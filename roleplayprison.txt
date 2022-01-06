@@ -1,0 +1,93 @@
+"roleplayprison"
+{
+	"base"		"base"
+	"title"		"Roleplay: Prison"
+	"maps"		"^rpp_"
+	"category"	"rp"
+	"menusystem"	"1"
+	"workshopid"	"15895"
+
+	"settings"
+	{
+		1
+		{
+			"name"		"sk_maxguards"
+			"text"		"Max guards"
+			"help"		"The limit of guards"
+			"type"		"Numeric"
+			"default"	"5"
+		}
+		2
+		{
+			"name"		"sk_maxrobbers"
+			"text"		"Max robbers"
+			"help"		"The limit of robbers"
+			"type"		"Numeric"
+			"default"	"10"
+		}
+		3
+		{
+			"name"		"sk_cycle_duration"
+			"text"		"Cycle duration (min)"
+			"help"		"Cycle duration in minutes"
+			"type"		"Numeric"
+			"default"	"30"
+		}
+		4
+		{
+			"name"		"sk_intercycle_duration"
+			"text"		"Time between cycles (min)"
+			"help"		"Time between cycles in minutes"
+			"type"		"Numeric"
+			"default"	"5"
+		}
+		5
+		{
+			"name"		"sk_routine_delay_min"
+			"text"		"Routine delay min"
+			"help"		"Minimal routine delay in seconds"
+			"type"		"Numeric"
+			"default"	"300"
+		}
+		6
+		{
+			"name"		"sk_routine_delay_max"
+			"text"		"Routine delay max"
+			"help"		"Maximum routine delay in seconds"
+			"type"		"Numeric"
+			"default"	"600"
+		}
+		7
+		{
+			"name"		"sk_routine_timeout"
+			"text"		"Routine timeout"
+			"help"		"Routine timeout in seconds"
+			"type"		"Numeric"
+			"default"	"90"
+		}
+		8
+		{
+			"name"		"sk_guard_routine_duration"
+			"text"		"Guard routine duration"
+			"help"		"Guard routine duration in seconds"
+			"type"		"Numeric"
+			"default"	"60"
+		}
+		9
+		{
+			"name"		"sk_officer_routine_duration"
+			"text"		"Officer routine duration"
+			"help"		"Officer routine duration in seconds"
+			"type"		"Numeric"
+			"default"	"20"
+		}
+		10
+		{
+			"name"		"sk_officer_punishment_duration"
+			"text"		"Officer punishment duration"
+			"help"		"Officer punishment duration in seconds"
+			"type"		"Numeric"
+			"default"	"300"
+		}
+	}
+}
