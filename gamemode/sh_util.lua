@@ -50,6 +50,13 @@ function UtilIsInterCycle()
 	return WorldEntity:GetNWBool("bInterCycle")
 end
 
+function UtilIsGlobalSpeakerEnabled()
+
+	local WorldEntity = game.GetWorld()
+
+	return WorldEntity:GetNWBool("bGlobalSpeakerEnabled")
+end
+
 function UtilGetCurrentCycleTimeSeconds()
 
 	local WorldEntity = game.GetWorld()

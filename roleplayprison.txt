@@ -89,5 +89,13 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
+		11
+		{
+			"name"		"sk_robber_work_duration"
+			"text"		"Robber work duration"
+			"help"		"Robber work duration in seconds"
+			"type"		"Numeric"
+			"default"	"60"
+		}
 	}
 }

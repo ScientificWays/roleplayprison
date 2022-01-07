@@ -27,20 +27,21 @@ PLAYER.UseVMHands           = true      -- Uses viewmodel hands
 
 function PLAYER:Init()
 	
-	self.Player.DetailWoodAmount     = 0
-	self.Player.DetailMetalAmount    = 0
-	self.Player.DressType            = "Robber"
+	
 
 end
 
 function PLAYER:Spawn()
 
-	if not IsInterCycle() then
+	if not UtilIsInterCycle() then
 
 		local RespawnPositions = ents.FindByClass("info_cycle_respawn")
 
 		self.Player:SetPos(table.Random(RespawnPositions):GetPos())
 	end
+
+	self.Player:SetNWInt("DetailWoodNum", 0)
+	self.Player:SetNWInt("DetailMetalNum", 0)
 end
 
 function PLAYER:Loadout()

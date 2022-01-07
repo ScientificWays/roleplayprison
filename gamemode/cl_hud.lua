@@ -54,7 +54,9 @@ end
 
 function TrySetTargetTask(InTargetEntity)
 
-	local bTask = InTargetEntity:GetNWBool("bGuardTask") or InTargetEntity:GetNWBool("bOfficerPhone")
+	local bTask = InTargetEntity:GetNWBool("bGuardTask")
+				or InTargetEntity:GetNWBool("bRobberTask")
+				or InTargetEntity:GetNWBool("bOfficerPhone")
 
 	--MsgN(string.format("TrySetTargetTask() return %s", bTask))
 	
@@ -97,7 +99,7 @@ local function InventoryDraw(InClient)
 
 	surface.SetTextPos(120, ScrH() - 190)
 
-	surface.DrawText(InClient.DetailWoodAmount)
+	surface.DrawText(InClient:GetNWInt("DetailWoodNum"))
 	
 	surface.SetMaterial(IconMetal)
 
@@ -105,7 +107,7 @@ local function InventoryDraw(InClient)
 
 	surface.SetTextPos(120, ScrH() - 240)
 
-	surface.DrawText(InClient.DetailMetalAmount)
+	surface.DrawText(InClient:GetNWInt("DetailMetalNum"))
 end
 
 local function DoorLockDraw(InClient)
@@ -151,18 +153,54 @@ local function TaskDraw(InClient)
 		return
 	end
 
+	local DrawString = ""
+
 	local TaskImplementer = ClientTargetTask:GetNWString("TaskImplementer")
 
-	if TaskImplementer ~= "" then
+	local NowImplemetingBy = ClientTargetTask:GetNWString("NowImplemetingBy")
 
-		surface.SetMaterial(IconComputerTask)
+	if ClientTargetTask:GetNWBool("bRobberTask") then
 
-		surface.SetDrawColor(COLOR_WHITE)
+		if NowImplemetingBy == "" then
 
-		surface.DrawTexturedRect(ScrW() / 2 - 16, ScrH() / 2 - 16, 32, 32)
+			if InClient:Team() == TEAM_ROBBER then
 
-		draw.DrawText(string.format("Задание для %s", TaskImplementer),
-			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+				DrawString = "Начать работу"
+			else
+
+				DrawString = "Работа для заключенного"
+			end
+		else
+
+			if NowImplemetingBy ~= InClient:GetName() then
+
+				DrawString = string.format("Выполняет %s", NowImplemetingBy)
+			end
+		end
+
+	elseif ClientTargetTask:GetNWBool("bGuardTask") and TaskImplementer ~= "" then
+
+		if NowImplemetingBy == "" then
+
+			surface.SetMaterial(IconComputerTask)
+
+			surface.SetDrawColor(COLOR_WHITE)
+
+			surface.DrawTexturedRect(ScrW() / 2 - 16, ScrH() / 2 - 16, 32, 32)
+
+			DrawString = string.format("Задание для %s", TaskImplementer)
+		else
+
+			if NowImplemetingBy ~= InClient:GetName() then
+
+				DrawString = string.format("Выполняет %s", NowImplemetingBy)
+			end
+		end
+	end
+
+	if DrawString ~= "" then
+
+		draw.DrawText(DrawString, "HUDTextSmall", ScrW() / 2, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
 	end
 end
 
@@ -177,7 +215,10 @@ local function TaskTimeDraw(InClient)
 
 	if TaskTimeLeft > 0 then
 
-		draw.DrawText(string.format("%.1f", TaskTimeLeft), "HUDTextSmall", ScrW() / 2, ScrH() / 2 + 48, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+		local TextColor = ColorAlpha(COLOR_YELLOW, 255 * (1.0 - InClient:GetNWFloat("TaskCancelExtent")))
+
+		draw.DrawText(string.format("%.1f", TaskTimeLeft),
+			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 64, TextColor, TEXT_ALIGN_CENTER)
 	end
 end
 

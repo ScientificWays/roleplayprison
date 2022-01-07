@@ -31,3 +31,31 @@ function UtilGetOfficerPunishmentDuration()
 
 	return GetConVar("sk_officer_punishment_duration"):GetInt()
 end
+
+function UtilGetRobberWorkDuration()
+
+	return GetConVar("sk_robber_work_duration"):GetInt()
+end
+
+function UtilCheckPlayerInArea(InPlayer, InArea)
+
+	if IsValid(InArea) then
+
+		local PlayerPos = InPlayer:GetPos()
+
+		local AreaPos = InArea:GetPos()
+
+		local AreaBoundMin, AreaBoundMax = InArea:GetCollisionBounds()
+
+		--MsgN(InArea:GetName(), AreaBoundMin, AreaBoundMax)
+
+		--MsgN(PlayerPos:WithinAABox(AreaPos + AreaBoundMin, AreaPos + AreaBoundMax))
+
+		if PlayerPos:WithinAABox(AreaPos + AreaBoundMin, AreaPos + AreaBoundMax) then
+
+			return true
+		end
+	end
+
+	return false
+end

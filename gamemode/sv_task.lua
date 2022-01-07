@@ -1,6 +1,6 @@
 ---- Roleplay: Prison
 
-local CurrentOfficerPhoneReason = ""
+--local CurrentOfficerPhoneReason = ""
 
 local OfficerPunishmentDuration = 0
 local TimeoutTaskNum = 0
@@ -18,21 +18,19 @@ function OnTaskTimeout(InTaskType)
 
 	TimeoutTaskNum = TimeoutTaskNum + 1
 
+	if TimeoutTaskNum > 3 then
+
+		OnOfficerAnswerPhone()
+	end
+
 	OfficerPunishmentDuration = OfficerPunishmentDuration + UtilGetOfficerPunishmentDuration() / TimeoutTaskNum
 
 	MsgN(string.format("OnTaskTimeout() %s, punishment duration now %i", InTaskType, OfficerPunishmentDuration))
 
 	TryEnableOfficerPhone()
-
-	if TimeoutTaskNum > 3 then
-
-		PunishOfficerPlayer(OfficerPunishmentDuration)
-
-		ResetTaskTimeout()
-	end
 end
 
-function ResetTaskTimeout()
+function ResetTaskTimeouts()
 
 	OfficerPunishmentDuration = 0
 	TimeoutTaskNum = 0
@@ -51,8 +49,6 @@ function TryEnableOfficerPhone()
 		if IsValid(OfficerPhone) then
 
 			OfficerPhone:Fire("FireUser1")
-
-			OfficerPhone:SetNWFloat("TaskTimeLeft", UtilGetOfficerRoutineDuration())
 		end
 	end
 end
@@ -70,8 +66,6 @@ function TryDisableOfficerPhone()
 		if IsValid(OfficerPhone) then
 
 			OfficerPhone:Fire("FireUser2")
-
-			OfficerPhone:SetNWFloat("TaskTimeLeft", 0)
 		end
 	end
 end
@@ -84,7 +78,7 @@ function OnOfficerAnswerPhone()
 
 		PunishOfficerPlayer(OfficerPunishmentDuration)
 
-		ResetTaskTimeout()
+		ResetTaskTimeouts()
 
 		return false
 	end
@@ -92,14 +86,14 @@ function OnOfficerAnswerPhone()
 	return true
 end
 
-function CancelOfficerAnswerPhone(InOfficerPlayer)
+function CancelOfficerAnswerPhone(InOfficerPlayer, InTaskStartEntity)
 
 	MsgN("CancelOfficerAnswerPhone()")
 
 	TryEnableOfficerPhone()
 end
 
-function FinishOfficerAnswerPhone(InOfficerPlayer)
+function FinishOfficerAnswerPhone(InOfficerPlayer, InTaskStartEntity)
 
 	MsgN("FinishOfficerAnswerPhone()")
 
@@ -110,19 +104,33 @@ function EnableGuardAccountingTask(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetName()
 
-	local PotentialComputers = ents.FindByName("*_GuardTask")
+	local PotentialSpots = ents.FindByName("*_GuardTask")
 
-	if not table.IsEmpty(PotentialComputers) then
+	local FilteredPotentialSpots = {}
 
-		local SampleComputer = table.Random(PotentialComputers)
+	for Index, SampleSpot in ipairs(PotentialSpots) do
 
-		SampleComputer:Fire("FireUser1")
+		if SampleSpot:GetNWString("TaskImplementer") == "" then
 
-		SampleComputer:SetNWString("TaskImplementer", GuardName)
+			table.insert(FilteredPotentialSpots, SampleSpot)
+		end
+	end
 
-		SampleComputer:SetNWFloat("TaskTimeLeft", UtilGetGuardRoutineDuration())
+	if not table.IsEmpty(FilteredPotentialSpots) then
 
-		MsgN(string.format("Enable guard %s accounting task with %s...", GuardName, SampleComputer:GetName()))
+		local SampleSpot = table.Random(FilteredPotentialSpots)
+
+		SampleSpot:Fire("FireUser1")
+
+		SampleSpot:SetNWString("TaskImplementer", GuardName)
+
+		SampleSpot:SetNWFloat("TaskTimeLeft", UtilGetGuardRoutineDuration())
+
+		MsgN(string.format("Enable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
+	else
+		UpdateGuardRoutine(GuardName)
+
+		MsgN(string.format("All spots are occupied! Skip routine for %s", GuardName))
 	end
 end
 
@@ -130,26 +138,26 @@ function DisableGuardAccountingTask(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetName()
 
-	local PotentialComputers = ents.FindByName("*_GuardTask")
+	local PotentialSpots = ents.FindByName("*_GuardTask")
 
-	for Index, SampleComputer in ipairs(PotentialComputers) do
+	for Index, SampleSpot in ipairs(PotentialSpots) do
 
-		if SampleComputer:GetNWString("TaskImplementer") == GuardName then
+		if SampleSpot:GetNWString("TaskImplementer") == GuardName then
 
-			SampleComputer:Fire("FireUser2")
+			SampleSpot:Fire("FireUser2")
 
-			SampleComputer:SetNWString("TaskImplementer", "")
+			SampleSpot:SetNWString("TaskImplementer", "")
 
-			SampleComputer:SetNWFloat("TaskTimeLeft", 0)
+			SampleSpot:SetNWFloat("TaskTimeLeft", 0)
 
-			MsgN(string.format("Disable guard %s accounting task with %s...", GuardName, SampleComputer:GetName()))
+			MsgN(string.format("Disable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
 
 			break
 		end
 	end
 end
 
-function CancelGuardAccountingTask(InGuardPlayer)
+function CancelGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
 
 	MsgN("CancelGuardAccountingTask()")
 
@@ -157,7 +165,7 @@ function CancelGuardAccountingTask(InGuardPlayer)
 
 end
 
-function FinishGuardAccountingTask(InGuardPlayer)
+function FinishGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
 
 	MsgN("FinishGuardAccountingTask()")
 
@@ -166,7 +174,21 @@ function FinishGuardAccountingTask(InGuardPlayer)
 	UpdateGuardRoutine(InGuardPlayer:GetName())
 end
 
-function OnImplementTaskStart(InPlayer, InDuration, InCancelCallback, InFinishCallback)
+function CancelRobberWorkTask(InRobberPlayer, InTaskStartEntity)
+
+	MsgN("CancelRobberWorkTask()")
+
+	
+end
+
+function FinishRobberWorkTask(InRobberPlayer, InTaskStartEntity)
+
+	MsgN("FinishRobberWorkTask()")
+
+	TryAddDetailForWork(InTaskStartEntity)
+end
+
+function OnImplementTaskStart(InPlayer, InTaskStartEntity, InDuration, InCancelCallback, InFinishCallback)
 
 	local PlayerName = InPlayer:GetName()
 
@@ -178,10 +200,13 @@ function OnImplementTaskStart(InPlayer, InDuration, InCancelCallback, InFinishCa
 
 	InPlayer:SetNWFloat("TaskTimeLeft", InDuration)
 
-	PlayerTaskDataList[PlayerName] = {Position = InPlayer:GetPos(),
-		Yaw = InPlayer:GetAngles().Yaw,
+	PlayerTaskDataList[PlayerName] = {TaskEntity = InTaskStartEntity,
+		Position = InPlayer:GetPos(),
+		Angles = InPlayer:EyeAngles(),
 		CancelCallback = InCancelCallback,
 		FinishCallback = InFinishCallback}
+
+	PlayerTaskDataList[PlayerName].TaskEntity:SetNWString("NowImplemetingBy", PlayerName)
 end
 
 function OnImplementTaskProgress(InPlayer)
@@ -193,7 +218,6 @@ function OnImplementTaskProgress(InPlayer)
 	if TimeLeft <= 0.0 then
 
 		OnImplementTaskStop(InPlayer, false)
-
 	else
 
 		local PlayerName = InPlayer:GetName()
@@ -202,10 +226,18 @@ function OnImplementTaskProgress(InPlayer)
 
 		local CurrentPlayerPos = InPlayer:GetPos()
 
-		local CurrentPlayerAngles = InPlayer:GetAngles()
+		local CurrentPlayerAngles = InPlayer:EyeAngles()
+
+		local CurrentYawDifference = math.abs(math.AngleDifference(CurrentPlayerAngles.Yaw, TaskData.Angles.Yaw))
+
+		local CurrentPitchDifference = math.abs(math.AngleDifference(CurrentPlayerAngles.Pitch, TaskData.Angles.Pitch))
+
+		local MaxDifference = math.max(CurrentYawDifference, CurrentPitchDifference)
+
+		InPlayer:SetNWFloat("TaskCancelExtent", MaxDifference / 30.0 - 0.2)
 
 		if CurrentPlayerPos:DistToSqr(TaskData.Position) > 128.0
-			or math.abs(math.AngleDifference(CurrentPlayerAngles.Yaw, TaskData.Yaw)) > 25.0 then
+			or MaxDifference > 30.0 then
 
 			OnImplementTaskStop(InPlayer, true)
 		end
@@ -220,15 +252,30 @@ function OnImplementTaskStop(InPlayer, bCancel)
 
 	local PlayerName = InPlayer:GetName()
 
+	local TaskData = PlayerTaskDataList[PlayerName]
+
 	--InPlayer:Freeze(false)
 
 	InPlayer:SetNWFloat("TaskTimeLeft", 0.0)
 
+	InPlayer:SetNWFloat("TaskCancelExtent", 0.0)
+
 	if bCancel then
 
-		PlayerTaskDataList[PlayerName].CancelCallback(InPlayer)
-	else
+		if TaskData.CancelCallback ~= nil then
 
-		PlayerTaskDataList[PlayerName].FinishCallback(InPlayer)
+			TaskData.CancelCallback(InPlayer, TaskData.TaskEntity)
+		end
+	else
+		if TaskData.FinishCallback ~= nil then
+
+			TaskData.FinishCallback(InPlayer, TaskData.TaskEntity)
+		end
 	end
+
+	TaskData.TaskEntity:SetNWString("NowImplemetingBy", "")
+
+	table.Empty(TaskData)
+
+	--MsgN("TaskData nil test: ", table.ToString(PlayerTaskDataList[PlayerName]))
 end

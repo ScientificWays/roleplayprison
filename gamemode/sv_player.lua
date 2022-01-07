@@ -10,15 +10,15 @@ local DebugDude = {}
 
 function UpdatePlayerMonitorType(InPlayer)
 
-	if CheckPlayerInArea(InPlayer, OfficerMonitorArea) then
+	if UtilCheckPlayerInArea(InPlayer, OfficerMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Officer")
 
-	elseif CheckPlayerInArea(InPlayer, ControlMonitorArea) then
+	elseif UtilCheckPlayerInArea(InPlayer, ControlMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Control")
 
-	elseif CheckPlayerInArea(InPlayer, LibraryMonitorArea) then
+	elseif UtilCheckPlayerInArea(InPlayer, LibraryMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Library")
 	else
@@ -27,27 +27,15 @@ function UpdatePlayerMonitorType(InPlayer)
 	end
 end
 
-function CheckPlayerInArea(InPlayer, InArea)
+function UpdatePlayerSpeakerState(InPlayer)
 
-	if IsValid(InArea) then
+	if UtilCheckPlayerInArea(InPlayer, ControlSpeakerArea) then
 
-		local PlayerPos = InPlayer:GetPos()
+		InPlayer:SetNWBool("bGlobalSpeaker", true)
+	else
 
-		local AreaPos = InArea:GetPos()
-
-		local AreaBoundMin, AreaBoundMax = InArea:GetCollisionBounds()
-
-		--MsgN(InArea:GetName(), AreaBoundMin, AreaBoundMax)
-
-		--MsgN(PlayerPos:WithinAABox(AreaPos + AreaBoundMin, AreaPos + AreaBoundMax))
-
-		if PlayerPos:WithinAABox(AreaPos + AreaBoundMin, AreaPos + AreaBoundMax) then
-
-			return true
-		end
+		InPlayer:SetNWBool("bGlobalSpeaker", false)
 	end
-
-	return false
 end
 
 function GM:PlayerSay(sender, text, teamChat)
@@ -117,81 +105,131 @@ function GM:PlayerSay(sender, text, teamChat)
 	return ""
 end
 
-function GM:AcceptInput(ent, input, activator, caller, value)
+function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
-	if not activator:IsPlayer() then
+	if not InActivator:IsPlayer() then
 
 		return false
 	end
 
-	--MsgN(input)
+	--MsgN(InInput)
 
-	if input == "Use" then
+	if InInput == "Use" then
 
-		local TargetEntityName = ent:GetName()
+		local TargetEntityName = InTargetEntity:GetName()
 
 		--MsgN(table.ToString(GuardOnlyUsableNames))
 
-		if string.EndsWith(TargetEntityName, "_GuardOnly") and activator:Team() ~= TEAM_GUARD then
+		if string.EndsWith(TargetEntityName, "_GuardOnly") and InActivator:Team() ~= TEAM_GUARD then
 
 			--MsgN(TargetEntityName.." activation blocked!")
 
-			ent:Input("Lock")
+			InTargetEntity:Input("Lock")
 
-			ent:Input("Use")
+			InTargetEntity:Input("Use")
 
-			ent:Fire("Unlock", nil, 1.5, activator, caller)
+			InTargetEntity:Fire("Unlock", nil, 1.5, InActivator, caller)
 
 			return true
 		end
 
-		if string.EndsWith(TargetEntityName, "_ScheduleSetup") then
+		if string.EndsWith(TargetEntityName, "_GlobalSpeaker") then
 
-			if activator:GetNWBool("bOfficer") and not IsOfficerPhoneEnabled() and not UtilIsScheduleSet() then
+			ToggleGlobalSpeaker(InTargetEntity)
 
-				activator:SendLua("ToggleScheduleSetup()")
-
-				return false
-			else
-
-				ent:Input("Lock")
-
-				ent:Input("Use")
-
-				ent:Fire("Unlock", nil, 1.5, activator, caller)
-
-				return true
-			end
+			return true
 		end
 
-		if string.EndsWith(TargetEntityName, "_OfficerPhone") then
+		if InActivator:Team() == TEAM_GUARD then
 
-			if activator:GetNWBool("bOfficer") and IsOfficerPhoneEnabled() then
+			if string.EndsWith(TargetEntityName, "_ScheduleSetup") then
 
-				--Temporary disable ringing, true if no punishment
-				if OnOfficerAnswerPhone() then
+				if InActivator:GetNWBool("bOfficer") and not IsOfficerPhoneEnabled() and not UtilIsScheduleSet() then
 
-					OnImplementTaskStart(activator,
-						UtilGetOfficerRoutineDuration(),
-						CancelOfficerAnswerPhone,
-						FinishOfficerAnswerPhone)
+					InActivator:SendLua("ToggleScheduleSetup()")
+
+					return false
+				else
+
+					InTargetEntity:Input("Lock")
+
+					InTargetEntity:Input("Use")
+
+					InTargetEntity:Fire("Unlock", nil, 1.5, InActivator, caller)
+
+					return true
 				end
-
-				return true
-			else
-
-				return false
 			end
-		end
 
-		if string.EndsWith(TargetEntityName, "_GuardTask") then
+			if string.EndsWith(TargetEntityName, "_OfficerPhone") then
 
-			if activator:GetName() == ent:GetNWString("TaskImplementer") then
+				if InActivator:GetNWBool("bOfficer")
+					and IsOfficerPhoneEnabled()
+					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
 
-				OnImplementTaskStart(activator,
-					UtilGetGuardRoutineDuration(),
-					CancelGuardAccountingTask,
-					FinishGuardAccountingTask)
+					--Temporary disable ringing, true if no punishment
+					if OnOfficerAnswerPhone() then
+
+						OnImplementTaskStart(InActivator,
+							InTargetEntity,
+							UtilGetOfficerRoutineDuration(),
+							CancelOfficerAnswerPhone,
+							FinishOfficerAnswerPhone)
+					end
+
+					return true
+				else
+
+					return false
+				end
+			end
+
+			if string.EndsWith(TargetEntityName, "_GuardTask") then
+
+				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
+					and InActivator:GetName() == InTargetEntity:GetNWString("TaskImplementer")
+					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
+
+					OnImplementTaskStart(InActivator,
+						InTargetEntity,
+						UtilGetGuardRoutineDuration(),
+						CancelGuardAccountingTask,
+						FinishGuardAccountingTask)
+
+					return true
+				else
+
+					return false
+				end
+			end
+
+		elseif InActivator:Team() == TEAM_ROBBER then
+
+			if string.EndsWith(TargetEntityName, "_RobberTask") then
+
+				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
+					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
+
+					OnImplementTaskStart(InActivator,
+						InTargetEntity,
+						UtilGetRobberWorkDuration(),
+						CancelRobberWorkTask,
+						FinishRobberWorkTask)
+
+					return true
+				else
+
+					return false
+				end
+			end
+
+			if string.EndsWith(TargetEntityName, "_DetailPickup") and GetDetailNumInStack(InTargetEntity) > 0 then
+
+				OnImplementTaskStart(InActivator,
+						InTargetEntity,
+						3.0,
+						nil,
+						TryPickDetailFromWork)
 
 				return true
 			else

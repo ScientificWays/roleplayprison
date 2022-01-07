@@ -95,6 +95,13 @@ function GM:Tick()
 
 			return
 		end
+
+	elseif ClientPlayer:Team() == TEAM_ROBBER then
+
+		if TrySetTargetTask(EyeTrace.Entity) then
+
+			return
+		end
 	end
 end
 

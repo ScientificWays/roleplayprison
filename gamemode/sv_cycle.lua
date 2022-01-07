@@ -80,7 +80,8 @@ local function SetupCycleStartGuardRoutine()
 
 		GuardRoutineTimeLeftTable[SampleGuardName] = {DelayLeft = AdjustedRoutineDelay, TimeLeft = UtilGetRoutineTimeout()}
 
-		Msg("Set first routine delay for %s: adjusted from %i to %i", SampleGuardName, BaseRoutineDelay, AdjustedRoutineDelay)
+		MsgN(string.format("Set first routine delay for %s: adjusted from %i to %i",
+			SampleGuardName, BaseRoutineDelay, AdjustedRoutineDelay))
 
 		table.RemoveByValue(AllGuards, SampleGuard)
 	end
@@ -195,6 +196,8 @@ function OnCycleEnd()
 
 	else
 		ServerResetScheduleList()
+
+		table.Empty(GuardRoutineTimeLeftTable)
 	end
 end
 

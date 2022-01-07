@@ -4,6 +4,8 @@ OfficerMonitorArea = {}
 ControlMonitorArea = {}
 LibraryMonitorArea = {}
 
+ControlSpeakerArea = {}
+
 function SetupMapLockables()
 
 	MsgN("Setup map lockables...")
@@ -113,13 +115,19 @@ function SetupMapRoutines()
 			MsgN(SampleTaskName.." is registered!")
 
 			SampleTask:SetNWBool("bOfficerPhone", true)
+
+		elseif string.EndsWith(SampleTaskName, "_RobberTask") then
+
+			MsgN(SampleTaskName.." is registered!")
+
+			SampleTask:SetNWBool("bRobberTask", true)
 		end
 	end
 end
 
-function SetupMapMonitorAreas()
+function SetupMapAreas()
 
-	MsgN("Setup map monitor areas...")
+	MsgN("Setup map areas...")
 
 	local PotentialMonitorAreas = ents.FindByClass("trigger_multiple")
 
@@ -144,6 +152,12 @@ function SetupMapMonitorAreas()
 			MsgN(SampleMonitorAreaName.." is registered!")
 
 			LibraryMonitorArea = SampleMonitorArea
+
+		elseif string.EndsWith(SampleMonitorAreaName, "_Control_SpeakerArea") then
+
+			MsgN(SampleMonitorAreaName.." is registered!")
+
+			ControlSpeakerArea = SampleMonitorArea
 		end
 	end
 end

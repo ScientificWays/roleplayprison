@@ -2,20 +2,24 @@
 
 AddCSLuaFile("sh_util.lua")
 AddCSLuaFile("cl_init.lua")
-AddCSLuaFile("cl_util.lua")
-AddCSLuaFile("cl_monitors.lua")
+
 AddCSLuaFile("cl_hud.lua")
+AddCSLuaFile("cl_util.lua")
+AddCSLuaFile("cl_network.lua")
+AddCSLuaFile("cl_monitors.lua")
 AddCSLuaFile("cl_pickrole.lua")
 AddCSLuaFile("cl_schedule.lua")
-AddCSLuaFile("cl_network.lua")
 
 include("sh_util.lua")
 include("sv_util.lua")
+
 include("sv_map.lua")
+include("sv_task.lua")
+include("sv_work.lua")
+include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_player.lua")
 include("sv_officer.lua")
-include("sv_task.lua")
 
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
@@ -45,7 +49,7 @@ function GM:InitPostEntity()
 
 	SetupMapRoutines()
 
-	SetupMapMonitorAreas()
+	SetupMapAreas()
 
 	local WorldEntity = game.GetWorld()
 
@@ -66,10 +70,11 @@ function GM:Tick()
 	for Index, SamplePlayer in ipairs(player.GetAll()) do
 
 		UpdatePlayerMonitorType(SamplePlayer)
+
+		UpdatePlayerSpeakerArea(SamplePlayer)
 	end
 end
 
---Дальность слышимости
 --Система тревоги с освещением
 --Ловушки и освещение в вентиляции
 --Бафф на скорость работы если охранник в комнате
