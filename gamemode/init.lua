@@ -71,12 +71,12 @@ function GM:Tick()
 
 		UpdatePlayerMonitorType(SamplePlayer)
 
-		UpdatePlayerSpeakerArea(SamplePlayer)
+		UpdatePlayerSpeakerState(SamplePlayer)
 	end
+
+	UpdateWorkAreasState()
 end
 
 --Система тревоги с освещением
---Ловушки и освещение в вентиляции
---Бафф на скорость работы если охранник в комнате
---Громкоговоритель на всю тюрьму и локальный на улице
+--Громкоговоритель локальный на улице
 --Отмычки ломаются с шансом 90%, дверь открывается с шансом 90%

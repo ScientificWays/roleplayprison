@@ -6,6 +6,11 @@ LibraryMonitorArea = {}
 
 ControlSpeakerArea = {}
 
+WorkWoodArea = {}
+WorkMetalArea = {}
+
+local bDayMapState = nil
+
 function SetupMapLockables()
 
 	MsgN("Setup map lockables...")
@@ -158,6 +163,57 @@ function SetupMapAreas()
 			MsgN(SampleMonitorAreaName.." is registered!")
 
 			ControlSpeakerArea = SampleMonitorArea
+
+		elseif string.EndsWith(SampleMonitorAreaName, "_Work_WoodArea") then
+
+			MsgN(SampleMonitorAreaName.." is registered!")
+
+			WorkWoodArea = SampleMonitorArea
+
+		elseif string.EndsWith(SampleMonitorAreaName, "_Work_MetalArea") then
+
+			MsgN(SampleMonitorAreaName.." is registered!")
+
+			WorkMetalArea = SampleMonitorArea
 		end
+	end
+end
+
+function TrySetMapDayState()
+
+	if bDayMapState or bDayMapState == nil then
+
+		return
+	else
+		local ToggleEntity = ents.FindByName("Map_CycleToggle")[1]
+
+		if IsValid(ToggleEntity) then
+
+			ToggleEntity:Fire("SetValueTest", 1)
+
+			MsgN("SetMapDayState")
+		end
+
+		bDayMapState = true
+	end
+end
+
+function TrySetMapNightState()
+
+	if bDayMapState or bDayMapState == nil then
+
+		local ToggleEntity = ents.FindByName("Map_CycleToggle")[1]
+
+		if IsValid(ToggleEntity) then
+
+			ToggleEntity:Fire("SetValueTest", 0)
+
+			MsgN("SetMapNightState")
+		end
+
+		bDayMapState = false
+	else
+
+		return
 	end
 end

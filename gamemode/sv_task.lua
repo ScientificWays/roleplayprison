@@ -211,7 +211,19 @@ end
 
 function OnImplementTaskProgress(InPlayer)
 
-	InPlayer:SetNWFloat("TaskTimeLeft", InPlayer:GetNWFloat("TaskTimeLeft") - 0.1)
+	local SpeedMul = 1.0
+
+	local PlayerName = InPlayer:GetName()
+
+	local TaskData = PlayerTaskDataList[PlayerName]
+
+	if (string.EndsWith(TaskData.TaskEntity:GetName(), "_Wood_RobberTask") and UtilIsWorkWoodBuffed())
+	or (string.EndsWith(TaskData.TaskEntity:GetName(), "_Metal_RobberTask") and UtilIsWorkMetalBuffed()) then
+
+		SpeedMul = 1.5
+	end
+
+	InPlayer:SetNWFloat("TaskTimeLeft", InPlayer:GetNWFloat("TaskTimeLeft") - 0.1 * SpeedMul)
 
 	local TimeLeft = InPlayer:GetNWFloat("TaskTimeLeft")
 
@@ -219,11 +231,6 @@ function OnImplementTaskProgress(InPlayer)
 
 		OnImplementTaskStop(InPlayer, false)
 	else
-
-		local PlayerName = InPlayer:GetName()
-
-		local TaskData = PlayerTaskDataList[PlayerName]
-
 		local CurrentPlayerPos = InPlayer:GetPos()
 
 		local CurrentPlayerAngles = InPlayer:EyeAngles()

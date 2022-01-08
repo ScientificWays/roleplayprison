@@ -40,7 +40,6 @@ luac.out
 *.hex
 
 # Hammer data
-/Extras/Maps/*.bsp
 *.log
 *.prt
 *.vmx
@@ -48,4 +47,3 @@ luac.out
 
 # Extra data
 /Extras/*
-!/Extras/Maps/

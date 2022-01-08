@@ -1,8 +1,44 @@
 ---- Roleplay: Prison
 
-local DetailStackBias = 1.0
-
 local DetailPickupList = {}
+
+local function GetWoodDetailTransformData(InCurrentDetailNum)
+
+	return Vector(math.Rand(-1.0, 1.0), math.Rand(-1.0, 1.0), 1.0 * InCurrentDetailNum), Angle(0.0, math.Rand(-3.0, 3.0), 0.0)
+end
+
+local function GetMetalDetailTransformData(InCurrentDetailNum)
+
+	return Vector(math.Rand(-2.0, 2.0), math.Rand(-2.0, 2.0), 3.0 * InCurrentDetailNum), Angle(0.0, math.Rand(0.0, 360.0), 0.0)
+end
+
+function UpdateWorkAreasState()
+
+	local WorldEntity = game.GetWorld()
+
+	local AllGuards = team.GetPlayers(TEAM_GUARD)
+
+	local bGuardInWoodArea = false
+
+	local bGuardInMetalArea = false
+
+	for Index, SampleGuard in ipairs(AllGuards) do
+
+		if UtilCheckPlayerInArea(SampleGuard, WorkWoodArea) then
+
+			bGuardInWoodArea = true
+		end
+
+		if UtilCheckPlayerInArea(SampleGuard, WorkMetalArea) then
+
+			bGuardInMetalArea = true
+		end
+	end
+
+	WorldEntity:SetNWBool("bWorkWoodBuffed", bGuardInWoodArea)
+
+	WorldEntity:SetNWBool("bWorkMetalBuffed", bGuardInMetalArea)
+end
 
 function GetDetailNumInStack(InPickupEntity)
 
@@ -51,17 +87,22 @@ function TryAddDetailForWork(InWorkEntity)
 
 			local NewDetailEntity = ents.Create("prop_dynamic")
 
-			local NewDetailPos = TemplateEntity:GetPos()
+			local BiasPos = Vector()
 
-			NewDetailPos:Add(Vector(math.Rand(-1.0, 1.0), math.Rand(-1.0, 1.0), DetailStackBias * PickupData:Num()))
+			local BiasAngles = Angle()
 
-			NewDetailEntity:SetPos(NewDetailPos)
+			if PickupData.DetailType == "Wood" then
 
-			local NewDetailAngles = TemplateEntity:GetAngles()
+				BiasPos, BiasAngles = GetWoodDetailTransformData(PickupData:Num())
 
-			NewDetailAngles:Add(Angle(0.0, math.Rand(-2.0, 2.0), 0.0))
+			elseif PickupData.DetailType == "Metal" then
 
-			NewDetailEntity:SetAngles(NewDetailAngles)
+				BiasPos, BiasAngles = GetMetalDetailTransformData(PickupData:Num())
+			end
+
+			NewDetailEntity:SetPos(TemplateEntity:GetPos() + BiasPos)
+
+			NewDetailEntity:SetAngles(TemplateEntity:GetAngles() + BiasAngles)
 
 			NewDetailEntity:SetModel(TemplateEntity:GetModel())
 

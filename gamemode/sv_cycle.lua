@@ -170,7 +170,7 @@ function StartNewCycle()
 
 		WorldEntity:SetNWBool("bScheduleSet", false)
 
-		PrintMessage(HUD_PRINTTALK, "Начался новый цикл!")
+		--PrintMessage(HUD_PRINTTALK, "Начался новый цикл!")
 
 		MsgN(table.ToString(ServerScheduleList))
 
@@ -180,11 +180,15 @@ function StartNewCycle()
 		end 
 
 		SetupCycleStartGuardRoutine()
+
+		TrySetMapDayState()
 	else
 
 		WorldEntity:SetNWBool("bInterCycle", true)
 
-		PrintMessage(HUD_PRINTTALK, "Начался перерыв!")
+		--PrintMessage(HUD_PRINTTALK, "Начался перерыв!")
+
+		TrySetMapNightState()
 	end
 end
 
@@ -206,6 +210,17 @@ function CycleUpdate()
 	local WorldEntity = game.GetWorld()
 
 	local CurrentCycleTimeSeconds = WorldEntity:GetNWInt("CurrentCycleTimeSeconds")
+
+	if UtilGetLeftCycleTimeSeconds() <= 150 then
+
+		if UtilIsInterCycle() then
+
+			TrySetMapDayState()
+		else
+
+			TrySetMapNightState()
+		end
+	end
 
 	if CurrentCycleTimeSeconds >= UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60 then
 

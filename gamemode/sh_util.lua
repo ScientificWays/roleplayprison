@@ -57,6 +57,20 @@ function UtilIsGlobalSpeakerEnabled()
 	return WorldEntity:GetNWBool("bGlobalSpeakerEnabled")
 end
 
+function UtilIsWorkWoodBuffed()
+
+	local WorldEntity = game.GetWorld()
+
+	return WorldEntity:GetNWBool("bWorkWoodBuffed")
+end
+
+function UtilIsWorkMetalBuffed()
+
+	local WorldEntity = game.GetWorld()
+
+	return WorldEntity:GetNWBool("bWorkMetalBuffed")
+end
+
 function UtilGetCurrentCycleTimeSeconds()
 
 	local WorldEntity = game.GetWorld()
