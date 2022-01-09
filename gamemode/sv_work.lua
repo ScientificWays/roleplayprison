@@ -26,6 +26,8 @@ function ClearDetailPickups()
 		end
 
 		table.Empty(PickupData.DetailEntityList)
+
+		SampleEntity:SetNWBool("bShowHint", false)
 	end
 end
 
@@ -112,11 +114,11 @@ function TryAddDetailForWork(InWorkEntity)
 
 			if PickupData.DetailType == "Wood" then
 
-				BiasPos, BiasAngles, SpawnSound = GetWoodDetailTransformData(PickupData:Num())
+				BiasPos, BiasAngles, SpawnSound = GetWoodDetailSpawnData(PickupData:Num())
 
 			elseif PickupData.DetailType == "Metal" then
 
-				BiasPos, BiasAngles, SpawnSound = GetMetalDetailTransformData(PickupData:Num())
+				BiasPos, BiasAngles, SpawnSound = GetMetalDetailSpawnData(PickupData:Num())
 			end
 
 			NewDetailEntity:SetPos(TemplateEntity:GetPos() + BiasPos)
@@ -126,6 +128,8 @@ function TryAddDetailForWork(InWorkEntity)
 			NewDetailEntity:SetModel(TemplateEntity:GetModel())
 
 			NewDetailEntity:EmitSound(SpawnSound)
+
+			TemplateEntity:SetNWBool("bShowHint", true)
 
 			table.insert(PickupData.DetailEntityList, NewDetailEntity)
 
@@ -144,14 +148,14 @@ function TryAddDetailForWork(InWorkEntity)
 	end
 end
 
-function TryPickDetailFromWork(InPickingPlayer, InWorkEntity)
+function TryPickDetailFromWork(InPickingPlayer, InPickupEntity)
 
 	MsgN("TryPickDetailFromWork()")
 
 	--In fact double check
-	if IsValid(InWorkEntity) and string.EndsWith(InWorkEntity:GetName(), "_DetailPickup") then
+	if IsValid(InPickupEntity) and string.EndsWith(InPickupEntity:GetName(), "_DetailPickup") then
 
-		local TemplateEntity = InWorkEntity:GetParent()
+		local TemplateEntity = InPickupEntity:GetParent()
 
 		MsgN(TemplateEntity)
 
@@ -178,7 +182,12 @@ function TryPickDetailFromWork(InPickingPlayer, InWorkEntity)
 
 				MsgN(string.format("Remove entity %s", LastAddedDetail))
 
-				LastAddedDetail:Remove()	
+				LastAddedDetail:Remove()
+
+				if PickupData:Num() == 0 then
+
+					TemplateEntity:SetNWBool("bShowHint", false)
+				end
 			end
 		end
 	end

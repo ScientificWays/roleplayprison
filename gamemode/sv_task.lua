@@ -220,7 +220,7 @@ function OnImplementTaskProgress(InPlayer)
 	if (string.EndsWith(TaskData.TaskEntity:GetName(), "_Wood_RobberTask") and UtilIsWorkWoodBuffed())
 	or (string.EndsWith(TaskData.TaskEntity:GetName(), "_Metal_RobberTask") and UtilIsWorkMetalBuffed()) then
 
-		SpeedMul = 1.5
+		SpeedMul = UtilGetRobberWorkBuffMultiplier()
 	end
 
 	InPlayer:SetNWFloat("TaskTimeLeft", InPlayer:GetNWFloat("TaskTimeLeft") - 0.1 * SpeedMul)

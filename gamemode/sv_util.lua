@@ -37,6 +37,26 @@ function UtilGetRobberWorkDuration()
 	return GetConVar("sk_robber_work_duration"):GetInt()
 end
 
+function UtilGetRobberWorkBuffMultiplier()
+
+	return GetConVar("sk_robber_work_buff_multiplier"):GetFloat()
+end
+
+function UtilGetDetailPickupDuration()
+
+	return GetConVar("sk_detail_pickup_duration"):GetInt()
+end
+
+function UtilGetServerSabotageDuration()
+
+	return GetConVar("sk_server_sabotage_duration"):GetInt()
+end
+
+function UtilGetServerRepairDuration()
+
+	return GetConVar("sk_server_repair_duration"):GetInt()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

@@ -33,6 +33,8 @@ end
 
 function ServerResetScheduleList()
 
+	WorldEntity:SetNWBool("bScheduleSet", false)
+
 	table.Empty(ServerScheduleList)
 
 	net.Start("SendScheduleListToClients")
@@ -169,8 +171,6 @@ function StartNewCycle()
 	if UtilIsInterCycle() then
 
 		WorldEntity:SetNWBool("bInterCycle", false)
-
-		WorldEntity:SetNWBool("bScheduleSet", false)
 
 		--PrintMessage(HUD_PRINTTALK, "Начался новый цикл!")
 

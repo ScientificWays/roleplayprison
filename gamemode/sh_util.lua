@@ -54,7 +54,14 @@ function UtilIsGlobalSpeakerEnabled()
 
 	local WorldEntity = game.GetWorld()
 
-	return WorldEntity:GetNWBool("bGlobalSpeakerEnabled")
+	return WorldEntity:GetNWBool("bGlobalSpeakerEnabled") and not UtilIsServerSabotaged()
+end
+
+function UtilIsServerSabotaged()
+
+	local WorldEntity = game.GetWorld()
+
+	return WorldEntity:GetNWBool("bServerSabotaged")
 end
 
 function UtilIsWorkWoodBuffed()

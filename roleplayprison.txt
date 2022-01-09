@@ -97,5 +97,37 @@
 			"type"		"Numeric"
 			"default"	"60"
 		}
+		12
+		{
+			"name"		"sk_robber_work_buff_multiplier"
+			"text"		"Robber work buff multiplier"
+			"help"		"Robber work buff multiplier"
+			"type"		"Numeric"
+			"default"	"1.2"
+		}
+		13
+		{
+			"name"		"sk_detail_pickup_duration"
+			"text"		"Detail pickup duration"
+			"help"		"Detail pickup duration in seconds"
+			"type"		"Numeric"
+			"default"	"2"
+		}
+		14
+		{
+			"name"		"sk_server_sabotage_duration"
+			"text"		"Server sabotage duration"
+			"help"		"Server sabotage duration in seconds"
+			"type"		"Numeric"
+			"default"	"10"
+		}
+		15
+		{
+			"name"		"sk_server_repair_duration"
+			"text"		"Server repair duration"
+			"help"		"Server repair duration in seconds"
+			"type"		"Numeric"
+			"default"	"30"
+		}
 	}
 }

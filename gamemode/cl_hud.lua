@@ -9,14 +9,24 @@ local IconLocked				= Material("vgui/rpp/icon_locked")
 local IconUnlocked				= Material("vgui/rpp/icon_unlocked")
 local IconHand					= Material("vgui/rpp/icon_hand")
 
+local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")
 local IconAlarmButton			= Material("icon16/exclamation.png")
 local IconGlobalSpeakerButton	= Material("icon16/sound.png")
+local IconServerSabotage		= Material("icon16/server.png")
 
 local IconGuardTask				= Material("icon16/folder_error.png")
 local IconRobberTask			= Material("icon16/cog.png")
+local IconDetailSpawn			= Material("icon16/brick.png")
 
 local HUDHintData = {}
+
+local function SetHUDHintDataScheduleSetup()
+
+	HUDHintData.Icon = IconScheduleSetup
+
+	HUDHintData.Text = "Редактирование расписания"
+end
 
 local function SetHUDHintDataCellsButton()
 
@@ -97,7 +107,33 @@ local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
 	end
 end
 
-local function InventoryDraw(InClient)
+local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
+
+	HUDHintData.Icon = IconDetailSpawn
+
+	if InNowImplemetingBy == "" then
+
+		HUDHintData.Text = "Произведенные детали"
+	else
+
+		HUDHintData.Text = string.format("Подбирает %s", InNowImplemetingBy)
+	end
+end
+
+local function SetHUDHintDataServerSabotage(bRobberTeam)
+
+	HUDHintData.Icon = IconServerSabotage
+
+	if bRobberTeam then
+
+		HUDHintData.Text = "Саботаж"
+	else
+
+		HUDHintData.Text = "Починить"
+	end
+end
+
+local function TryDrawInventory(InClient)
 
 	if not IsValid(InClient) then
 
@@ -184,7 +220,7 @@ end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
 
-	MsgN(InTargetEntity)
+	--MsgN(InTargetEntity)
 
 	if not InTargetEntity:GetNWBool("bShowHint") then
 
@@ -192,13 +228,19 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 		if IsValid(TargetEntityParent) and TargetEntityParent:GetNWBool("bShowHint") then
 
-			TryUpdateHUDHintData(InPlayer, TargetEntityParent)
+			UpdateHUDHintData(InPlayer, TargetEntityParent)
 		end
 
 		return
 	end
 
-	if InTargetEntity:GetNWBool("bCellsButton") then
+	if InTargetEntity:GetNWBool("bScheduleSetupEntity") then
+
+		SetHUDHintDataScheduleSetup()
+
+		return
+
+	elseif InTargetEntity:GetNWBool("bCellsButton") then
 
 		SetHUDHintDataCellsButton()
 
@@ -213,6 +255,12 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 	elseif InTargetEntity:GetNWBool("bGlobalSpeakerButton") then
 
 		SetHUDHintDataGlobalSpeakerButton()
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bDetailSpawn") then
+
+		SetHUDHintDataDetailSpawn(InTargetEntity:GetNWString("TaskImplementer"))
 
 		return
 	end
@@ -239,6 +287,10 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		elseif InTargetEntity:GetNWBool("bRobberTask") then
 
 			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), false)
+
+		elseif InTargetEntity:GetNWBool("bServerSabotage") and InTargetEntity:GetNWBool("bSabotaged") then
+
+			SetHUDHintDataServerSabotage(false)
 		end
 
 	elseif InPlayer:Team() == TEAM_ROBBER then
@@ -246,6 +298,10 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		if InTargetEntity:GetNWBool("bRobberTask") then
 
 			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), true)
+
+		elseif InTargetEntity:GetNWBool("bServerSabotage") and not InTargetEntity:GetNWBool("bSabotaged") then
+
+			SetHUDHintDataServerSabotage(true)
 		end
 	end
 end
@@ -273,7 +329,7 @@ function GM:HUDPaint()
 
 	if hook.Run("HUDShouldDraw", "RPPInventory") and Client:Team() == TEAM_ROBBER then
 
-		InventoryDraw(Client)
+		TryDrawInventory(Client)
 	end
 
 	if not TryDrawTaskTime(Client) then

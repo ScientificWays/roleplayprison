@@ -20,6 +20,7 @@ include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_player.lua")
 include("sv_officer.lua")
+include("sv_sabotage.lua")
 
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")

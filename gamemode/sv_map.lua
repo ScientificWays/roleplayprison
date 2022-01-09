@@ -37,7 +37,9 @@ function UpdateMapLockablesState()
 
 	MsgN("Update map lockables state...")
 
-	local PotentialLockables = ents.FindByName("_*Lockable")
+	local PotentialLockables = ents.FindByName("*Lockable")
+
+	--MsgN(table.ToString(PotentialLockables))
 
 	for Index, SampleEntity in ipairs(PotentialLockables) do
 
@@ -55,6 +57,8 @@ function UpdateMapLockablesState()
 		SampleEntity:Input(InputType)
 
 		SampleEntity:SetNWBool("bWasLocked", bNewLockState)
+
+		--MsgN(InputType)
 
 		local SlaveDoorName = SampleEntity:GetInternalVariable("slavename") or ""
 
@@ -117,6 +121,12 @@ function SetupMapEntityFlags()
 
 			SampleEntity:SetNWBool("bShowHint", true)
 
+		elseif string.EndsWith(SampleEntityName, "_ScheduleSetup") then
+
+			SampleEntity:SetNWBool("bScheduleSetupEntity", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
 		elseif string.EndsWith(SampleEntityName, "_CellsButton") then
 
 			SampleEntity:SetNWBool("bCellsButton", true)
@@ -132,6 +142,12 @@ function SetupMapEntityFlags()
 		elseif string.EndsWith(SampleEntityName, "_GlobalSpeakerButton") then
 
 			SampleEntity:SetNWBool("bGlobalSpeakerButton", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
+		elseif string.EndsWith(SampleEntityName, "_ServerSabotage") then
+
+			SampleEntity:SetNWBool("bServerSabotage", true)
 
 			SampleEntity:SetNWBool("bShowHint", true)
 
@@ -158,6 +174,21 @@ function SetupMapEntityFlags()
 			SampleEntity:SetNWBool("bRobberTask", true)
 
 			SampleEntity:SetNWBool("bShowHint", true)
+
+		elseif string.EndsWith(SampleEntityName, "_DetailPickup") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bDetailPickup", true)
+
+		elseif string.EndsWith(SampleEntityName, "_DetailSpawn") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bDetailSpawn", true)
+
+			--Will be true if will have at least 1 detail made
+			--SampleEntity:SetNWBool("bShowHint", true)
 		end
 	end
 end

@@ -114,7 +114,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 	--MsgN(InInput)
 
-	if InInput == "Use" then
+	if InInput == "Use" and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
 
 		local TargetEntityName = InTargetEntity:GetName()
 
@@ -133,7 +133,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			return true
 		end
 
-		if string.EndsWith(TargetEntityName, "_GlobalSpeakerButton") then
+		if InTargetEntity:GetNWBool("bGlobalSpeakerButton") and not UtilIsServerSabotaged() then
 
 			ToggleGlobalSpeaker(InTargetEntity)
 
@@ -142,7 +142,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 		if InActivator:Team() == TEAM_GUARD then
 
-			if string.EndsWith(TargetEntityName, "_ScheduleSetup") then
+			if InTargetEntity:GetNWBool("bScheduleSetupEntity") then
 
 				if InActivator:GetNWBool("bOfficer") and not IsOfficerPhoneEnabled() and not UtilIsScheduleSet() then
 
@@ -161,11 +161,27 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 				end
 			end
 
-			if string.EndsWith(TargetEntityName, "_OfficerPhone") then
+			if InTargetEntity:GetNWBool("bServerSabotage") then
+
+				if InTargetEntity:GetNWBool("bSabotaged") then
+
+					OnImplementTaskStart(InActivator,
+						InTargetEntity,
+						UtilGetServerRepairDuration(),
+						nil,
+						TryRepairServer)
+
+					return true
+				else
+
+					return false
+				end
+			end
+
+			if InTargetEntity:GetNWBool("bOfficerPhone") then
 
 				if InActivator:GetNWBool("bOfficer")
-					and IsOfficerPhoneEnabled()
-					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
+					and IsOfficerPhoneEnabled() then
 
 					--Temporary disable ringing, true if no punishment
 					if OnOfficerAnswerPhone() then
@@ -184,11 +200,10 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 				end
 			end
 
-			if string.EndsWith(TargetEntityName, "_GuardTask") then
+			if InTargetEntity:GetNWBool("bGuardTask") then
 
 				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
-					and InActivator:GetName() == InTargetEntity:GetNWString("TaskImplementer")
-					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
+					and InActivator:GetName() == InTargetEntity:GetNWString("TaskImplementer") then
 
 					OnImplementTaskStart(InActivator,
 						InTargetEntity,
@@ -205,10 +220,26 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 		elseif InActivator:Team() == TEAM_ROBBER then
 
-			if string.EndsWith(TargetEntityName, "_RobberTask") then
+			if InTargetEntity:GetNWBool("bServerSabotage") then
 
-				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
-					and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
+				if not InTargetEntity:GetNWBool("bSabotaged") then
+
+					OnImplementTaskStart(InActivator,
+						InTargetEntity,
+						UtilGetServerSabotageDuration(),
+						nil,
+						TrySabotageServer)
+
+					return true
+				else
+
+					return false
+				end
+			end
+
+			if InTargetEntity:GetNWBool("bRobberTask") then
+
+				if InTargetEntity:GetNWString("NowImplemetingBy") == "" then
 
 					OnImplementTaskStart(InActivator,
 						InTargetEntity,
@@ -223,11 +254,11 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 				end
 			end
 
-			if string.EndsWith(TargetEntityName, "_DetailPickup") and GetDetailNumInStack(InTargetEntity) > 0 then
+			if InTargetEntity:GetNWBool("bDetailPickup") and GetDetailNumInStack(InTargetEntity) > 0 then
 
 				OnImplementTaskStart(InActivator,
 						InTargetEntity,
-						2.0,
+						UtilGetDetailPickupDuration(),
 						nil,
 						TryPickDetailFromWork)
 
