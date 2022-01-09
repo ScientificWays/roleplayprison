@@ -1,0 +1,10 @@
+"Officer_PhoneRing"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"100"
+
+	"soundlevel"		"SNDLVL_30dB"
+
+	"wave"			"roleplayprison/phone_ring.wav"
+}

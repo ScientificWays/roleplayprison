@@ -34,7 +34,7 @@ end
 
 function PLAYER:Loadout()
  
-	self.Player:RemoveAllAmmo()
+	self.Player:RemoveAllItems()
 	
 	self.Player:Give("weapon_rpp_unarmed")
 	self.Player:Give("weapon_rpp_fists")

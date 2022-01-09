@@ -4,7 +4,7 @@ local PlayerFallSounds = {
 	Sound("player/damage1.wav"),
 	Sound("player/damage2.wav"),
 	Sound("player/damage3.wav")
-};
+}
 
 local DebugDude = {}
 
@@ -38,24 +38,24 @@ function UpdatePlayerSpeakerState(InPlayer)
 	end
 end
 
-function GM:PlayerSay(sender, text, teamChat)
+function GM:PlayerSay(InSender, InText, bTeamChat)
 
-	if text[1] ~= "/" then
+	if InText[1] ~= "/" then
 
-		return text
+		return InText
 	end
 
-	SeparatedStrings = string.Explode(" ", text, false)
+	SeparatedStrings = string.Explode(" ", InText, false)
 
-	if SeparatedStrings[1] == "/vote" then
+	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= "" then
 
-		AddOfficerVote(sender, SeparatedStrings[2] or "")
+		AddOfficerVote(InSender, table.concat(SeparatedStrings, " ", 2))
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
 
 		FinishOfficerVote()
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/start" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/start" then
 
 		local WorldEntity = game.GetWorld()
 
@@ -63,7 +63,7 @@ function GM:PlayerSay(sender, text, teamChat)
 
 		StartNewCycle()
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/auto" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/auto" then
 
 		FinishOfficerVote()
 
@@ -73,26 +73,26 @@ function GM:PlayerSay(sender, text, teamChat)
 		
 		StartNewCycle()
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/pause" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/pause" then
 
 		ToggleCycle(true)
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/unpause" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/unpause" then
 
 		ToggleCycle(false)
 
-	elseif sender:IsAdmin() and SeparatedStrings[1] == "/skip" then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/skip" then
 
 		if SeparatedStrings[2] == "cycle" then
 
 			StartNewCycle()
 
-		elseif SeparatedStrings[2] == "delay" then
+		elseif SeparatedStrings[2] == "delay" and SeparatedStrings[3] == "" then
 
-			TrySkipTaskDelayFor(SeparatedStrings[3] or "")
+			TrySkipTaskDelayFor(table.concat(SeparatedStrings, " ", 3))
 		end
 
-	elseif sender:IsAdmin() and (SeparatedStrings[1] == "/Лёха" or SeparatedStrings[1] == "/лёха") then
+	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Лёха" or SeparatedStrings[1] == "/лёха") then
 
 		DebugDude = player.CreateNextBot("Лёха")
 
@@ -227,7 +227,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				OnImplementTaskStart(InActivator,
 						InTargetEntity,
-						3.0,
+						2.0,
 						nil,
 						TryPickDetailFromWork)
 

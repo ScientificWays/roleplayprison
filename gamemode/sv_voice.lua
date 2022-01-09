@@ -27,7 +27,7 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 
 		return true, false
 	else
-		local bWithinDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()) < 1000000
+		local bWithinDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()) < 250000
 
 		return bWithinDistance, true
 	end

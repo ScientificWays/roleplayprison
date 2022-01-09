@@ -2,14 +2,18 @@
 
 local DetailPickupList = {}
 
-local function GetWoodDetailTransformData(InCurrentDetailNum)
+local function GetWoodDetailSpawnData(InCurrentDetailNum)
 
-	return Vector(math.Rand(-1.0, 1.0), math.Rand(-1.0, 1.0), 1.0 * InCurrentDetailNum), Angle(0.0, math.Rand(-3.0, 3.0), 0.0)
+	return Vector(math.Rand(-1.0, 1.0), math.Rand(-1.0, 1.0), 1.0 * InCurrentDetailNum),
+		Angle(0.0, math.Rand(-3.0, 3.0), 0.0),
+		"Wood_Furniture.ImpactSoft"
 end
 
-local function GetMetalDetailTransformData(InCurrentDetailNum)
+local function GetMetalDetailSpawnData(InCurrentDetailNum)
 
-	return Vector(math.Rand(-2.0, 2.0), math.Rand(-2.0, 2.0), 3.0 * InCurrentDetailNum), Angle(0.0, math.Rand(0.0, 360.0), 0.0)
+	return Vector(math.Rand(-2.0, 2.0), math.Rand(-2.0, 2.0), 3.0 * InCurrentDetailNum),
+		Angle(0.0, math.Rand(0.0, 360.0), 0.0),
+		"SolidMetal.ImpactSoft"
 end
 
 function UpdateWorkAreasState()
@@ -91,13 +95,15 @@ function TryAddDetailForWork(InWorkEntity)
 
 			local BiasAngles = Angle()
 
+			local SpawnSound = ""
+
 			if PickupData.DetailType == "Wood" then
 
-				BiasPos, BiasAngles = GetWoodDetailTransformData(PickupData:Num())
+				BiasPos, BiasAngles, SpawnSound = GetWoodDetailTransformData(PickupData:Num())
 
 			elseif PickupData.DetailType == "Metal" then
 
-				BiasPos, BiasAngles = GetMetalDetailTransformData(PickupData:Num())
+				BiasPos, BiasAngles, SpawnSound = GetMetalDetailTransformData(PickupData:Num())
 			end
 
 			NewDetailEntity:SetPos(TemplateEntity:GetPos() + BiasPos)
@@ -105,6 +111,8 @@ function TryAddDetailForWork(InWorkEntity)
 			NewDetailEntity:SetAngles(TemplateEntity:GetAngles() + BiasAngles)
 
 			NewDetailEntity:SetModel(TemplateEntity:GetModel())
+
+			NewDetailEntity:EmitSound(SpawnSound)
 
 			table.insert(PickupData.DetailEntityList, NewDetailEntity)
 
