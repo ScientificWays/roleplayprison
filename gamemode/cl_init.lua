@@ -31,6 +31,8 @@ function GM:Initialize()
 
 	net.Receive("SendScheduleListToClients", ClientReceiveScheduleList)
 
+	net.Receive("UpdateClientLightmaps", UpdateClientLightmaps)
+	
 	self.BaseClass:Initialize()
 end
 
@@ -39,6 +41,8 @@ function GM:InitPostEntity()
 	local WorldEntity = game.GetWorld()
 
 	WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
+
+	render.RedownloadAllLightmaps();
 
 	self.BaseClass:InitPostEntity()
 end
@@ -50,8 +54,8 @@ function GM:Tick()
 		return
 	end
 
-	HUDResetTarget()
-	
+	ResetHUDHintData()
+
 	local ClientPlayer = LocalPlayer()
 
 	if not IsValid(ClientPlayer)
@@ -68,41 +72,7 @@ function GM:Tick()
 		return
 	end
 
-	if ClientPlayer:Team() == TEAM_GUARD then
-
-		if TrySetTargetLockable(EyeTrace.Entity) then
-
-			return
-		else
-
-			local ParentEntity = EyeTrace.Entity:GetParent()
-
-			if IsValid(ParentEntity) then
-
-				if TrySetTargetLockable(ParentEntity) then
-
-					return
-				end
-			end
-		end
-
-		if TrySetTargetUsable(EyeTrace.Entity) then
-
-			return
-		end
-
-		if TrySetTargetTask(EyeTrace.Entity) then
-
-			return
-		end
-
-	elseif ClientPlayer:Team() == TEAM_ROBBER then
-
-		if TrySetTargetTask(EyeTrace.Entity) then
-
-			return
-		end
-	end
+	UpdateHUDHintData(ClientPlayer, EyeTrace.Entity)
 end
 
 function GM:AddDeathNotice() end

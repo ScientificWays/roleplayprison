@@ -2,82 +2,99 @@
 
 local bHideHUD = false
 
-local IconWood			= Material("vgui/rpp/icon_wood")
-local IconMetal			= Material("vgui/rpp/icon_metal")
---local IconDressRobber	= Material("vgui/rpp/icon_dress_robber")
-local IconLocked		= Material("vgui/rpp/icon_locked")
-local IconUnlocked		= Material("vgui/rpp/icon_unlocked")
-local IconHand			= Material("vgui/rpp/icon_hand")
+local IconWood					= Material("vgui/rpp/icon_wood")
+local IconMetal					= Material("vgui/rpp/icon_metal")
+--local IconDressRobber			= Material("vgui/rpp/icon_dress_robber")
+local IconLocked				= Material("vgui/rpp/icon_locked")
+local IconUnlocked				= Material("vgui/rpp/icon_unlocked")
+local IconHand					= Material("vgui/rpp/icon_hand")
 
-local IconComputerTask	= Material("icon16/folder_error.png")
+local IconCellsButton			= Material("icon16/lock_open.png")
+local IconAlarmButton			= Material("icon16/exclamation.png")
+local IconGlobalSpeakerButton	= Material("icon16/sound.png")
 
-local ClientTargetLockable = nil
-local ClientTargetUsable = nil
-local ClientTargetTask = nil
+local IconGuardTask				= Material("icon16/folder_error.png")
+local IconRobberTask			= Material("icon16/cog.png")
 
-function HUDResetTarget()
+local HUDHintData = {}
 
-	ClientTargetLockable = nil
-	ClientTargetUsable = nil
-	ClientTargetTask = nil
+local function SetHUDHintDataCellsButton()
+
+	HUDHintData.Icon = IconCellsButton
+
+	HUDHintData.Text = "Управление камерами"
 end
 
-function TrySetTargetLockable(InTargetEntity)
+local function SetHUDHintDataAlarmButton()
 
-	local bLockable = InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable")
+	HUDHintData.Icon = IconAlarmButton
 
-	if bLockable then
-
-		ClientTargetLockable = InTargetEntity
-
-		return true
-	end
-
-	return false
+	HUDHintData.Text = "Кнопка тревоги"
 end
 
-function TrySetTargetUsable(InTargetEntity)
+local function SetHUDHintDataGlobalSpeakerButton()
 
-	local bUsable = InTargetEntity:GetNWBool("bGuardUser1")
-					or InTargetEntity:GetNWBool("bRobberUser1")
-					or InTargetEntity:GetNWBool("bAllUser1")
+	HUDHintData.Icon = IconGlobalSpeakerButton
 
-	if bUsable then
-
-		ClientTargetUsable = InTargetEntity
-
-		return true
-	end
-
-	return false
+	HUDHintData.Text = "Громкоговоритель"
 end
 
-function TrySetTargetTask(InTargetEntity)
+local function SetHUDHintDataLockable(bWasLocked)
 
-	local bTask = InTargetEntity:GetNWBool("bGuardTask")
-				or InTargetEntity:GetNWBool("bRobberTask")
-				or InTargetEntity:GetNWBool("bOfficerPhone")
+	if bWasLocked then
 
-	--MsgN(string.format("TrySetTargetTask() return %s", bTask))
-	
-	if bTask then
+		HUDHintData.Icon = IconLocked
+	else
 
-		ClientTargetTask = InTargetEntity
-
-		return true
+		HUDHintData.Icon = IconUnlocked
 	end
 
-	return false
+	HUDHintData.IconSize.x = 48
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ПКМ"
 end
 
-local function SpecHUDPaint(InClient)
-	
-	if not IsValid(InClient) then
+local function SetHUDHintDataUsable()
 
-		return
+	HUDHintData.Icon = IconHand
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ПКМ"
+end
+
+local function SetHUDHintDataGuardTask(InImplementerName, InNowImplemetingBy)
+
+	HUDHintData.Icon = IconGuardTask
+
+	if InNowImplemetingBy == "" then
+
+		HUDHintData.Text = string.format("Задание для %s", InImplementerName)
+	else
+
+		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
 	end
+end
 
-	return
+local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
+
+	HUDHintData.Icon = IconRobberTask
+
+	if InNowImplemetingBy == "" then
+
+		if bRobberTeam then
+
+			HUDHintData.Text = "Начать работу"
+		else
+
+			HUDHintData.Text = "Работа для заключенного"
+		end
+	else
+
+		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
+	end
 end
 
 local function InventoryDraw(InClient)
@@ -110,105 +127,39 @@ local function InventoryDraw(InClient)
 	surface.DrawText(InClient:GetNWInt("DetailMetalNum"))
 end
 
-local function DoorLockDraw(InClient)
+local function TryDrawHUDHintData(InClient)
 
 	if not IsValid(InClient) then
 
 		return
 	end
 
-	if ClientTargetLockable:GetNWBool("bWasLocked") then
+	local TextBiasY = 0
 
-		surface.SetMaterial(IconLocked)
-	else
+	if HUDHintData.Icon then
 
-		surface.SetMaterial(IconUnlocked)
+		surface.SetMaterial(HUDHintData.Icon)
+
+		surface.SetDrawColor(HUDHintData.IconColor)
+
+		surface.DrawTexturedRect(ScrW() / 2 - HUDHintData.IconSize.x / 2,
+			ScrH() / 2 - HUDHintData.IconSize.y / 2,
+			HUDHintData.IconSize.x, HUDHintData.IconSize.y)
+
+		TextBiasY = HUDHintData.IconSize.y / 2
 	end
 
-	surface.SetDrawColor(COLOR_YELLOW)
+	if HUDHintData.Text then
 
-	surface.DrawTexturedRect(ScrW() / 2 - 24, ScrH() / 2 - 16, 48, 32)
-
-	draw.DrawText("ПКМ", "HUDTextSmall", ScrW() / 2, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
-end
-
-local function UsableDraw(InClient)
-
-	if not IsValid(InClient) then
-
-		return
-	end
-
-	surface.SetMaterial(IconHand)
-
-	surface.SetDrawColor(COLOR_YELLOW)
-
-	surface.DrawTexturedRect(ScrW() / 2 - 16, ScrH() / 2 - 16, 32, 32)
-end
-
-local function TaskDraw(InClient)
-
-	if not IsValid(InClient) then
-
-		return
-	end
-
-	local DrawString = ""
-
-	local TaskImplementer = ClientTargetTask:GetNWString("TaskImplementer")
-
-	local NowImplemetingBy = ClientTargetTask:GetNWString("NowImplemetingBy")
-
-	if ClientTargetTask:GetNWBool("bRobberTask") then
-
-		if NowImplemetingBy == "" then
-
-			if InClient:Team() == TEAM_ROBBER then
-
-				DrawString = "Начать работу"
-			else
-
-				DrawString = "Работа для заключенного"
-			end
-		else
-
-			if NowImplemetingBy ~= InClient:GetName() then
-
-				DrawString = string.format("Выполняет %s", NowImplemetingBy)
-			end
-		end
-
-	elseif ClientTargetTask:GetNWBool("bGuardTask") and TaskImplementer ~= "" then
-
-		if NowImplemetingBy == "" then
-
-			surface.SetMaterial(IconComputerTask)
-
-			surface.SetDrawColor(COLOR_WHITE)
-
-			surface.DrawTexturedRect(ScrW() / 2 - 16, ScrH() / 2 - 16, 32, 32)
-
-			DrawString = string.format("Задание для %s", TaskImplementer)
-		else
-
-			if NowImplemetingBy ~= InClient:GetName() then
-
-				DrawString = string.format("Выполняет %s", NowImplemetingBy)
-			end
-		end
-	end
-
-	if DrawString ~= "" then
-
-		draw.DrawText(DrawString, "HUDTextSmall", ScrW() / 2, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+		draw.DrawText(HUDHintData.Text, "HUDTextSmall", ScrW() / 2, ScrH() / 2 + TextBiasY, COLOR_YELLOW, TEXT_ALIGN_CENTER)
 	end
 end
 
-local function TaskTimeDraw(InClient)
+local function TryDrawTaskTime(InClient)
 
 	if not IsValid(InClient) then
 
-		return
+		return false
 	end
 
 	local TaskTimeLeft = InClient:GetNWFloat("TaskTimeLeft")
@@ -219,6 +170,83 @@ local function TaskTimeDraw(InClient)
 
 		draw.DrawText(string.format("%.1f", TaskTimeLeft),
 			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 64, TextColor, TEXT_ALIGN_CENTER)
+
+		return true
+	end
+
+	return false
+end
+
+function ResetHUDHintData()
+
+	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil}
+end
+
+function UpdateHUDHintData(InPlayer, InTargetEntity)
+
+	MsgN(InTargetEntity)
+
+	if not InTargetEntity:GetNWBool("bShowHint") then
+
+		local TargetEntityParent = InTargetEntity:GetParent()
+
+		if IsValid(TargetEntityParent) and TargetEntityParent:GetNWBool("bShowHint") then
+
+			TryUpdateHUDHintData(InPlayer, TargetEntityParent)
+		end
+
+		return
+	end
+
+	if InTargetEntity:GetNWBool("bCellsButton") then
+
+		SetHUDHintDataCellsButton()
+
+		return
+
+	elseif InTargetEntity:GetNWBool("bAlarmButton") then
+
+		SetHUDHintDataAlarmButton()
+
+		return
+
+	elseif InTargetEntity:GetNWBool("bGlobalSpeakerButton") then
+
+		SetHUDHintDataGlobalSpeakerButton()
+
+		return
+	end
+
+	if InPlayer:Team() == TEAM_GUARD then
+
+		if InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable") then
+
+			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
+		
+		elseif InTargetEntity:GetNWBool("bGuardUser1") or InTargetEntity:GetNWBool("bAllUser1") then
+
+			SetHUDHintDataUsable()
+		
+		elseif InTargetEntity:GetNWBool("bGuardTask") or InTargetEntity:GetNWBool("bOfficerPhone") then
+
+			local TaskImplementer = InTargetEntity:GetNWString("TaskImplementer")
+
+			if TaskImplementer ~= "" then
+
+				SetHUDHintDataGuardTask(TaskImplementer, InTargetEntity:GetNWString("NowImplemetingBy"))
+			end
+		
+		elseif InTargetEntity:GetNWBool("bRobberTask") then
+
+			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), false)
+		end
+
+	elseif InPlayer:Team() == TEAM_ROBBER then
+
+		if InTargetEntity:GetNWBool("bRobberTask") then
+
+			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), true)
+		end
 	end
 end
 
@@ -233,7 +261,7 @@ function GM:HUDPaint()
 
 	bHideHUD = not Client:KeyDown(IN_WALK)
 
-	if (not Client:Alive()) or Client:Team() == TEAM_SPECTATOR then
+	if not Client:Alive() or Client:Team() == TEAM_SPECTATOR or Client:Team() == TEAM_UNASSIGNED then
 
 		if hook.Run("HUDShouldDraw", "RPPSpecHUD") then
 
@@ -248,26 +276,10 @@ function GM:HUDPaint()
 		InventoryDraw(Client)
 	end
 
-	if IsValid(ClientTargetLockable) then
+	if not TryDrawTaskTime(Client) then
 
-		--MsgN("DoorLockDraw()")
-
-		DoorLockDraw(Client)
-
-	elseif IsValid(ClientTargetUsable) then
-
-		--MsgN("UsableDraw()")
-
-		UsableDraw(Client)
-
-	elseif IsValid(ClientTargetTask) then
-
-		--MsgN("TaskDraw()")
-
-		TaskDraw(Client)
+		TryDrawHUDHintData(Client)
 	end
-
-	TaskTimeDraw(Client)
 end
 
 -- Hide HUD elements

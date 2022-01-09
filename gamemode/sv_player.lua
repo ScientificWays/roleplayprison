@@ -133,7 +133,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			return true
 		end
 
-		if string.EndsWith(TargetEntityName, "_GlobalSpeaker") then
+		if string.EndsWith(TargetEntityName, "_GlobalSpeakerButton") then
 
 			ToggleGlobalSpeaker(InTargetEntity)
 

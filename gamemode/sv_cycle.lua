@@ -116,7 +116,9 @@ local function HandleGuardRoutine(InGuardPlayer)
 
 		elseif RoutineData.TimeLeft <= 0 then
 
-			OnTaskTimeout()
+			OnTaskTimeout("GuardRoutine")
+
+			DisableGuardAccountingTask(InGuardPlayer)
 
 			UpdateGuardRoutine(GuardName)
 
@@ -181,14 +183,18 @@ function StartNewCycle()
 
 		SetupCycleStartGuardRoutine()
 
-		TrySetMapDayState()
+		ClearDetailPickups()
+
+		TrySetMapDayState(1.0)
 	else
 
 		WorldEntity:SetNWBool("bInterCycle", true)
 
 		--PrintMessage(HUD_PRINTTALK, "Начался перерыв!")
 
-		TrySetMapNightState()
+		UpdateMapLockablesState()
+
+		TrySetMapNightState(1.0)
 	end
 end
 
@@ -209,18 +215,11 @@ function CycleUpdate()
 
 	local WorldEntity = game.GetWorld()
 
+	WorldEntity:SetNWInt("CurrentCycleTimeSeconds", WorldEntity:GetNWInt("CurrentCycleTimeSeconds") + 1)
+
 	local CurrentCycleTimeSeconds = WorldEntity:GetNWInt("CurrentCycleTimeSeconds")
 
-	if UtilGetLeftCycleTimeSeconds() <= 150 then
-
-		if UtilIsInterCycle() then
-
-			TrySetMapDayState()
-		else
-
-			TrySetMapNightState()
-		end
-	end
+	--MsgN(WorldEntity:GetNWInt("CurrentCycleTimeSeconds"))
 
 	if CurrentCycleTimeSeconds >= UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60 then
 
@@ -231,9 +230,18 @@ function CycleUpdate()
 		return
 	end
 
-	WorldEntity:SetNWInt("CurrentCycleTimeSeconds", CurrentCycleTimeSeconds + 1)
+	local LeftCycleTimeSeconds = UtilGetLeftCycleTimeSeconds()
 
-	--MsgN(WorldEntity:GetNWInt("CurrentCycleTimeSeconds"))
+	if LeftCycleTimeSeconds <= 150 then
+
+		if UtilIsInterCycle() then
+
+			TrySetMapDayState(1.0 - LeftCycleTimeSeconds / 150)
+		else
+
+			TrySetMapNightState(1.0 - LeftCycleTimeSeconds / 150)
+		end
+	end
 
 	local AllGuards = team.GetPlayers(TEAM_GUARD)
 

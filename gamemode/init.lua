@@ -24,7 +24,7 @@ include("sv_officer.lua")
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
 
---CreateClientConVar("schedulesetup", "0")
+util.AddNetworkString("UpdateClientLightmaps")
 
 function GM:Initialize()
 
@@ -43,13 +43,11 @@ function GM:InitPostEntity()
 
 	MsgN("Server post entity initializing...")
 
-	SetupMapLockables()
-
-	SetupMapUsables()
-
-	SetupMapRoutines()
+	SetupMapEntityFlags()
 
 	SetupMapAreas()
+
+	SetColorCorrectionEntities()
 
 	local WorldEntity = game.GetWorld()
 
@@ -79,9 +77,7 @@ end
 
 --Зоны изменения множителя дальности звука (карцер)
 --Интерфейс вместо монитора
---Подсказка на кнопках управления
---Удаление деталей в конце цикла
 --Система тревоги с освещением
 --Задержка включения камеры
 --Громкоговоритель локальный на улице
---Отмычки ломаются с шансом 90%, дверь открывается с шансом 90%
+--Отмычки ломаются с шансом 90%, дверь открывается с шансом 90%, открытие дверей камер

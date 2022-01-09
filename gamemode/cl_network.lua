@@ -20,3 +20,8 @@ function ClientSendScheduleList(InElementList)
 
 	net.SendToServer()
 end
+
+function UpdateClientLightmaps(InMessageLength, InPlayer)
+
+	render.RedownloadAllLightmaps()
+end

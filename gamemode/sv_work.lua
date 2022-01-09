@@ -16,6 +16,19 @@ local function GetMetalDetailSpawnData(InCurrentDetailNum)
 		"SolidMetal.ImpactSoft"
 end
 
+function ClearDetailPickups()
+
+	for TemplateEntity, PickupData in pairs(DetailPickupList) do
+
+		for Index, DetailEntity in ipairs(PickupData.DetailEntityList) do
+
+			DetailEntity:Remove()	
+		end
+
+		table.Empty(PickupData.DetailEntityList)
+	end
+end
+
 function UpdateWorkAreasState()
 
 	local WorldEntity = game.GetWorld()

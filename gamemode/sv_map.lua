@@ -11,121 +11,153 @@ WorkMetalArea = {}
 
 local bDayMapState = nil
 
-function SetupMapLockables()
+local OldLightStyle = ""
+
+local function TryUpdateLightStyle(InNewLightStyle)
+
+	if InNewLightStyle ~= OldLightStyle then
+
+		engine.LightStyle(0, InNewLightStyle)
+
+		timer.Simple( 0.1, function()
+
+		net.Start("UpdateClientLightmaps")
+
+		net.Broadcast()
+
+		end)
+
+		MsgN(string.format("New light style: %s", InNewLightStyle))
+
+		OldLightStyle = InNewLightStyle
+	end
+end
+
+function UpdateMapLockablesState()
+
+	MsgN("Update map lockables state...")
+
+	local PotentialLockables = ents.FindByName("_*Lockable")
+
+	for Index, SampleEntity in ipairs(PotentialLockables) do
+
+		local InputType = "Lock"
+
+		local bNewLockState = true
+
+		if math.random() < 0.5 then
+
+			InputType = "Unlock"
+
+			bNewLockState = false
+		end
+
+		SampleEntity:Input(InputType)
+
+		SampleEntity:SetNWBool("bWasLocked", bNewLockState)
+
+		local SlaveDoorName = SampleEntity:GetInternalVariable("slavename") or ""
+
+		if SlaveDoorName ~= "" then
+
+			local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+
+			if IsValid(SlaveDoorEntity) then
+
+				SlaveDoorEntity:Input(InputType)
+
+				SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+			end
+		end
+	end
+end
+
+function SetColorCorrectionEntities()
+
+	ColorCorrectionNightAreaList = ents.FindByName("ColorCorrection_Night")
+end
+
+function SetupMapEntityFlags()
 
 	MsgN("Setup map lockables...")
 
-	local PotentialLockables = ents.FindByClass("prop_door_rotating")
+	local AllEntities = ents.GetAll()
 
-	table.Add(PotentialLockables, ents.FindByClass("func_door_rotating"))
+	for Index, SampleEntity in ipairs(AllEntities) do
 
-	for Index, SampleLockable in ipairs(PotentialLockables) do
+		local SampleEntityName = SampleEntity:GetName()
 
-		local SampleLockableName = SampleLockable:GetName()
+		if string.EndsWith(SampleEntityName, "_GuardLockable") then
 
-		local bLockable = false
+			SampleEntity:SetNWBool("bGuardLockable", true)
 
-		if string.EndsWith(SampleLockableName, "_GuardLockable") then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			bLockable = true
+		elseif string.EndsWith(SampleEntityName, "_OfficerLockable") then
 
-			SampleLockable:SetNWBool("bGuardLockable", true)
+			SampleEntity:SetNWBool("bOfficerLockable", true)
 
-		elseif string.EndsWith(SampleLockableName, "_OfficerLockable") then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			bLockable = true
-			
-			SampleLockable:SetNWBool("bOfficerLockable", true)
-		end
+		elseif string.EndsWith(SampleEntityName, "_AllUser1") then
 
-		if bLockable then
+			SampleEntity:SetNWBool("bAllUser1", true)
 
-			MsgN(SampleLockableName.." is registered!")
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			local InputType = "Lock"
+		elseif string.EndsWith(SampleEntityName, "_GuardUser1") then
 
-			local bNewLockState = true
+			SampleEntity:SetNWBool("bGuardUser1", true)
 
-			if math.random() < 0.5 then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-				InputType = "Unlock"
+		elseif string.EndsWith(SampleEntityName, "_RobberUser1") then
 
-				bNewLockState = false
-			end
+			SampleEntity:SetNWBool("bRobberUser1", true)
 
-			SampleLockable:Input(InputType)
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			SampleLockable:SetNWBool("bWasLocked", bNewLockState)
+		elseif string.EndsWith(SampleEntityName, "_CellsButton") then
 
-			local SlaveDoorName = SampleLockable:GetInternalVariable("slavename") or ""
+			SampleEntity:SetNWBool("bCellsButton", true)
 
-			if SlaveDoorName ~= "" then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-				local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+		elseif string.EndsWith(SampleEntityName, "_AlarmButton") then
 
-				if IsValid(SlaveDoorEntity) then
+			SampleEntity:SetNWBool("bAlarmButton", true)
 
-					SlaveDoorEntity:Input(InputType)
+			SampleEntity:SetNWBool("bShowHint", true)
 
-					SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
-				end
-			end
-		end
-	end
-end
+		elseif string.EndsWith(SampleEntityName, "_GlobalSpeakerButton") then
 
-function SetupMapUsables()
+			SampleEntity:SetNWBool("bGlobalSpeakerButton", true)
 
-	MsgN("Setup map usables...")
+			SampleEntity:SetNWBool("bShowHint", true)
 
-	local PotentialUsables = ents.FindByName("*User1")
+		elseif string.EndsWith(SampleEntityName, "_GuardTask") then
 
-	for Index, SampleUsable in ipairs(PotentialUsables) do
+			MsgN(SampleEntityName.." is registered!")
 
-		local SampleUsableName = SampleUsable:GetName()
+			SampleEntity:SetNWBool("bGuardTask", true)
 
-		if string.EndsWith(SampleUsableName, "_AllUser1") then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			SampleUsable:SetNWBool("bAllUser1", true)
+		elseif string.EndsWith(SampleEntityName, "_OfficerPhone") then
 
-		elseif string.EndsWith(SampleUsableName, "_GuardUser1") then
+			MsgN(SampleEntityName.." is registered!")
 
-			SampleUsable:SetNWBool("bGuardUser1", true)
+			SampleEntity:SetNWBool("bOfficerPhone", true)
 
-		elseif string.EndsWith(SampleUsableName, "_RobberUser1") then
+			SampleEntity:SetNWBool("bShowHint", true)
 
-			SampleUsable:SetNWBool("bRobberUser1", true)
-		end
-	end
-end
+		elseif string.EndsWith(SampleEntityName, "_RobberTask") then
 
-function SetupMapRoutines()
+			MsgN(SampleEntityName.." is registered!")
 
-	MsgN("Setup map routines...")
+			SampleEntity:SetNWBool("bRobberTask", true)
 
-	local PotentialTasks = ents.FindByName("*_*Task")
-
-	for Index, SampleTask in ipairs(PotentialTasks) do
-
-		local SampleTaskName = SampleTask:GetName()
-
-		if string.EndsWith(SampleTaskName, "_GuardTask") then
-
-			MsgN(SampleTaskName.." is registered!")
-
-			SampleTask:SetNWBool("bGuardTask", true)
-
-		elseif string.EndsWith(SampleTaskName, "_OfficerPhone") then
-
-			MsgN(SampleTaskName.." is registered!")
-
-			SampleTask:SetNWBool("bOfficerPhone", true)
-
-		elseif string.EndsWith(SampleTaskName, "_RobberTask") then
-
-			MsgN(SampleTaskName.." is registered!")
-
-			SampleTask:SetNWBool("bRobberTask", true)
+			SampleEntity:SetNWBool("bShowHint", true)
 		end
 	end
 end
@@ -142,78 +174,69 @@ function SetupMapAreas()
 
 		if string.EndsWith(SampleMonitorAreaName, "_Officer_MonitorArea") then
 
-			MsgN(SampleMonitorAreaName.." is registered!")
-
 			OfficerMonitorArea = SampleMonitorArea
 
 		elseif string.EndsWith(SampleMonitorAreaName, "_Control_MonitorArea") then
-
-			MsgN(SampleMonitorAreaName.." is registered!")
 
 			ControlMonitorArea = SampleMonitorArea
 
 		elseif string.EndsWith(SampleMonitorAreaName, "_Library_MonitorArea") then
 
-			MsgN(SampleMonitorAreaName.." is registered!")
-
 			LibraryMonitorArea = SampleMonitorArea
 
 		elseif string.EndsWith(SampleMonitorAreaName, "_Control_SpeakerArea") then
-
-			MsgN(SampleMonitorAreaName.." is registered!")
 
 			ControlSpeakerArea = SampleMonitorArea
 
 		elseif string.EndsWith(SampleMonitorAreaName, "_Work_WoodArea") then
 
-			MsgN(SampleMonitorAreaName.." is registered!")
-
 			WorkWoodArea = SampleMonitorArea
 
 		elseif string.EndsWith(SampleMonitorAreaName, "_Work_MetalArea") then
-
-			MsgN(SampleMonitorAreaName.." is registered!")
 
 			WorkMetalArea = SampleMonitorArea
 		end
 	end
 end
 
-function TrySetMapDayState()
+function TrySetMapDayState(InAlpha)
 
-	if bDayMapState or bDayMapState == nil then
+	if not bDayMapState then
 
-		return
-	else
-		local ToggleEntity = ents.FindByName("Map_CycleToggle")[1]
+		local ToggleEntity = ents.FindByName("ColorCorrection_Toggle")[1]
 
 		if IsValid(ToggleEntity) then
 
-			ToggleEntity:Fire("SetValueTest", 1)
+			ToggleEntity:Fire("FireUser1")
 
 			MsgN("SetMapDayState")
 		end
 
 		bDayMapState = true
 	end
+
+	local RemappedAlpha = math.Remap(InAlpha, 0.0, 1.0, string.byte("b"), string.byte("m"))
+
+	TryUpdateLightStyle(string.char(math.Round(RemappedAlpha)))
 end
 
-function TrySetMapNightState()
+function TrySetMapNightState(InAlpha)
 
 	if bDayMapState or bDayMapState == nil then
 
-		local ToggleEntity = ents.FindByName("Map_CycleToggle")[1]
+		local ToggleEntity = ents.FindByName("ColorCorrection_Toggle")[1]
 
 		if IsValid(ToggleEntity) then
 
-			ToggleEntity:Fire("SetValueTest", 0)
+			ToggleEntity:Fire("FireUser2")
 
 			MsgN("SetMapNightState")
 		end
 
 		bDayMapState = false
-	else
-
-		return
 	end
+
+	local RemappedAlpha = math.Remap(InAlpha, 0.0, 1.0, string.byte("m"), string.byte("b"))
+
+	TryUpdateLightStyle(string.char(math.Round(RemappedAlpha)))
 end
