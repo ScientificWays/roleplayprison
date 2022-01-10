@@ -38,6 +38,59 @@ function UpdatePlayerSpeakerState(InPlayer)
 	end
 end
 
+function UpdatePlayerVoiceArea(InPlayer)
+
+	if UtilCheckPlayerInArea(InPlayer, LocalPunishmentArea) then
+
+		InPlayer:SetNWString("VoiceLocalArea", "LocalPunishmentArea")
+
+	elseif UtilCheckPlayerInArea(InPlayer, LocalOutside1Area) then
+
+		InPlayer:SetNWString("VoiceLocalArea", "LocalOutside1Area")
+	else
+
+		InPlayer:SetNWString("VoiceLocalArea", "")
+	end
+
+	MsgN(InPlayer:GetNWString("VoiceLocalArea"))
+end
+
+function TryGiveRoleplayItem(InPlayer, InItemNameStr, InItemNumStr)
+
+	local ItemNum = util.StringToType(InItemNumStr, "int")
+
+	if ItemNum == nil then
+
+		return
+	end
+
+	local ItemName = string.lower(InItemNameStr)
+
+	local VariableName = ""
+
+	MsgN(ItemNum)
+
+	if ItemName == "wood" then
+
+		VariableName = "DetailWoodNum"
+
+	elseif ItemName == "metal" then
+
+		VariableName = "DetailMetalNum"
+
+	elseif ItemName == "picklock" then
+
+		VariableName = "PicklockNum"
+	end
+
+	if VariableName ~= "" then
+
+		local FinalItemNum = InPlayer:GetNWInt(VariableName) + ItemNum
+
+		InPlayer:SetNWInt(VariableName, math.Clamp(FinalItemNum, 0, 99))
+	end
+end
+
 function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if InText[1] ~= "/" then
@@ -100,6 +153,9 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:Spawn()
 
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
+
+			TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
 	end
 
 	return ""

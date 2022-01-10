@@ -26,7 +26,20 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 	elseif InListener:GetNWBool("bHasTalkie") and InTalker:GetNWBool("bUsingTalkie") then
 
 		return true, false
+
+	elseif InListener:GetNWString("VoiceLocalArea") ~= "" then
+
+		if InListener:GetNWString("VoiceLocalArea") == InTalker:GetNWString("VoiceLocalArea") then
+
+			return true, true
+		else
+
+			local bWithinDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()) < 3600
+
+			return bWithinDistance, true
+		end
 	else
+
 		local bWithinDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()) < 250000
 
 		return bWithinDistance, true

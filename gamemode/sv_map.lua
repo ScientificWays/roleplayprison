@@ -9,6 +9,9 @@ ControlSpeakerArea = {}
 WorkWoodArea = {}
 WorkMetalArea = {}
 
+LocalPunishmentArea = {}
+LocalOutside1Area = {}
+
 local bDayMapState = nil
 
 local OldLightStyle = ""
@@ -37,40 +40,43 @@ function UpdateMapLockablesState()
 
 	MsgN("Update map lockables state...")
 
-	local PotentialLockables = ents.FindByName("*Lockable")
+	local AllLockables = ents.FindByName("*Lockable")
 
-	--MsgN(table.ToString(PotentialLockables))
+	--MsgN(table.ToString(AllLockables))
 
-	for Index, SampleEntity in ipairs(PotentialLockables) do
+	for Index, SampleLockable in ipairs(AllLockables) do
 
-		local InputType = "Lock"
+		if SampleLockable:GetNWBool("bWasLocked") then
 
-		local bNewLockState = true
+			local InputType = "Lock"
 
-		if math.random() < 0.5 then
+			local bNewLockState = true
 
-			InputType = "Unlock"
+			if math.random() < 0.5 then
 
-			bNewLockState = false
-		end
+				InputType = "Unlock"
 
-		SampleEntity:Input(InputType)
+				bNewLockState = false
+			end
 
-		SampleEntity:SetNWBool("bWasLocked", bNewLockState)
+			SampleLockable:Input(InputType)
 
-		--MsgN(InputType)
+			SampleLockable:SetNWBool("bWasLocked", bNewLockState)
 
-		local SlaveDoorName = SampleEntity:GetInternalVariable("slavename") or ""
+			--MsgN(InputType)
 
-		if SlaveDoorName ~= "" then
+			local SlaveDoorName = SampleLockable:GetInternalVariable("slavename") or ""
 
-			local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+			if SlaveDoorName ~= "" then
 
-			if IsValid(SlaveDoorEntity) then
+				local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
 
-				SlaveDoorEntity:Input(InputType)
+				if IsValid(SlaveDoorEntity) then
 
-				SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+					SlaveDoorEntity:Input(InputType)
+
+					SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+				end
 			end
 		end
 	end
@@ -97,11 +103,19 @@ function SetupMapEntityFlags()
 
 			SampleEntity:SetNWBool("bShowHint", true)
 
+			SampleEntity:Input("Lock")
+
+			SampleEntity:SetNWBool("bWasLocked", true)
+
 		elseif string.EndsWith(SampleEntityName, "_OfficerLockable") then
 
 			SampleEntity:SetNWBool("bOfficerLockable", true)
 
 			SampleEntity:SetNWBool("bShowHint", true)
+
+			SampleEntity:Input("Lock")
+
+			SampleEntity:SetNWBool("bWasLocked", true)
 
 		elseif string.EndsWith(SampleEntityName, "_AllUser1") then
 
@@ -197,35 +211,43 @@ function SetupMapAreas()
 
 	MsgN("Setup map areas...")
 
-	local PotentialMonitorAreas = ents.FindByClass("trigger_multiple")
+	local PotentialAreas = ents.FindByClass("trigger_multiple")
 
-	for Index, SampleMonitorArea in ipairs(PotentialMonitorAreas) do
+	for Index, SampleArea in ipairs(PotentialAreas) do
 
-		local SampleMonitorAreaName = SampleMonitorArea:GetName()
+		local SampleAreaName = SampleArea:GetName()
 
-		if string.EndsWith(SampleMonitorAreaName, "_Officer_MonitorArea") then
+		if string.EndsWith(SampleAreaName, "_Officer_MonitorArea") then
 
-			OfficerMonitorArea = SampleMonitorArea
+			OfficerMonitorArea = SampleArea
 
-		elseif string.EndsWith(SampleMonitorAreaName, "_Control_MonitorArea") then
+		elseif string.EndsWith(SampleAreaName, "_Control_MonitorArea") then
 
-			ControlMonitorArea = SampleMonitorArea
+			ControlMonitorArea = SampleArea
 
-		elseif string.EndsWith(SampleMonitorAreaName, "_Library_MonitorArea") then
+		elseif string.EndsWith(SampleAreaName, "_Library_MonitorArea") then
 
-			LibraryMonitorArea = SampleMonitorArea
+			LibraryMonitorArea = SampleArea
 
-		elseif string.EndsWith(SampleMonitorAreaName, "_Control_SpeakerArea") then
+		elseif string.EndsWith(SampleAreaName, "_Control_SpeakerArea") then
 
-			ControlSpeakerArea = SampleMonitorArea
+			ControlSpeakerArea = SampleArea
 
-		elseif string.EndsWith(SampleMonitorAreaName, "_Work_WoodArea") then
+		elseif string.EndsWith(SampleAreaName, "_Work_WoodArea") then
 
-			WorkWoodArea = SampleMonitorArea
+			WorkWoodArea = SampleArea
 
-		elseif string.EndsWith(SampleMonitorAreaName, "_Work_MetalArea") then
+		elseif string.EndsWith(SampleAreaName, "_Work_MetalArea") then
 
-			WorkMetalArea = SampleMonitorArea
+			WorkMetalArea = SampleArea
+
+		elseif string.EndsWith(SampleAreaName, "_Punishment_Area") then
+
+			LocalPunishmentArea = SampleArea
+
+		elseif string.EndsWith(SampleAreaName, "_Outside1_Area") then
+
+			LocalOutside1Area = SampleArea
 		end
 	end
 end

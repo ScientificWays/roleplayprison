@@ -1,4 +1,4 @@
---Roleplay: Prison
+---- Roleplay: Prison
 
 AddCSLuaFile()
 
@@ -31,49 +31,130 @@ SWEP.AllowDelete            = false
 SWEP.AllowDrop              = false
 SWEP.NoSights               = true
 
-local function TryToggleLock(InPlayer, InInteractEntity)
+local function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
+
+	local InputType = "Unlock"
+
+	if bNewLockState then
+
+		InputType = "Lock"
+	end
+
+	InLockableEntity:Fire(InputType, nil, 0, InPlayer, InLockableEntity)
+
+	InLockableEntity:SetNWBool("bWasLocked", bNewLockState)
+
+	InLockableEntity:EmitSound("Town.d1_town_02_default_locked")
+
+	local SlaveDoorName = InLockableEntity:GetInternalVariable("slavename") or ""
+
+	if SlaveDoorName ~= "" then
+
+		local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+
+		--MsgN(SlaveDoorEntity:GetName())
+
+		if IsValid(SlaveDoorEntity) then
+
+			SlaveDoorEntity:Fire(InputType)
+
+			SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+		end
+	end
+end
+
+local function CanUsePicklock(InPlayer, InInteractEntity)
+
+	if InPlayer:GetNWInt("PicklockNum") > 0
+	and InInteractEntity:GetNWBool("bWasLocked")
+	and (InInteractEntity:GetNWBool("bGuardLockable")
+	or InInteractEntity:GetNWBool("bOfficerLockable")
+	or InInteractEntity:GetNWBool("bCellDoor")) then
+
+		return true, InInteractEntity
+	else
+
+		local InteractEntityParent = InteractEntity:GetParent()
+
+		if IsValid(InteractEntityParent) then
+
+			return CanUsePicklock(InPlayer, InteractEntityParent)
+		end
+	end
+
+	return false, nil
+end
+
+local function TryUsePicklock(InPlayer, InInteractEntity)
+
+	local bUsePicklock, FinalInteractEntity = CanUsePicklock(InPlayer, InInteractEntity)
+
+	if not bUsePicklock then
+
+		return false
+	end
+
+	if math.random() < UtilGetPicklockOpenChance() then
+
+		ChangeLockableState(InPlayer, FinalInteractEntity, false)
+	else
+
+		InPlayer:EmitSound("Door.Locked2")
+	end
+
+	if math.random() < UtilGetPicklockBreakChance() then
+
+		local PicklockNum = InPlayer:GetNWInt("PicklockNum")
+
+		InPlayer:SetNWInt("PicklockNum", PicklockNum - 1)
+	end
+
+	return true
+end
+
+local function CanToggleLock(InPlayer, InInteractEntity)
 
 	if InInteractEntity:GetNWBool("bGuardLockable")
-		or (InInteractEntity:GetNWBool("bOfficerLockable") and InPlayer:GetNWBool("bOfficer")) then
+	or (InInteractEntity:GetNWBool("bOfficerLockable") and InPlayer:GetNWBool("bOfficer")) then
 
-		local InputType = "Lock"
+		return true, InInteractEntity
+	else
 
-		local bNewLockState = true
+		local InteractEntityParent = InteractEntity:GetParent()
 
-		--print(InInteractEntity:GetNWBool("bWasLocked"))
+		if IsValid(InteractEntityParent) then
 
-		if InInteractEntity:GetNWBool("bWasLocked") then
-
-			InputType = "Unlock"
-
-			bNewLockState = false
+			return CanToggleLock(InPlayer, InteractEntityParent)
 		end
+	end
 
-		InInteractEntity:Fire(InputType, nil, 0, InPlayer, InInteractEntity)
+	return false, nil
+end
 
-		InInteractEntity:SetNWBool("bWasLocked", bNewLockState)
+local function TryToggleLock(InPlayer, InInteractEntity)
 
-		InInteractEntity:EmitSound("Town.d1_town_02_default_locked")
+	local bToggleLock, FinalInteractEntity = CanToggleLock(InPlayer, InInteractEntity)
 
-		local SlaveDoorName = InInteractEntity:GetInternalVariable("slavename") or ""
+	if not bToggleLock then
 
-		if SlaveDoorName ~= "" then
+		return false
+	end
 
-			local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+	local bNewLockState = true
 
-			--MsgN(SlaveDoorEntity:GetName())
+	if FinalInteractEntity:GetNWBool("bWasLocked") then
 
-			if IsValid(SlaveDoorEntity) then
+		bNewLockState = false
+	end
 
-				SlaveDoorEntity:Fire(InputType)
+	ChangeLockableState(InPlayer, FinalInteractEntity, bNewLockState)
 
-				SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
-			end
-		end
+	return true
+end
 
-		return true
+local function TryToggleUser1(InPlayer, InInteractEntity)
 
-	elseif InInteractEntity:GetNWBool("bGuardUser1") then
+	if InInteractEntity:GetNWBool("bGuardUser1") then
 
 		InInteractEntity:Fire("FireUser1", nil, 0, InPlayer, InInteractEntity)
 
@@ -83,7 +164,7 @@ local function TryToggleLock(InPlayer, InInteractEntity)
 	return false
 end
 
-local function TryImplementTask(InPlayer, InInteractEntity)
+--[[local function TryImplementTask(InPlayer, InInteractEntity)
 
 	local PlayerName = InPlayer:GetName()
 
@@ -95,7 +176,7 @@ local function TryImplementTask(InPlayer, InInteractEntity)
 	end
 
 	return false
-end
+end]]
 
 function SWEP:Initialize()
 
@@ -143,6 +224,11 @@ end
 
 function SWEP:SecondaryAttack()
 	
+	if CLIENT then
+
+		return
+	end
+
 	--MsgN("Unarmed secondary attack")
 
 	local PlayerOwner = self:GetOwner()
@@ -151,28 +237,44 @@ function SWEP:SecondaryAttack()
 
 	if EyeTrace.Fraction * 32768 > 128 then
 
-		MsgN("Eye trace was too far!")
+		--MsgN("Eye trace was too far!")
 
 		return
 	end
 
 	local InteractEntity = EyeTrace.Entity
 
-	if SERVER then
+	if IsValid(InteractEntity) then
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
-			if not TryToggleLock(PlayerOwner, InteractEntity) then
+			if CanToggleLock(PlayerOwner, InteractEntity) then
 
-				local InteractEntityParent = InteractEntity:GetParent()
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetToggleLockDuration(),
+						nil,
+						TryToggleLock)
 
-				if IsValid(InteractEntityParent) then
+				return
+			end
 
-					TryToggleLock(PlayerOwner, InteractEntityParent)
-				else
+			if TryToggleUser1(PlayerOwner, InteractEntity) then
 
-					TryImplementTask(PlayerOwner, InteractEntity)
-				end
+				return
+			end
+
+		elseif PlayerOwner:Team() == TEAM_ROBBER then
+
+			if CanUsePicklock(PlayerOwner, InteractEntity) then
+
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetPicklockUseDuration(),
+						nil,
+						TryUsePicklock)
+
+				return
 			end
 		end
 	end

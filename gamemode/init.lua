@@ -27,6 +27,20 @@ util.AddNetworkString("SendScheduleListToClients")
 
 util.AddNetworkString("UpdateClientLightmaps")
 
+function OnPlayerAreaUpdate()
+
+	for Index, SamplePlayer in ipairs(player.GetAll()) do
+
+		UpdatePlayerMonitorType(SamplePlayer)
+
+		UpdatePlayerSpeakerState(SamplePlayer)
+
+		UpdatePlayerVoiceArea(SamplePlayer)
+	end
+
+	UpdateWorkAreasState()
+end
+
 function GM:Initialize()
 
 	MsgN("Roleplay: Prison gamemode initializing...")
@@ -56,29 +70,16 @@ function GM:InitPostEntity()
 
 	--WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
 
+	timer.Create("PlayerAreaUpdate", 1.0, 0, OnPlayerAreaUpdate)
+
 	self.BaseClass:InitPostEntity()
 end
 
-function GM:Tick()
+--[[function GM:Tick()
 
-	if engine.TickCount() % 60 ~= 0 then
 
-		return
-	end
+end]]
 
-	for Index, SamplePlayer in ipairs(player.GetAll()) do
-
-		UpdatePlayerMonitorType(SamplePlayer)
-
-		UpdatePlayerSpeakerState(SamplePlayer)
-	end
-
-	UpdateWorkAreasState()
-end
-
---Зоны изменения множителя дальности звука (карцер)
 --Интерфейс вместо монитора
 --Система тревоги с освещением
 --Задержка включения камеры
---Громкоговоритель локальный на улице
---Отмычки ломаются с шансом 90%, дверь открывается с шансом 90%, открытие дверей камер

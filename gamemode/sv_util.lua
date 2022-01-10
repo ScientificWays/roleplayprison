@@ -57,6 +57,26 @@ function UtilGetServerRepairDuration()
 	return GetConVar("sk_server_repair_duration"):GetInt()
 end
 
+function UtilGetToggleLockDuration()
+
+	return GetConVar("sk_toggle_lock_duration"):GetInt()
+end
+
+function UtilGetPicklockUseDuration()
+
+	return GetConVar("sk_picklock_use_duration"):GetInt()
+end
+
+function UtilGetPicklockOpenChance()
+
+	return GetConVar("sk_picklock_open_chance"):GetInt()
+end
+
+function UtilGetPicklockBreakChance()
+
+	return GetConVar("sk_picklock_break_chance"):GetInt()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

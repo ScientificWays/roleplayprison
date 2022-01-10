@@ -129,5 +129,37 @@
 			"type"		"Numeric"
 			"default"	"30"
 		}
+		16
+		{
+			"name"		"sk_toggle_lock_duration"
+			"text"		"Guard toggle lock duration"
+			"help"		"Guard toggle lock duration in seconds"
+			"type"		"Numeric"
+			"default"	"2"
+		}
+		17
+		{
+			"name"		"sk_picklock_use_duration"
+			"text"		"Picklock use duration"
+			"help"		"Picklock use duration in seconds"
+			"type"		"Numeric"
+			"default"	"10"
+		}
+		18
+		{
+			"name"		"sk_picklock_open_chance"
+			"text"		"Picklock open chance"
+			"help"		"Picklock open chance"
+			"type"		"Numeric"
+			"default"	"0.9"
+		}
+		19
+		{
+			"name"		"sk_picklock_break_chance"
+			"text"		"Picklock break chance"
+			"help"		"Picklock break chance"
+			"type"		"Numeric"
+			"default"	"0.9"
+		}
 	}
 }

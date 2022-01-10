@@ -8,6 +8,7 @@ local IconMetal					= Material("vgui/rpp/icon_metal")
 local IconLocked				= Material("vgui/rpp/icon_locked")
 local IconUnlocked				= Material("vgui/rpp/icon_unlocked")
 local IconHand					= Material("vgui/rpp/icon_hand")
+local IconPicklock				= Material("vgui/rpp/icon_picklock")
 
 local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")
@@ -161,6 +162,14 @@ local function TryDrawInventory(InClient)
 	surface.SetTextPos(120, ScrH() - 240)
 
 	surface.DrawText(InClient:GetNWInt("DetailMetalNum"))
+	
+	surface.SetMaterial(IconPicklock)
+
+	surface.DrawTexturedRect(50, ScrH() - 300, 50, 50)
+
+	surface.SetTextPos(120, ScrH() - 290)
+
+	surface.DrawText(InClient:GetNWInt("PicklockNum"))
 end
 
 local function TryDrawHUDHintData(InClient)
@@ -302,6 +311,11 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		elseif InTargetEntity:GetNWBool("bServerSabotage") and not InTargetEntity:GetNWBool("bSabotaged") then
 
 			SetHUDHintDataServerSabotage(true)
+
+		elseif (InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable"))
+			and InPlayer:GetNWInt("PicklockNum") > 0 then
+
+			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
 		end
 	end
 end
