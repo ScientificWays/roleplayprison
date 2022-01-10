@@ -349,6 +349,9 @@ function GM:HUDPaint()
 	if not TryDrawTaskTime(Client) then
 
 		TryDrawHUDHintData(Client)
+	else
+
+		ResetHUDHintData()
 	end
 end
 

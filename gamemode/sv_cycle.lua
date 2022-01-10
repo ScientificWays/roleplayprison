@@ -33,6 +33,8 @@ end
 
 function ServerResetScheduleList()
 
+	local WorldEntity = game.GetWorld()
+
 	WorldEntity:SetNWBool("bScheduleSet", false)
 
 	table.Empty(ServerScheduleList)

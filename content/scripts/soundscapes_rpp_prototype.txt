@@ -1,0 +1,309 @@
+"rpp_prototype.util_Flies"
+{
+	"playrandom"
+	{
+		"time"		"30, 60"
+		"volume"	"0.35, 0.6"
+		"pitch"		"95, 105"
+		"position"	"random"
+		"soundlevel"	"SNDLVL_140db"
+
+		"rndwave"
+		{
+			"wave"	"ambient\creatures\flies1.wav"
+			"wave"	"ambient\creatures\flies2.wav"
+			"wave"	"ambient\creatures\flies3.wav"
+			"wave"	"ambient\creatures\flies4.wav"
+			"wave"	"ambient\creatures\flies5.wav"
+		}
+	
+	}
+}
+"rpp_prototype.util_WoodCreak"
+{
+	"playrandom"
+	{
+		"time"		"15, 45"
+		"volume"	"0.35, 0.6"
+		"pitch"		"95, 105"
+		"position"	"random"
+		"soundlevel"	"SNDLVL_140db"
+
+		"rndwave"
+		{
+			"wave"	"ambient/materials/wood_creak1.wav"
+			"wave"	"ambient/materials/wood_creak2.wav"
+			"wave"	"ambient/materials/wood_creak3.wav"
+			"wave"	"ambient/materials/wood_creak4.wav"
+			"wave"	"ambient/materials/wood_creak5.wav"
+			"wave"	"ambient/materials/wood_creak6.wav"
+			"wave"	"ambient/materials/shutter6.wav"
+			"wave"	"ambient/materials/shutter7.wav"
+			"wave"	"ambient/materials/shutter8.wav"
+		}
+	
+	}
+}
+"rpp_prototype.util_WindGusts"
+{
+	"playrandom"
+	{
+		"volume"	"0.1, 0.2"
+		"time"		"10, 30"
+		"pitch"		"90, 130"
+		"soundlevel"	"SNDLVL_140dB"
+		"position"	"random"
+		"rndwave"
+		{
+			"wave" "ambient/wind/wind_snippet1.wav"
+			"wave" "ambient/wind/wind_snippet2.wav"
+			"wave" "ambient/wind/wind_snippet3.wav"
+			"wave" "ambient/wind/wind_snippet4.wav"
+			"wave" "ambient/wind/wind_snippet5.wav"
+		}
+	}
+}
+"rpp_prototype.util_Cavehits"
+{
+	"playrandom"
+	{
+		"time"		"50, 100"
+		"volume"	"0.3, 0.4"
+		"pitch"		"95, 105"
+
+		"rndwave"
+		{
+			"wave"	"ambient\atmosphere\cave_hit1.wav"
+			"wave"	"ambient\atmosphere\cave_hit2.wav"
+			"wave"	"ambient\atmosphere\cave_hit3.wav"
+			"wave"	"ambient\atmosphere\cave_hit4.wav"
+			"wave"	"ambient\atmosphere\cave_hit5.wav"
+			"wave"	"ambient\atmosphere\cave_hit6.wav"
+		}
+	
+	}
+}
+"rpp_prototype.PrisonHall"
+{
+
+	"dsp"	"19"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.25"
+		"wave"		"ambient\atmosphere\corridor.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Flies"
+		"volume"	"1.0"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"1.0"
+	}
+}
+"rpp_prototype.PrisonHallLarge"
+{
+
+	"dsp"	"19"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.25"
+		"wave"		"ambient\atmosphere\ambience_base.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_WindGusts"
+		"volume"	"0.5"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"1.0"
+	}
+}
+"rpp_prototype.PrisonRoom"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.2"
+		"wave"		"ambient\atmosphere\quiet_cellblock_amb.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Flies"
+		"volume"	"1.0"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"0.4"
+	}
+}
+"rpp_prototype.PrisonLibrary"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.1"
+		"wave"		"ambient\atmosphere\quiet_cellblock_amb.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"0.2"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_WoodCreak"
+		"volume"	"1.0"
+	}
+}
+"rpp_prototype.PrisonShower"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.4"
+		"wave"		"ambient\atmosphere\laundry_amb.wav"
+		"pitch"		"100"
+		"position"	"0"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"0.6"
+	}
+}
+"rpp_prototype.PrisonCell"
+{
+
+	"dsp"	"8"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.1"
+		"wave"		"ambient\atmosphere\quiet_cellblock_amb.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Flies"
+		"volume"	"1.0"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"0.6"
+	}
+}
+"rpp_prototype.PrisonVent"
+{
+
+	"dsp"	"2"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.5"
+		"wave"		"ambient\wind\wasteland_wind.wav"
+		"pitch"		"100"
+	}
+	"playlooping"
+	{
+		"volume"	"1"
+		"wave"		"ambient\machines\city_ventpump_loop1.wav"
+		"pitch"		"100"
+		"position"	"0"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_Cavehits"
+		"volume"	"0.8"
+	}
+}
+"rpp_prototype.PrisonOutdoor"
+{
+
+	"dsp"	"22"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.8"
+		"wave"		"ambient\construct_tone.wav"
+		"pitch"		"100"
+	}
+	"playsoundscape"
+	{
+		"name"		"rpp_prototype.util_WindGusts"
+		"volume"	"1.0"
+	}
+}
+"rpp_prototype.PrisonCleanCorridor"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.4"
+		"wave"		"ambient\atmosphere\underground_hall_loop1.wav"
+		"pitch"		"100"
+	}
+}
+"rpp_prototype.PrisonTechRoom"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.4"
+		"wave"		"ambient\atmosphere\indoor1.wav"
+		"pitch"		"100"
+		"position"	"0"
+	}
+	"playlooping"
+	{
+		"volume"	"0.4"
+		"wave"		"ambient\machines\lab_loop1.wav"
+		"pitch"		"100"
+		"position"	"1"
+	}
+}
+"rpp_prototype.PrisonCleanRoom"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.2"
+		"wave"		"ambient\atmosphere\engine_room.wav"
+		"pitch"		"100"
+	}
+}

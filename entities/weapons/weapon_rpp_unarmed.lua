@@ -114,13 +114,19 @@ end
 
 local function CanToggleLock(InPlayer, InInteractEntity)
 
-	if InInteractEntity:GetNWBool("bGuardLockable")
-	or (InInteractEntity:GetNWBool("bOfficerLockable") and InPlayer:GetNWBool("bOfficer")) then
+	if InInteractEntity:GetNWBool("bGuardLockable") then
 
 		return true, InInteractEntity
+
+	elseif InInteractEntity:GetNWBool("bOfficerLockable") then
+
+		if InPlayer:GetNWBool("bOfficer") then
+
+			return true, InInteractEntity
+		end
 	else
 
-		local InteractEntityParent = InteractEntity:GetParent()
+		local InteractEntityParent = InInteractEntity:GetParent()
 
 		if IsValid(InteractEntityParent) then
 
@@ -248,6 +254,11 @@ function SWEP:SecondaryAttack()
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
+			if TryToggleUser1(PlayerOwner, InteractEntity) then
+
+				return
+			end
+
 			if CanToggleLock(PlayerOwner, InteractEntity) then
 
 				OnImplementTaskStart(PlayerOwner,
@@ -255,11 +266,6 @@ function SWEP:SecondaryAttack()
 						UtilGetToggleLockDuration(),
 						nil,
 						TryToggleLock)
-
-				return
-			end
-
-			if TryToggleUser1(PlayerOwner, InteractEntity) then
 
 				return
 			end
@@ -282,7 +288,9 @@ end
 
 function SWEP:Reload()
 	
-	
+	local PlayerOwner = self:GetOwner()
+
+	PlayerOwner:AnimRestartGesture(GESTURE_SLOT_CUSTOM, ACT_GMOD_TAUNT_CHEER, true)
 end
 
 function SWEP:Deploy()

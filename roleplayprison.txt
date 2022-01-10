@@ -135,7 +135,7 @@
 			"text"		"Guard toggle lock duration"
 			"help"		"Guard toggle lock duration in seconds"
 			"type"		"Numeric"
-			"default"	"2"
+			"default"	"1"
 		}
 		17
 		{
