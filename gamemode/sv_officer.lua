@@ -148,7 +148,7 @@ function SetOfficerPlayer(InPlayer)
 
 	if InPlayer:Team() ~= TEAM_GUARD then
 
-		MsgN("Попытка сделать офицером не охранника! Отмена...")
+		PrintMessage(HUD_PRINTTALK, "Попытка сделать офицером не охранника! Отмена...")
 
 		return
 	end

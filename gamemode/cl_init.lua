@@ -42,6 +42,13 @@ surface.CreateFont( 'msg', {
 	size = 17,
 } )
 
+surface.CreateFont( 'txt', {
+	font = 'Tahoma',
+	extended = true,
+	weight = 500,
+	size = 17,
+} )
+
 function GM:Initialize()
 
 	MsgN("RPP Client initializing...")

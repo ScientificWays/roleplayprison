@@ -1,5 +1,15 @@
 ---- Roleplay: Prison
 
+local MainRoleFrame = nil
+local SubRoleFrame = nil
+
+local MainFrameWidth, MainFrameHeight = 250, 300
+local SubFrameWidth, SubFrameHeight = 200, 200
+
+local MainRoleList = {[1] = true, [2] = true}
+
+local SubRoleList = {[1] = {"Охранник"}, [2] = {"Заключенный"}}
+
 function TeamCanBePicked(TeamID)
 
 	if TeamID == TEAM_GUARD then
@@ -18,68 +28,234 @@ end
 
 function GM:ShowTeam()
 
-	if (IsValid(self.TeamSelectFrame)) then return end
-	
-	self.TeamSelectFrame = vgui.Create("DFrame")
+	if IsValid(MainRoleFrame) then
 
-	self.TeamSelectFrame:SetTitle("Выбор роли")
-	
+		return
+	end
+
+	MainRoleFrame = vgui.Create("DFrame")
+
+	MainRoleFrame:SizeTo(MainFrameWidth, MainFrameHeight, 1.5, 0, 0.1)
+
+	MainRoleFrame:SetPos(10, ScrH() / 2 - MainFrameHeight / 2)
+
+	MainRoleFrame:SetTitle("")
+
+	MainRoleFrame:SetDraggable(false)
+
+	MainRoleFrame:ShowCloseButton(false)
+
+	MainRoleFrame:MakePopup()
+
+	MainRoleFrame.Paint = function(self, w, h)
+
+		DrawBlur(self, 3)
+
+		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, false, true, false)
+
+		draw.SimpleText('Выбрать роль', 'title',
+			MainFrameWidth / 2, 12, Color(255, 255, 255, 255),
+			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+		draw.RoundedBoxEx(0, 0, 20, w, 5, Color(255, 255, 255), true, true, true, true)
+	end
+
+	local PickRoleScrollPanel = vgui.Create('DScrollPanel', MainRoleFrame)
+
+	PickRoleScrollPanel:Dock(FILL)
+
+	local PickRoleScrollBar = PickRoleScrollPanel:GetVBar()
+
+	PickRoleScrollBar.Paint = function() end
+
+	function PickRoleScrollBar.btnUp:Paint(h, i)
+
+		draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+	end
+		
+	function PickRoleScrollBar.btnDown:Paint(h, i)
+
+		draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+	end
+
+	function PickRoleScrollBar.btnGrip:Paint(h, i)
+
+		draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+	end
+
 	local AllTeams = team.GetAllTeams()
 
-	local y = 30
+	for ID, TeamInfo in pairs(AllTeams) do
 
-	for ID, TeamInfo in pairs (AllTeams) do
-	
-		if (ID ~= TEAM_CONNECTING && ID ~= TEAM_UNASSIGNED) then
-	
-			local Team = vgui.Create("DButton", self.TeamSelectFrame)
+		if MainRoleList[ID] ~= nil then 
 
-			function Team.DoClick()
+			local MainRoleButton = PickRoleScrollPanel:Add('DButton')
 
-				if TeamCanBePicked(ID) then
+			MainRoleButton:SetSize(10, 50)
 
-					self:HideTeam()
+			MainRoleButton:Dock(TOP)
 
-					RunConsoleCommand("changeteam", ID)
+			MainRoleButton:DockMargin(0, 5, 0, 5)
+
+			MainRoleButton:SetText("")
+
+			MainRoleButton.lerp = 0
+
+			MainRoleButton.Paint = function(self, w, h)
+
+				draw.RoundedBoxEx(10, 0, 0, w, h, Color(30, 30, 30, 200), true, true, true, true)
+
+				if self:IsHovered() then
+
+					self.lerp = Lerp(FrameTime() * 6, self.lerp, 10)
+
+					draw.RoundedBoxEx(10, 0, 0, self.lerp, h, Color(116, 0, 255, 255), true, false, true, false)
+				else
+					self.lerp = Lerp(FrameTime() * 6, self.lerp, 0)
+
+					draw.RoundedBoxEx(10, 0, 0, self.lerp, h, Color(116, 0, 255, 255), true, false, true, false)
+				end
+
+				draw.SimpleText(team.GetName(ID), 'txt', MainFrameWidth/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			end
+
+			MainRoleButton.DoClick = function()
+
+				if SubRoleList[ID] ~= nil then
+					
+					if SubRoleFrame ~= nil then
+
+						SubRoleFrame:Remove()
+					end
+
+					SubRoleFrame = vgui.Create("DFrame")
+
+					SubRoleFrame:SetPos(10 + MainFrameWidth, ScrH() / 2 - MainFrameHeight / 2)
+
+					SubRoleFrame:SetSize(0, 0)
+
+					SubRoleFrame:SizeTo(SubFrameWidth, SubFrameHeight, 1.5, 0, 0.1)
+
+					SubRoleFrame:SetTitle("")
+
+					SubRoleFrame:SetDraggable(false)
+
+					SubRoleFrame:ShowCloseButton(true)
+
+					SubRoleFrame.Paint = function(self, w, h)
+
+						DrawBlur(self, 3)
+
+						draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), false, true, false, true)
+
+						--draw.SimpleText('Выбрать роль', 'title', ws2/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+						draw.RoundedBoxEx(0, 0, 20, w, 5, Color(255, 255, 255), true, true, true, true)
+					end
+
+					local SubRoleScrollPanel = vgui.Create('DScrollPanel', SubRoleFrame)
+
+					SubRoleScrollPanel:Dock(FILL)
+
+					local ScrollBar = SubRoleScrollPanel:GetVBar()
+
+					ScrollBar.Paint = function() end
+
+					function ScrollBar.btnUp:Paint(h, i)
+
+						draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+					end
+						
+					function ScrollBar.btnDown:Paint(h, i)
+
+						draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+					end
+
+					function ScrollBar.btnGrip:Paint(h, i)
+
+						draw.RoundedBox(0, 0, 0, h, i, Color(0, 0, 0, 200))
+					end
+
+					for Index, SampleSubRole in ipairs(SubRoleList[ID]) do
+
+						local SubRoleButton = SubRoleScrollPanel:Add('DButton')
+
+						SubRoleButton:SetSize(SubFrameWidth, 50)
+
+						SubRoleButton:Dock(TOP)
+
+						SubRoleButton:DockMargin(0, 5, 0, 5)
+
+						SubRoleButton:SetText("")
+
+						SubRoleButton.LerpValue = 0
+
+						SubRoleButton.Paint = function(self, w, h)
+
+							draw.RoundedBoxEx(10, 0, 0, w, h, Color(30, 30, 30, 200), true, true, true, true)
+
+							if self:IsHovered() then
+
+								self.LerpValue = Lerp(FrameTime() * 6, self.LerpValue, 10)
+
+								draw.RoundedBoxEx(10, 0, 0, self.LerpValue, h, Color(116, 0, 255, 255), true, false, true, false)
+							else
+								self.LerpValue = Lerp(FrameTime() * 6, self.LerpValue, 0)
+
+								draw.RoundedBoxEx(10, 0, 0, self.LerpValue, h, Color(116, 0, 255, 255), true, false, true, false)
+							end
+
+							draw.SimpleText(SampleSubRole, 'txt', SubFrameWidth / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+						end
+
+						SubRoleButton.DoClick = function()
+
+							if TeamCanBePicked(ID) then
+
+								self:HideTeam()
+
+								RunConsoleCommand("changeteam", ID)
+							end
+						end
+					end
+				else
+
+					MsgN(string.format("SubRole is empty for %s!", team.GetName(ID)))
 				end
 			end
-
-			Team:SetPos(10, y)
-
-			Team:SetSize(200, 20)
-
-			Team:SetText(TeamInfo.Name)
-			
-			if (IsValid(LocalPlayer()) && LocalPlayer():Team() == ID) then
-
-				Team:SetDisabled(true)
-			end
-			
-			y = y + 30
 		end
-		
 	end
-	
-	self.TeamSelectFrame:SetSize(220, y)
-
-	self.TeamSelectFrame:Center()
-
-	self.TeamSelectFrame:MakePopup()
-
-	self.TeamSelectFrame:SetKeyboardInputEnabled( false )
-
 end
 
---[[---------------------------------------------------------
-   Name: gamemode:HideTeam()
-   Desc:
------------------------------------------------------------]]
 function GM:HideTeam()
 
-	if IsValid(self.TeamSelectFrame) then
+	--MsgN("HideTeam()")
 
-		self.TeamSelectFrame:Remove()
+	if IsValid(SubRoleFrame) then
 
-		self.TeamSelectFrame = nil
+		--MsgN("Valid SubRoleFrame")
+
+		SubRoleFrame:SizeTo(0, 0, 0.9, 0, 0.1)
+
+		timer.Simple(0.4, function()
+
+			SubRoleFrame:Remove()
+
+			SubRoleFrame = nil
+		end)
+	end
+
+	if IsValid(MainRoleFrame) then
+
+		--MsgN("Valid MainRoleFrame")
+
+		MainRoleFrame:SizeTo(0, 0, 0.9, 0.2, 0.1)
+
+		timer.Simple(0.7, function()
+
+			MainRoleFrame:Remove()
+
+			MainRoleFrame = nil
+		end)
 	end
 end

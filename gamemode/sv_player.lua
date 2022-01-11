@@ -52,7 +52,7 @@ function UpdatePlayerVoiceArea(InPlayer)
 		InPlayer:SetNWString("VoiceLocalArea", "")
 	end
 
-	MsgN(InPlayer:GetNWString("VoiceLocalArea"))
+	--MsgN(InPlayer:GetNWString("VoiceLocalArea"))
 end
 
 function TryGiveRoleplayItem(InPlayer, InItemNameStr, InItemNumStr)

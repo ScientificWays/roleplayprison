@@ -3,6 +3,7 @@ GM.Author = "Albert Bagautdinov"
 GM.Email = "albert.bagautdinov03@mail.ru"
 GM.Website = "N/A"
 GM.TeamBased = true
+GM.SecondsBetweenTeamSwitches = 0
 
 COLOR_WHITE  = Color(255, 255, 255, 255)
 COLOR_BLACK  = Color(0, 0, 0, 255)
@@ -120,7 +121,7 @@ function GM:CreateTeams()
 	team.SetSpawnPoint(TEAM_STAFF, {"info_staff_start"})
 	team.SetClass(TEAM_STAFF, {"player_default"})
 
-	team.SetUp(TEAM_SPECTATOR, "Наблюдение", Color(255, 255, 255))
+	team.SetUp(TEAM_SPECTATOR, "Наблюдатели", Color(255, 255, 255))
 	team.SetSpawnPoint(TEAM_SPECTATOR, {"worldspawn"})
 end
 
