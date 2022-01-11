@@ -300,10 +300,9 @@
 	"dsp"	"18"
 	"dsp_volume" "1.0"
 
-	"playlooping"
+	"playsoundscape"
 	{
-		"volume"	"0.2"
-		"wave"		"ambient\atmosphere\engine_room.wav"
-		"pitch"		"100"
+		"name"		"rpp_prototype.util_WoodCreak"
+		"volume"	"0.5"
 	}
 }
