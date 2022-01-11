@@ -76,7 +76,7 @@ end
 -----------------------------------------------------------]]
 function GM:HideTeam()
 
-	if (IsValid(self.TeamSelectFrame)) then
+	if IsValid(self.TeamSelectFrame) then
 
 		self.TeamSelectFrame:Remove()
 

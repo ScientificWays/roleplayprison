@@ -21,6 +21,27 @@ surface.CreateFont("HUDTextSmall", {font = "Tahoma",
 									size = 18,
 									weight = 700})
 
+surface.CreateFont( 'closebtn', {
+	font = 'Tahoma',
+	extended = true,
+	weight = 500,
+	size = 20,
+} )
+
+surface.CreateFont( 'title', {
+	font = 'Tahoma',
+	extended = true,
+	weight = 600,
+	size = 15,
+} )
+
+surface.CreateFont( 'msg', {
+	font = 'Tahoma',
+	extended = true,
+	weight = 500,
+	size = 17,
+} )
+
 function GM:Initialize()
 
 	MsgN("RPP Client initializing...")
