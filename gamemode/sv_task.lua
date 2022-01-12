@@ -157,14 +157,6 @@ function DisableGuardAccountingTask(InGuardPlayer)
 	end
 end
 
-function CancelGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
-
-	MsgN("CancelGuardAccountingTask()")
-
-
-
-end
-
 function FinishGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
 
 	MsgN("FinishGuardAccountingTask()")
@@ -172,13 +164,6 @@ function FinishGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
 	DisableGuardAccountingTask(InGuardPlayer)
 
 	UpdateGuardRoutine(InGuardPlayer:GetName())
-end
-
-function CancelRobberWorkTask(InRobberPlayer, InTaskStartEntity)
-
-	MsgN("CancelRobberWorkTask()")
-
-	
 end
 
 function FinishRobberWorkTask(InRobberPlayer, InTaskStartEntity)

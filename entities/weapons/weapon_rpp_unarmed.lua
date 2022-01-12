@@ -65,7 +65,8 @@ end
 
 local function CanUsePicklock(InPlayer, InInteractEntity)
 
-	if InPlayer:GetNWInt("PicklockNum") > 0
+	if not InPlayer:GetNWBool("bHandcuffed")
+	and InPlayer:GetNWInt("PicklockNum") > 0
 	and InInteractEntity:GetNWBool("bWasLocked")
 	and (InInteractEntity:GetNWBool("bGuardLockable")
 	or InInteractEntity:GetNWBool("bOfficerLockable")
@@ -74,7 +75,7 @@ local function CanUsePicklock(InPlayer, InInteractEntity)
 		return true, InInteractEntity
 	else
 
-		local InteractEntityParent = InteractEntity:GetParent()
+		local InteractEntityParent = InInteractEntity:GetParent()
 
 		if IsValid(InteractEntityParent) then
 
@@ -91,7 +92,7 @@ local function TryUsePicklock(InPlayer, InInteractEntity)
 
 	if not bUsePicklock then
 
-		return false
+		return
 	end
 
 	if math.random() < UtilGetPicklockOpenChance() then
@@ -99,7 +100,7 @@ local function TryUsePicklock(InPlayer, InInteractEntity)
 		ChangeLockableState(InPlayer, FinalInteractEntity, false)
 	else
 
-		InPlayer:EmitSound("Door.Locked2")
+		InPlayer:EmitSound("Metal_Box.BulletImpact")
 	end
 
 	if math.random() < UtilGetPicklockBreakChance() then
@@ -108,8 +109,6 @@ local function TryUsePicklock(InPlayer, InInteractEntity)
 
 		InPlayer:SetNWInt("PicklockNum", PicklockNum - 1)
 	end
-
-	return true
 end
 
 local function CanToggleLock(InPlayer, InInteractEntity)
@@ -143,7 +142,7 @@ local function TryToggleLock(InPlayer, InInteractEntity)
 
 	if not bToggleLock then
 
-		return false
+		return
 	end
 
 	local bNewLockState = true
@@ -154,8 +153,6 @@ local function TryToggleLock(InPlayer, InInteractEntity)
 	end
 
 	ChangeLockableState(InPlayer, FinalInteractEntity, bNewLockState)
-
-	return true
 end
 
 local function TryToggleUser1(InPlayer, InInteractEntity)
@@ -168,6 +165,94 @@ local function TryToggleUser1(InPlayer, InInteractEntity)
 	end
 
 	return false
+end
+
+local function CanHandcuffsOn(InPlayer, InInteractEntity)
+
+	return InInteractEntity:IsPlayer() 
+	and InInteractEntity:Team() == TEAM_ROBBER
+	and not InInteractEntity:GetNWBool("bHandcuffed")
+end
+
+local function TryHandcuffsOn(InPlayer, InInteractEntity)
+
+	if not CanHandcuffsOn(InPlayer, InInteractEntity) then
+
+		return
+	end
+
+	OnPlayerHandcuffsOn(InPlayer)
+
+	UtilChangePlayerFreeze(InInteractEntity, false)
+end
+
+local function CanHandcuffsOff(InPlayer, InInteractEntity)
+
+	return InInteractEntity:IsPlayer() 
+	and InInteractEntity:Team() == TEAM_ROBBER
+	and InInteractEntity:GetNWBool("bHandcuffed")
+end
+
+local function TryHandcuffsOff(InPlayer, InInteractEntity)
+
+	if not CanHandcuffsOff(InPlayer, InInteractEntity) then
+
+		return
+	end
+
+	OnPlayerHandcuffsOff(InPlayer)
+
+	UtilChangePlayerFreeze(InInteractEntity, false)
+end
+
+local function CanInspect(InPlayer, InInteractEntity)
+
+	return InInteractEntity:IsPlayer() 
+	and InInteractEntity:Team() == TEAM_ROBBER
+end
+
+local function TryInspect(InPlayer, InInteractEntity)
+
+	if not CanInspect(InPlayer, InInteractEntity) then
+
+		return
+	end
+
+	UtilChangePlayerFreeze(InInteractEntity, false)
+end
+
+local function TryToggleKidnap(InPlayer, InInteractEntity)
+
+	if not InInteractEntity:GetNWBool("bHandcuffed") then
+
+		return false
+	end
+
+	local CurrentKidnapper = InInteractEntity:GetNWEntity("Kidnapper", nil)
+
+	if IsValid(CurrentKidnapper) then
+
+		InInteractEntity:SetNWEntity("Kidnapper", nil)
+
+		timer.Remove(string.format("%s_kidnap", InInteractEntity:GetName()))
+
+		MsgN(string.format("Release %s from %s", InInteractEntity:GetName(), InPlayer:GetName()))
+	else
+
+		InInteractEntity:SetNWEntity("Kidnapper", InPlayer)
+
+		timer.Create(string.format("%s_kidnap", InInteractEntity:GetName()), 0.5, 0, function()
+
+			if InInteractEntity:GetPos():DistToSqr(InPlayer:GetPos()) > 9216.0 then
+
+				TryToggleKidnap(InPlayer, InInteractEntity)
+			end
+		end)
+
+		MsgN(string.format("%s kidnapped %s", InPlayer:GetName(), InInteractEntity:GetName()))
+	end
+
+	return true
 end
 
 --[[local function TryImplementTask(InPlayer, InInteractEntity)
@@ -204,24 +289,35 @@ end
 
 function SWEP:PrimaryAttack()
 
+	if CLIENT then
+
+		return
+	end
+
 	local PlayerOwner = self:GetOwner()
 
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
 
-		MsgN("Eye trace was too far!")
+		--MsgN("Eye trace was too far!")
 
 		return
 	end
 
 	local InteractEntity = EyeTrace.Entity
 
-	if SERVER then
+	if IsValid(InteractEntity) then
 
-		local InteractEntityClass = InteractEntity:GetClass()
+		if PlayerOwner:Team() == TEAM_GUARD then
 
-		if InteractEntityClass == "prop_door_rotating" then
+			if TryToggleKidnap() then
+
+				return
+			end
+		end
+
+		if InteractEntity:GetClass() == "prop_door_rotating" then
 
 			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock")
 		end
@@ -259,13 +355,54 @@ function SWEP:SecondaryAttack()
 				return
 			end
 
-			if CanToggleLock(PlayerOwner, InteractEntity) then
+			local bToggleLock, FinalInteractEntity = CanToggleLock(PlayerOwner, InteractEntity)
+
+			if bToggleLock then
 
 				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
+						FinalInteractEntity,
 						UtilGetToggleLockDuration(),
 						nil,
 						TryToggleLock)
+
+				return
+			end
+
+			if CanHandcuffsOn(PlayerOwner, InteractEntity) then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetHandcuffsOnDuration(),
+						function() UtilChangePlayerFreeze(InteractEntity, false) end,
+						TryHandcuffsOn)
+
+				return
+			end
+
+			if CanHandcuffsOff(PlayerOwner, InteractEntity) then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetHandcuffsOffDuration(),
+						function() UtilChangePlayerFreeze(InteractEntity, false) end,
+						TryHandcuffsOff)
+
+				return
+			end
+
+			if CanInspect(PlayerOwner, InteractEntity) then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetInspectionDuration(),
+						function() UtilChangePlayerFreeze(InteractEntity, false) end,
+						TryInspect)
 
 				return
 			end

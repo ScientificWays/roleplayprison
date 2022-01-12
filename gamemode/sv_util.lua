@@ -69,12 +69,27 @@ end
 
 function UtilGetPicklockOpenChance()
 
-	return GetConVar("sk_picklock_open_chance"):GetInt()
+	return GetConVar("sk_picklock_open_chance"):GetFloat()
 end
 
 function UtilGetPicklockBreakChance()
 
-	return GetConVar("sk_picklock_break_chance"):GetInt()
+	return GetConVar("sk_picklock_break_chance"):GetFloat()
+end
+
+function UtilGetHandcuffsOnDuration()
+
+	return GetConVar("sk_handcuffs_on_duration"):GetInt()
+end
+
+function UtilGetHandcuffsOffDuration()
+
+	return GetConVar("sk_handcuffs_off_duration"):GetInt()
+end
+
+function UtilGetInspectionDuration()
+
+	return GetConVar("sk_inspection_duration"):GetInt()
 end
 
 function UtilCheckPlayerInArea(InPlayer, InArea)
@@ -98,4 +113,27 @@ function UtilCheckPlayerInArea(InPlayer, InArea)
 	end
 
 	return false
+end
+
+function UtilChangePlayerFreeze(InPlayer, bAddFreeze)
+
+	InPlayer.FreezeNum = InPlayer.FreezeNum or 0
+
+	if bAddFreeze then
+
+		InPlayer.FreezeNum = InPlayer.FreezeNum + 1
+	else
+
+		InPlayer.FreezeNum = InPlayer.FreezeNum - 1
+	end
+
+	if InPlayer.FreezeNum <= 0 then
+
+		InPlayer.FreezeNum = 0
+
+		InPlayer:Freeze(false)
+	else
+
+		InPlayer:Freeze(true)
+	end
 end

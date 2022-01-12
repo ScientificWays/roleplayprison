@@ -161,5 +161,29 @@
 			"type"		"Numeric"
 			"default"	"0.9"
 		}
+		20
+		{
+			"name"		"sk_handcuffs_on_duration"
+			"text"		"Handcuffs on duration"
+			"help"		"Handcuffs on duration in seconds"
+			"type"		"Numeric"
+			"default"	"2"
+		}
+		21
+		{
+			"name"		"sk_handcuffs_off_duration"
+			"text"		"Handcuffs off duration"
+			"help"		"Handcuffs off duration in seconds"
+			"type"		"Numeric"
+			"default"	"5"
+		}
+		22
+		{
+			"name"		"sk_inspection_duration"
+			"text"		"Inspection duration"
+			"help"		"Inspection duration in seconds"
+			"type"		"Numeric"
+			"default"	"10"
+		}
 	}
 }

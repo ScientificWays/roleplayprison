@@ -4,11 +4,13 @@ local bHideHUD = false
 
 local IconWood					= Material("vgui/rpp/icon_wood")
 local IconMetal					= Material("vgui/rpp/icon_metal")
+local IconHandcuffs				= Material("vgui/rpp/icon_handcuffs")
 --local IconDressRobber			= Material("vgui/rpp/icon_dress_robber")
 local IconLocked				= Material("vgui/rpp/icon_locked")
 local IconUnlocked				= Material("vgui/rpp/icon_unlocked")
 local IconHand					= Material("vgui/rpp/icon_hand")
 local IconPicklock				= Material("vgui/rpp/icon_picklock")
+local IconKnock					= Material("vgui/rpp/icon_knock")
 
 local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")
@@ -29,6 +31,8 @@ local function SetHUDHintDataScheduleSetup()
 	HUDHintData.Icon = IconScheduleSetup
 
 	HUDHintData.Text = "Редактирование расписания"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataCellsButton()
@@ -36,6 +40,8 @@ local function SetHUDHintDataCellsButton()
 	HUDHintData.Icon = IconCellsButton
 
 	HUDHintData.Text = "Управление камерами"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataAlarmButton()
@@ -43,6 +49,8 @@ local function SetHUDHintDataAlarmButton()
 	HUDHintData.Icon = IconAlarmButton
 
 	HUDHintData.Text = "Кнопка тревоги"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataGlobalSpeakerButton()
@@ -50,6 +58,8 @@ local function SetHUDHintDataGlobalSpeakerButton()
 	HUDHintData.Icon = IconGlobalSpeakerButton
 
 	HUDHintData.Text = "Громкоговоритель"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataLockable(bWasLocked)
@@ -67,6 +77,8 @@ local function SetHUDHintDataLockable(bWasLocked)
 	HUDHintData.IconColor = COLOR_YELLOW
 
 	HUDHintData.Text = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataUsable()
@@ -76,6 +88,8 @@ local function SetHUDHintDataUsable()
 	HUDHintData.IconColor = COLOR_YELLOW
 
 	HUDHintData.Text = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataGuardTask(InImplementerName, InNowImplemetingBy)
@@ -89,6 +103,8 @@ local function SetHUDHintDataGuardTask(InImplementerName, InNowImplemetingBy)
 
 		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
 	end
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
@@ -108,6 +124,8 @@ local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
 
 		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
 	end
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
@@ -121,6 +139,8 @@ local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
 
 		HUDHintData.Text = string.format("Подбирает %s", InNowImplemetingBy)
 	end
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintDataServerSabotage(bRobberTeam)
@@ -134,16 +154,57 @@ local function SetHUDHintDataServerSabotage(bRobberTeam)
 
 		HUDHintData.Text = "Починить"
 	end
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataHandcuffs()
+
+	HUDHintData.Icon = IconHandcuffs
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintData2Knock()
+
+	HUDHintData.Icon2 = IconKnock
+
+	HUDHintData.IconColor2 = COLOR_YELLOW
+
+	HUDHintData.Text2 = "ЛКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintData2Inspect()
+
+	HUDHintData.Icon3 = IconInspect
+
+	HUDHintData.IconColor3 = COLOR_YELLOW
+
+	HUDHintData.Text3 = "R"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintData3Kidnap()
+
+	HUDHintData.Icon2 = IconHand
+
+	HUDHintData.IconColor2 = COLOR_YELLOW
+
+	HUDHintData.Text2 = "ЛКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function TryDrawInventory(InClient)
 
-	if not IsValid(InClient) then
-
-		return
-	end
-
-	surface.SetDrawColor(255, 255, 0)
+	surface.SetDrawColor(COLOR_YELLOW)
 
 	surface.SetFont("DermaLarge")
 
@@ -174,40 +235,67 @@ local function TryDrawInventory(InClient)
 	surface.DrawText(InClient:GetNWInt("PicklockNum"))
 end
 
-local function TryDrawHUDHintData(InClient)
+local function TryDrawHandcuffed(InClient)
 
-	if not IsValid(InClient) then
+	local CurrentAlpha = math.abs(math.sin(CurTime())) * 255
 
-		return
+	surface.SetDrawColor(ColorAlpha(COLOR_YELLOW, CurrentAlpha))
+
+	surface.SetMaterial(IconHandcuffs)
+
+	surface.DrawTexturedRect(100, ScrH() / 2, 64, 64)
+end
+
+local function DrawHUDHintElement(InX, InIcon, InIconColor, InIconSize, InText)
+
+	local bSuccess = false
+
+	if InIcon then
+
+		surface.SetMaterial(InIcon)
+
+		surface.SetDrawColor(InIconColor)
+
+		surface.DrawTexturedRect(InX - InIconSize.x / 2,
+			ScrH() / 2 - InIconSize.y / 2,
+			InIconSize.x, InIconSize.y)
+
+		bSuccess = true
 	end
+
+	if InText then
+
+		draw.DrawText(InText, "HUDTextSmall", InX, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+
+		bSuccess = true
+	end
+
+	return bSuccess
+end
+
+local function TryDrawHUDHintData(InClient)
 
 	local TextBiasY = 0
 
-	if HUDHintData.Icon then
+	local DrawX = ScrW() / 2 - (HUDHintData.TotalNum - 1) * 24
 
-		surface.SetMaterial(HUDHintData.Icon)
+	if DrawHUDHintElement(DrawX, HUDHintData.Icon2, HUDHintData.IconColor2, HUDHintData.IconSize, HUDHintData.Text2) then
 
-		surface.SetDrawColor(HUDHintData.IconColor)
-
-		surface.DrawTexturedRect(ScrW() / 2 - HUDHintData.IconSize.x / 2,
-			ScrH() / 2 - HUDHintData.IconSize.y / 2,
-			HUDHintData.IconSize.x, HUDHintData.IconSize.y)
-
-		TextBiasY = HUDHintData.IconSize.y / 2
+		DrawX = DrawX + 48
 	end
 
-	if HUDHintData.Text then
+	if DrawHUDHintElement(DrawX, HUDHintData.Icon, HUDHintData.IconColor, HUDHintData.IconSize, HUDHintData.Text) then
 
-		draw.DrawText(HUDHintData.Text, "HUDTextSmall", ScrW() / 2, ScrH() / 2 + TextBiasY, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+		DrawX = DrawX + 48
+	end
+
+	if DrawHUDHintElement(DrawX, HUDHintData.Icon3, HUDHintData.IconColor3, HUDHintData.IconSize, HUDHintData.Text3) then
+
+		DrawX = DrawX + 48
 	end
 end
 
 local function TryDrawTaskTime(InClient)
-
-	if not IsValid(InClient) then
-
-		return false
-	end
 
 	local TaskTimeLeft = InClient:GetNWFloat("TaskTimeLeft")
 
@@ -246,14 +334,15 @@ end
 
 function ResetHUDHintData()
 
-	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil}
+	--Default size and color defined here
+	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil, TotalNum = 0}
 end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 	--MsgN(InTargetEntity)
 
-	if not InTargetEntity:GetNWBool("bShowHint") then
+	if not InTargetEntity:GetNWBool("bShowHint") and not InTargetEntity:IsPlayer() then
 
 		local TargetEntityParent = InTargetEntity:GetParent()
 
@@ -263,6 +352,11 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		end
 
 		return
+	end
+
+	if InTargetEntity:GetClass() == "prop_door_rotating" then
+
+		SetHUDHintData2Knock()
 	end
 
 	if InTargetEntity:GetNWBool("bScheduleSetupEntity") then
@@ -294,6 +388,12 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		SetHUDHintDataDetailSpawn(InTargetEntity:GetNWString("TaskImplementer"))
 
 		return
+		
+	elseif InTargetEntity:GetNWBool("bStash") then
+
+		SetHUDHintDataUsable()
+
+		return
 	end
 
 	if InPlayer:Team() == TEAM_GUARD then
@@ -322,6 +422,17 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		elseif InTargetEntity:GetNWBool("bServerSabotage") and InTargetEntity:GetNWBool("bSabotaged") then
 
 			SetHUDHintDataServerSabotage(false)
+
+		elseif InTargetEntity:IsPlayer() and InTargetEntity:Team() == TEAM_ROBBER then
+
+			SetHUDHintDataHandcuffs()
+
+			SetHUDHintData2Inspect()
+
+			if InTargetEntity:GetNWBool("bHandcuffed") then
+
+				SetHUDHintData3Kidnap()
+			end
 		end
 
 	elseif InPlayer:Team() == TEAM_ROBBER then
@@ -334,7 +445,8 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 			SetHUDHintDataServerSabotage(true)
 
-		elseif (InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable"))
+		elseif InTargetEntity:GetNWBool("bWasLocked")
+			and (InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable"))
 			and InPlayer:GetNWInt("PicklockNum") > 0 then
 
 			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
@@ -374,6 +486,11 @@ function GM:HUDPaint()
 	else
 
 		ResetHUDHintData()
+	end
+
+	if Client:GetNWBool("bHandcuffed") then
+
+		TryDrawHandcuffed(Client)
 	end
 end
 
