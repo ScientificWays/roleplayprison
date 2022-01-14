@@ -190,8 +190,8 @@ function OnImplementTaskStart(InPlayer, InTaskStartEntity, InDuration, InCancelC
 	PlayerTaskDataList[PlayerName] = {TaskEntity = InTaskStartEntity,
 		Position = InPlayer:GetPos(),
 		Angles = InPlayer:EyeAngles(),
-		CancelCallback = InCancelCallback,
-		FinishCallback = InFinishCallback}
+		CancelCallback = InCancelCallback or function(InPlayer, InTaskEntity) end,
+		FinishCallback = InFinishCallback or function(InPlayer, InTaskEntity) end}
 end
 
 function OnImplementTaskProgress(InPlayer)
@@ -212,7 +212,7 @@ function OnImplementTaskProgress(InPlayer)
 
 	local TimeLeft = InPlayer:GetNWFloat("TaskTimeLeft")
 
-	if TimeLeft <= 0.0 then
+	if TimeLeft <= 0.0 or InPlayer:GetNWBool("bHandcuffed") then
 
 		OnImplementTaskStop(InPlayer, false)
 	else
@@ -256,15 +256,10 @@ function OnImplementTaskStop(InPlayer, bCancel)
 
 	if bCancel then
 
-		if TaskData.CancelCallback ~= nil then
-
-			TaskData.CancelCallback(InPlayer, TaskData.TaskEntity)
-		end
+		TaskData.CancelCallback(InPlayer, TaskData.TaskEntity)
 	else
-		if TaskData.FinishCallback ~= nil then
 
-			TaskData.FinishCallback(InPlayer, TaskData.TaskEntity)
-		end
+		TaskData.FinishCallback(InPlayer, TaskData.TaskEntity)
 	end
 
 	table.Empty(TaskData)

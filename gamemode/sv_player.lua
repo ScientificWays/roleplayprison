@@ -116,7 +116,7 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	
 	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.6)
 
-	local Kidnapper = InPlayer.Kidnapper
+	local Kidnapper = InPlayer:GetNWEntity("Kidnapper")
 
 	if not IsValid(Kidnapper) or Kidnapper == InPlayer then
 
@@ -139,10 +139,13 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	local FinalMoveToPos = MoveToPos - (MoveDirection * Distance)
 	
 	local xDif = math.abs(MoveFromPos.x - FinalMoveToPos.x)
+
 	local yDif = math.abs(MoveFromPos.y - FinalMoveToPos.y)
+
 	local zDif = math.abs(MoveFromPos.z - FinalMoveToPos.z)
 	
 	local speedMult = 3 + ((xDif + yDif) * 0.5)^1.01
+
 	local vertMult = math.max((math.Max(300 - (xDif + yDif), - 10) * 0.08)^1.01  + (zDif / 2), 0)
 	
 	if Kidnapper:GetGroundEntity() == InPlayer then
@@ -151,18 +154,25 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	end
 	
 	local TargetVel = (FinalMoveToPos - MoveFromPos):GetNormal() * 10
+
 	TargetVel.x = TargetVel.x*speedMult
+
 	TargetVel.y = TargetVel.y*speedMult
+
 	TargetVel.z = TargetVel.z*vertMult
 
 	local MoveVelocity = InMoveData:GetVelocity()
 	
 	local clamp = 50
+
 	local vclamp = 20
+
 	local accel = 200
+
 	local vaccel = 30 * (vertMult / 50)
 	
 	MoveVelocity.x = (MoveVelocity.x > TargetVel.x - clamp or MoveVelocity.x < TargetVel.x + clamp) and math.Approach(MoveVelocity.x, TargetVel.x, accel) or MoveVelocity.x
+
 	MoveVelocity.y = (MoveVelocity.y > TargetVel.y - clamp or MoveVelocity.y < TargetVel.y + clamp) and math.Approach(MoveVelocity.y, TargetVel.y, accel) or MoveVelocity.y
 	
 	if MoveFromPos.z < FinalMoveToPos.z then
@@ -170,6 +180,8 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 		
 		if vertMult > 0 then InPlayer.Cuff_ForceJump = InPlayer end
 	end
+
+	MsgN(MoveVelocity)
 	
 	InMoveData:SetVelocity(MoveVelocity)
 	
@@ -251,6 +263,14 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:Spawn()
 
+	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Саня" or SeparatedStrings[1] == "/саня") then
+
+		DebugDude = player.CreateNextBot("Саня")
+
+		DebugDude:SetTeam(TEAM_ROBBER)
+
+		DebugDude:Spawn()
+
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
 
 			TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
@@ -270,28 +290,42 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 	if InInput == "Use" and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
 
-		local TargetEntityName = InTargetEntity:GetName()
-
-		--MsgN(table.ToString(GuardOnlyUsableNames))
-
-		if string.EndsWith(TargetEntityName, "_GuardOnly") and InActivator:Team() ~= TEAM_GUARD then
-
-			--MsgN(TargetEntityName.." activation blocked!")
-
-			InTargetEntity:Input("Lock")
-
-			InTargetEntity:Input("Use")
-
-			InTargetEntity:Fire("Unlock", nil, 1.5, InActivator, caller)
+		if InActivator:GetNWBool("bHandcuffed") then
 
 			return true
 		end
 
-		if InTargetEntity:GetNWBool("bGlobalSpeakerButton") and not UtilIsServerSabotaged() then
+		local TargetEntityName = InTargetEntity:GetName()
 
-			ToggleGlobalSpeaker(InTargetEntity)
+		--MsgN(table.ToString(GuardOnlyUsableNames))
 
-			return true
+		if string.EndsWith(TargetEntityName, "_GuardOnly") then
+
+			if InActivator:Team() == TEAM_GUARD then
+
+				return false
+			else
+
+				--MsgN(TargetEntityName.." activation blocked!")
+
+				InTargetEntity:Input("Lock")
+
+				InTargetEntity:Input("Use")
+
+				InTargetEntity:Fire("Unlock", nil, 1.5, InActivator, caller)
+
+				return true
+			end
+		end
+
+		if InTargetEntity:GetNWBool("bGlobalSpeakerButton") then
+
+			if not UtilIsServerSabotaged() then
+
+				ToggleGlobalSpeaker(InTargetEntity)
+			end
+
+			return false
 		end
 
 		if InActivator:Team() == TEAM_GUARD then
@@ -423,6 +457,8 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			end
 		end
 	end
+
+	return false
 end
 
 function GM:PlayerInitialSpawn(InPlayer, bTransition)
@@ -599,5 +635,19 @@ function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 
 			sound.Play(table.Random(PlayerFallSounds), InPlayer:GetMoveFromPos(), 55 + math.Clamp(CalculatedDamage, 0, 50), 100)
 		end
+	end
+end
+
+function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
+
+	if string.EndsWith(InEntity:GetName(), "_Throwable") and bThrown then
+
+		local ThrowDirection = (InEntity:GetPos() - InPlayer:EyePos())
+
+		ThrowDirection:Normalize()
+
+		--MsgN(ThrowDirection)
+
+		InEntity:GetPhysicsObject():ApplyForceCenter(ThrowDirection * 10000.0)
 	end
 end

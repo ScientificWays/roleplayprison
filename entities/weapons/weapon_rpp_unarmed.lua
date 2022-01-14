@@ -181,7 +181,7 @@ local function TryHandcuffsOn(InPlayer, InInteractEntity)
 		return
 	end
 
-	OnPlayerHandcuffsOn(InPlayer)
+	OnPlayerHandcuffsOn(InInteractEntity)
 
 	UtilChangePlayerFreeze(InInteractEntity, false)
 end
@@ -200,7 +200,7 @@ local function TryHandcuffsOff(InPlayer, InInteractEntity)
 		return
 	end
 
-	OnPlayerHandcuffsOff(InPlayer)
+	OnPlayerHandcuffsOff(InInteractEntity)
 
 	UtilChangePlayerFreeze(InInteractEntity, false)
 end
@@ -280,10 +280,12 @@ function SWEP:GetClass()
 end
 
 function SWEP:OnDrop()
+
 	self:Remove()
 end
 
 function SWEP:ShouldDropOnDie()
+
 	return false
 end
 
@@ -307,11 +309,11 @@ function SWEP:PrimaryAttack()
 
 	local InteractEntity = EyeTrace.Entity
 
-	if IsValid(InteractEntity) then
+	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
-			if TryToggleKidnap() then
+			if TryToggleKidnap(PlayerOwner, InteractEntity) then
 
 				return
 			end
@@ -346,7 +348,7 @@ function SWEP:SecondaryAttack()
 
 	local InteractEntity = EyeTrace.Entity
 
-	if IsValid(InteractEntity) then
+	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
@@ -394,19 +396,6 @@ function SWEP:SecondaryAttack()
 				return
 			end
 
-			if CanInspect(PlayerOwner, InteractEntity) then
-
-				UtilChangePlayerFreeze(InteractEntity, true)
-
-				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
-						UtilGetInspectionDuration(),
-						function() UtilChangePlayerFreeze(InteractEntity, false) end,
-						TryInspect)
-
-				return
-			end
-
 		elseif PlayerOwner:Team() == TEAM_ROBBER then
 
 			if CanUsePicklock(PlayerOwner, InteractEntity) then
@@ -425,9 +414,44 @@ end
 
 function SWEP:Reload()
 	
+	if CLIENT then
+
+		return
+	end
+
+	--MsgN("Unarmed secondary attack")
+
 	local PlayerOwner = self:GetOwner()
 
-	PlayerOwner:AnimRestartGesture(GESTURE_SLOT_CUSTOM, ACT_GMOD_TAUNT_CHEER, true)
+	local EyeTrace = PlayerOwner:GetEyeTrace()
+
+	if EyeTrace.Fraction * 32768 > 128 then
+
+		--MsgN("Eye trace was too far!")
+
+		return
+	end
+
+	local InteractEntity = EyeTrace.Entity
+
+	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
+
+		if PlayerOwner:Team() == TEAM_GUARD then
+
+			if CanInspect(PlayerOwner, InteractEntity) then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(PlayerOwner,
+						InteractEntity,
+						UtilGetInspectionDuration(),
+						function() UtilChangePlayerFreeze(InteractEntity, false) end,
+						TryInspect)
+
+				return
+			end
+		end
+	end
 end
 
 function SWEP:Deploy()

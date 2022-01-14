@@ -279,7 +279,7 @@ local function TryDrawHUDHintData(InClient)
 
 	local DrawX = ScrW() / 2 - (HUDHintData.TotalNum - 1) * 24
 
-	if DrawHUDHintElement(DrawX, HUDHintData.Icon2, HUDHintData.IconColor2, HUDHintData.IconSize, HUDHintData.Text2) then
+	if DrawHUDHintElement(DrawX, HUDHintData.Icon2, HUDHintData.IconColor2, HUDHintData.IconSize2, HUDHintData.Text2) then
 
 		DrawX = DrawX + 48
 	end
@@ -289,7 +289,7 @@ local function TryDrawHUDHintData(InClient)
 		DrawX = DrawX + 48
 	end
 
-	if DrawHUDHintElement(DrawX, HUDHintData.Icon3, HUDHintData.IconColor3, HUDHintData.IconSize, HUDHintData.Text3) then
+	if DrawHUDHintElement(DrawX, HUDHintData.Icon3, HUDHintData.IconColor3, HUDHintData.IconSize3, HUDHintData.Text3) then
 
 		DrawX = DrawX + 48
 	end
@@ -335,7 +335,9 @@ end
 function ResetHUDHintData()
 
 	--Default size and color defined here
-	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil, TotalNum = 0}
+	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil, TotalNum = 0,
+					IconSize2 = {x = 32, y = 32},
+					IconSize3 = {x = 32, y = 32}}
 end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
@@ -480,12 +482,12 @@ function GM:HUDPaint()
 		TryDrawInventory(Client)
 	end
 
-	if not TryDrawTaskTime(Client) then
-
-		TryDrawHUDHintData(Client)
-	else
+	if TryDrawTaskTime(Client) then
 
 		ResetHUDHintData()
+	else
+
+		TryDrawHUDHintData(Client)
 	end
 
 	if Client:GetNWBool("bHandcuffed") then
