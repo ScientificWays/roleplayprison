@@ -9,6 +9,8 @@ AddCSLuaFile("cl_network.lua")
 AddCSLuaFile("cl_monitors.lua")
 AddCSLuaFile("cl_pickrole.lua")
 AddCSLuaFile("cl_schedule.lua")
+AddCSLuaFile("cl_inspection.lua")
+AddCSLuaFile("cl_postprocess.lua")
 
 include("sh_util.lua")
 include("sv_util.lua")
@@ -21,9 +23,12 @@ include("sv_cycle.lua")
 include("sv_player.lua")
 include("sv_officer.lua")
 include("sv_sabotage.lua")
+include("sv_inspection.lua")
 
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
+
+util.AddNetworkString("SendAndShowInspectDataToClient")
 
 util.AddNetworkString("UpdateClientLightmaps")
 
@@ -83,7 +88,7 @@ end]]
 --Интерфейс крафта, крафт отмычек
 --Интерфейс вместо монитора
 --Дубинка, рация и их крафт
---Заначки и досмотр
+--Заначки
 --Логика для побега и перехода в режим наблюдателя
 
 --Предмет швабра

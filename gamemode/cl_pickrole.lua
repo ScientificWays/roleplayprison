@@ -140,7 +140,7 @@ function GM:ShowTeam()
 
 					SubRoleFrame:SetDraggable(false)
 
-					SubRoleFrame:ShowCloseButton(true)
+					SubRoleFrame:ShowCloseButton(false)
 
 					SubRoleFrame.Paint = function(self, w, h)
 

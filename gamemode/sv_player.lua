@@ -181,7 +181,7 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 		if vertMult > 0 then InPlayer.Cuff_ForceJump = InPlayer end
 	end
 
-	MsgN(MoveVelocity)
+	--MsgN(MoveVelocity)
 	
 	InMoveData:SetVelocity(MoveVelocity)
 	
@@ -199,6 +199,127 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 		
 		InPlayer.Cuff_NextDragDamage = CurTime() + 0.1
 	end
+end)
+
+timer.Create("HungerTick", 24, 0, function()
+
+	local AllPlayers = player.GetAll()
+
+	for Index, Player in ipairs(AllPlayers) do
+
+		if Player.Food >= 1 then
+
+			Player.Food = Player.Food - 1
+		else
+
+			Player.Food = 0
+		end
+
+		if Player.Water >= 1 then
+
+			Player.Water = Player.Water - 2
+		else
+
+			Player.Water = 0
+		end
+
+		Player:SetNWFloat("HungerValue", 1.0 - (Player.Food + Player.Water) / 200)
+
+		if Player.Food < 20 or Player.Water < 20 then
+
+			if Player:Health() > 15 then
+
+				Player:SetHealth(Player:Health() - 1)
+			end
+		end
+	end
+
+end)
+
+hook.Add("SetupMove", "HungerMove", function(InPlayer, InMoveData, InCommandData)
+
+	local VelocityMul = Lerp(InPlayer:GetNWFloat("HungerValue"), 1.0, 0.5)
+
+	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * VelocityMul)
+end)
+
+timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
+
+	local AllPlayers = player.GetAll()
+
+	for Index, Player in ipairs(AllPlayers) do
+
+		if Player:Team() ~= TEAM_ROBBER and Player:Team() ~= TEAM_GUARD then
+
+			return
+		end
+
+		local OldEnergy = Player.Energy
+
+		if Player:IsSprinting() then
+
+			if Player.Energy >= 1.0 then
+
+				Player.Energy = Player.Energy - 1.0
+			else
+
+				Player.Energy = 0.0
+			end
+		else
+
+			if Player.Energy < UtilGetSprintDuration() then
+
+				Player.Energy = Player.Energy + 0.5
+			else
+
+				Player.Energy = UtilGetSprintDuration()
+			end
+		end
+
+		if OldEnergy == Player.Energy then
+
+			return
+		end
+		
+		if Player.Energy < UtilGetSprintDuration() * 0.25 then
+
+			if Player.BreatheSound == nil then
+
+				Player.BreatheSound = CreateSound(Player, "player/breathe1.wav", RecipientFilter():AddAllPlayers())
+
+				Player.BreatheSound:Play()
+
+				--MsgN("Play sound")
+			end
+
+			Player.BreatheSound:ChangeVolume(1.0 - Player.Energy / (UtilGetSprintDuration() * 0.25))
+		else
+
+			--MsgN(Player.BreatheSound)
+
+			if Player.BreatheSound ~= nil then
+
+				Player.BreatheSound:Stop()
+
+				Player.BreatheSound = nil
+
+				--MsgN("Stop sound")
+			end
+		end
+
+		Player:SetJumpPower(Player:GetNWFloat("EnergyValue") * 200.0)
+
+		Player:SetNWFloat("EnergyValue", Player.Energy / UtilGetSprintDuration())
+
+		--MsgN(Player.Energy)
+	end
+end)
+
+hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData)
+
+	local FinalMaxSpeed = Lerp(InPlayer:GetNWFloat("EnergyValue"), 100, InMoveData:GetMaxClientSpeed())
+
+	InMoveData:SetMaxClientSpeed(FinalMaxSpeed)
 end)
 
 function GM:PlayerSay(InSender, InText, bTeamChat)
@@ -273,7 +394,17 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
 
-			TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
+		TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
+
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/food" and SeparatedStrings[2] ~= nil then
+
+		InSender.Food = math.Round(tonumber(SeparatedStrings[2])) or InSender.Food
+
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/water" and SeparatedStrings[2] ~= nil then
+
+		InSender.Water = math.Round(tonumber(SeparatedStrings[2])) or InSender.Water
+
+		print(InSender.Water)
 	end
 
 	return ""
@@ -456,6 +587,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 				return false
 			end
 		end
+
+	elseif InInput == "Trigger" --[[and InActivator:Team() == TEAM_ROBBER--]] then
+
+		if InTargetEntity:GetName() == "Escape_OnTrigger" then
+
+			
+		end
 	end
 
 	return false
@@ -515,6 +653,18 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		player_manager.OnPlayerSpawn(InPlayer, InTransiton)
 
 		player_manager.RunClass(InPlayer, "Spawn")
+
+		InPlayer:ConCommand("pp_colormod 1")
+
+		InPlayer:ConCommand("pp_motionblur 1")
+
+		InPlayer.Food = 100
+
+		InPlayer.Water = 100
+
+		InPlayer.Energy = UtilGetSprintDuration()
+
+		InPlayer:SetNWFloat("EnergyValue", 1.0)
 
 		hook.Run("PlayerLoadout", InPlayer)
 
@@ -650,4 +800,9 @@ function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
 
 		InEntity:GetPhysicsObject():ApplyForceCenter(ThrowDirection * 10000.0)
 	end
+end
+
+function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDamageTaken)
+
+	InVictimPlayer:SetNWFloat("InjuryValue", 1.0 - InHealthRemaining / 100.0)
 end

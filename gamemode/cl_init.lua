@@ -7,6 +7,8 @@ include("cl_hud.lua")
 include("cl_pickrole.lua")
 include("cl_schedule.lua")
 include("cl_network.lua")
+include("cl_inspection.lua")
+include("cl_postprocess.lua")
 
 surface.CreateFont("MonitorText", {font = "Tahoma",
 									size = 120,
@@ -21,29 +23,29 @@ surface.CreateFont("HUDTextSmall", {font = "Tahoma",
 									size = 18,
 									weight = 700})
 
-surface.CreateFont( 'closebtn', {
-	font = 'Tahoma',
+surface.CreateFont( "closebtn", {
+	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 20,
 } )
 
-surface.CreateFont( 'title', {
-	font = 'Tahoma',
+surface.CreateFont( "title", {
+	font = "Tahoma",
 	extended = true,
 	weight = 600,
 	size = 15,
 } )
 
-surface.CreateFont( 'msg', {
-	font = 'Tahoma',
+surface.CreateFont( "msg", {
+	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 17,
 } )
 
-surface.CreateFont( 'txt', {
-	font = 'Tahoma',
+surface.CreateFont( "txt", {
+	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 17,
@@ -58,6 +60,8 @@ function GM:Initialize()
 	--concommand.Add("schedulesetup", ToggleScheduleSetup)
 
 	net.Receive("SendScheduleListToClients", ClientReceiveScheduleList)
+
+	net.Receive("SendAndShowInspectDataToClient", ClientReceiveInspectData)
 
 	net.Receive("UpdateClientLightmaps", UpdateClientLightmaps)
 	
@@ -86,9 +90,14 @@ function GM:Tick()
 
 	local ClientPlayer = LocalPlayer()
 
-	if not IsValid(ClientPlayer)
-		or not IsValid(ClientPlayer:GetActiveWeapon())
-		or ClientPlayer:GetActiveWeapon():GetClass() ~= "weapon_rpp_unarmed" then
+	if not IsValid(ClientPlayer) then
+
+		return
+	end
+
+	UpdatePostProcessData(ClientPlayer)
+
+	if  not IsValid(ClientPlayer:GetActiveWeapon()) or ClientPlayer:GetActiveWeapon():GetClass() ~= "weapon_rpp_unarmed" then
 
 		return
 	end

@@ -185,5 +185,13 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
+		22
+		{
+			"name"		"sk_sprint_duration"
+			"text"		"Sprint duration"
+			"help"		"Sprint duration in seconds"
+			"type"		"Numeric"
+			"default"	"20.0"
+		}
 	}
 }

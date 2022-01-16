@@ -11,6 +11,7 @@ local IconUnlocked				= Material("vgui/rpp/icon_unlocked")
 local IconHand					= Material("vgui/rpp/icon_hand")
 local IconPicklock				= Material("vgui/rpp/icon_picklock")
 local IconKnock					= Material("vgui/rpp/icon_knock")
+local IconInspect				= Material("vgui/rpp/icon_inspect")
 
 local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")

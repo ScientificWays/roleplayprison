@@ -44,7 +44,8 @@ local function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
 
 	InLockableEntity:SetNWBool("bWasLocked", bNewLockState)
 
-	InLockableEntity:EmitSound("Town.d1_town_02_default_locked")
+	InLockableEntity:EmitSound("Town.d1_town_02_default_locked",
+		60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
 
 	local SlaveDoorName = InLockableEntity:GetInternalVariable("slavename") or ""
 
@@ -100,7 +101,8 @@ local function TryUsePicklock(InPlayer, InInteractEntity)
 		ChangeLockableState(InPlayer, FinalInteractEntity, false)
 	else
 
-		InPlayer:EmitSound("Metal_Box.BulletImpact")
+		InPlayer:EmitSound("Metal_Box.BulletImpact",
+		60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
 	end
 
 	if math.random() < UtilGetPicklockBreakChance() then
@@ -218,6 +220,8 @@ local function TryInspect(InPlayer, InInteractEntity)
 		return
 	end
 
+	OnInspect(InPlayer, InInteractEntity)
+
 	UtilChangePlayerFreeze(InInteractEntity, false)
 end
 
@@ -321,7 +325,8 @@ function SWEP:PrimaryAttack()
 
 		if InteractEntity:GetClass() == "prop_door_rotating" then
 
-			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock")
+			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock",
+			60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
 		end
 	end
 end

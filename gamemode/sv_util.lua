@@ -92,6 +92,11 @@ function UtilGetInspectionDuration()
 	return GetConVar("sk_inspection_duration"):GetInt()
 end
 
+function UtilGetSprintDuration()
+
+	return GetConVar("sk_sprint_duration"):GetFloat()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

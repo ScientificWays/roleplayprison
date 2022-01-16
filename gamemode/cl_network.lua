@@ -21,6 +21,13 @@ function ClientSendScheduleList(InElementList)
 	net.SendToServer()
 end
 
+function ClientReceiveInspectData(InMessageLength, InPlayer)
+
+	local InspectDataTable = net.ReadTable()
+
+	ShowInspection(InspectDataTable)
+end
+
 function UpdateClientLightmaps(InMessageLength, InPlayer)
 
 	render.RedownloadAllLightmaps()
