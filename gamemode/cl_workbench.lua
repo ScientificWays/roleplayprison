@@ -171,5 +171,7 @@ function HideWorkbenchFrame()
 	timer.Simple(0.4, function()
 
 		WorkbenchFrame:Remove()
+
+		WorkbenchFrame = nil
 	end)
 end

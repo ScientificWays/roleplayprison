@@ -28,6 +28,7 @@ include("sv_cycle.lua")
 include("sv_items.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
+include("sv_energy.lua")
 include("sv_officer.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
@@ -95,7 +96,6 @@ end
 
 end]]
 
---Интерфейс вместо монитора
 --Дубинка, рация и их крафт
 --Заначки
 --Sit anywhere

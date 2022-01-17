@@ -27,10 +27,6 @@ timer.Create("HungerTick", 24.0, 0, function()
 			Player.Water = 0
 		end
 
-		--print(Player.Food, Player.Water)
-
-		Player:SetNWFloat("HungerValue", 1.0 - (Player.Food + Player.Water) / 200)
-
 		if Player.Food < 20 or Player.Water < 20 then
 
 			if Player:Health() > 15 then
@@ -38,6 +34,8 @@ timer.Create("HungerTick", 24.0, 0, function()
 				Player:SetHealth(Player:Health() - 1)
 			end
 		end
+
+		UpdatePlayerHungerValue(Player)
 	end
 end)
 
@@ -90,17 +88,28 @@ hook.Add("OnPlayerPhysicsDrop", "NutritionDrop", function(InPlayer, InEntity, bT
 	end
 end)
 
+function UpdatePlayerHungerValue(InPlayer)
+
+	InPlayer.Food = math.Clamp(InPlayer.Food, 0.0, 100.0)
+
+	InPlayer.Water = math.Clamp(InPlayer.Water, 0.0, 100.0)
+
+	MsgN(string.format("%s Food: %i, Water: %s", InPlayer:GetName(), InPlayer.Food, InPlayer.Water))
+
+	InPlayer:SetNWFloat("HungerValue", 1.0 - (InPlayer.Food + InPlayer.Water) / 200)
+end
+
 function AddNutrition(InPlayer, InValue, bFood)
 
 	if bFood then
 
-		InPlayer.Food = math.Clamp(InPlayer.Food + InValue, 0, 100)
+		InPlayer.Food = InPlayer.Food + InValue
 	else
 
-		InPlayer.Water = math.Clamp(InPlayer.Water + InValue, 0, 100)
+		InPlayer.Water = InPlayer.Water + InValue
 	end
 
-	InPlayer:SetNWFloat("HungerValue", 1.0 - (InPlayer.Food + InPlayer.Water) / 200)
+	UpdatePlayerHungerValue(InPlayer)
 end
 
 function OnNutritionSpawn(InPlayer, InTemplateEntity)

@@ -15,10 +15,10 @@ include("cl_inspection.lua")
 include("cl_postprocess.lua")
 
 surface.CreateFont("MonitorText", {font = "Tahoma",
-									size = 120,
-									weight = 1000})
+									size = 28,
+									weight = 900})
 surface.CreateFont("MonitorTextSmall", {font = "Tahoma",
-									size = 70,
+									size = 18,
 									weight = 900})
 surface.CreateFont("HUDText", {font = "Tahoma",
 									size = 32,

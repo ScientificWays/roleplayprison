@@ -1,12 +1,10 @@
 ---- Roleplay: Prison
 
-local MonitorOfficerRT = GetRenderTarget("_rt_MonitorOfficer", 2048, 2048)
-local MonitorControlRT = GetRenderTarget("_rt_MonitorControl", 2048, 2048)
-local MonitorLibraryRT = GetRenderTarget("_rt_MonitorLibrary", 2048, 2048)
+local MonitorFrame = {}
 
---local MonitorRTTexture = Material("models/rendertarget"):GetTexture("$basetexture")
+local MonitorFrameWidth, MonitorFrameHeight = 320, 160
 
-local OldMonitorType = ""
+local MonitorDrawFunction = nil
 
 timer.Create("MonitorTick", 1.0, 0, function()
 
@@ -21,34 +19,38 @@ timer.Create("MonitorTick", 1.0, 0, function()
 
 	if ActiveMonitorType == "None" then
 
+		HideMonitor()
+	else
 		if ActiveMonitorType == "Officer" then
 
-			OfficerMonitorDraw()
+			MonitorDrawFunction = OfficerMonitorDraw
 
 		elseif ActiveMonitorType == "Control" then
 
-			ControlMonitorDraw()
+			MonitorDrawFunction = ControlMonitorDraw
 
 		elseif ActiveMonitorType == "Library" then
 
-			LibraryMonitorDraw()
+			MonitorDrawFunction = LibraryMonitorDraw
 		end
+
+		ShowMonitor()
 	end
 
-	OldMonitorType = ActiveMonitorType
+	--MsgN(ActiveMonitorType)
 end)
 
 function OfficerMonitorDraw()
 
-	render.PushRenderTarget(MonitorOfficerRT)
+	--MsgN("OfficerMonitorDraw()")
 
-	render.Clear(0, 0, 20, 255)
-
-	draw.DrawText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText", 850, 10, COLOR_WHITE, TEXT_ALIGN_CENTER)
+	draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()),
+		"MonitorText", MonitorFrameWidth / 2, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	if UtilIsInterCycle() then
 
-		draw.DrawText("Перерыв", "MonitorText", 850, 380, COLOR_WHITE, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Перерыв", "MonitorText",
+			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
 		surface.SetFont("MonitorText")
@@ -57,54 +59,54 @@ function OfficerMonitorDraw()
 
 		if table.IsEmpty(ScheduleList) then
 
-			draw.DrawText("Расписание не обнаружено", "MonitorText", 850, 380, COLOR_RED, TEXT_ALIGN_CENTER)
+			draw.SimpleText("Расписание не обнаружено", "MonitorTextSmall",
+				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
-
-			local ElementY = 150
-
 			local ActiveElementIndex, ActiveElementTimeLeft = UtilGetActiveScheduleElementIndexAndTimeLeft(ScheduleList)
 
 			--MsgN(table.ToString(ScheduleList))
 
-			for i, ScheduleElement in ipairs(ScheduleList) do
+			local ElementY = 50
 
-				local RowText = ""
+			for Index, ScheduleElement in ipairs(ScheduleList) do
 
-				local RowColor = COLOR_WHITE
+				if math.abs(ActiveElementIndex - Index) < 3 then
 
-				if (i == ActiveElementIndex) then
+					local RowText = ""
 
-					RowText = string.format("%s [%s]", ScheduleElement.Name, string.ToMinutesSeconds(ActiveElementTimeLeft))
+					local RowColor = COLOR_WHITE
 
-					RowColor = COLOR_BLUE
-				else
+					if (Index == ActiveElementIndex) then
 
-					RowText = ScheduleElement.Name
+						RowText = string.format("%s [%s]", ScheduleElement.Name, string.ToMinutesSeconds(ActiveElementTimeLeft))
 
-					RowColor = COLOR_WHITE
+						RowColor = COLOR_BLUE
+					else
+
+						RowText = ScheduleElement.Name
+
+						RowColor = COLOR_WHITE
+					end
+
+					draw.SimpleText(RowText, "MonitorTextSmall",
+						10, ElementY, RowColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+					ElementY = ElementY + 20
 				end
-
-				draw.DrawText(RowText, "MonitorTextSmall", 40, ElementY, RowColor, TEXT_ALIGN_LEFT)
-
-				ElementY = ElementY + 70
 			end
 		end
 	end
-
-	render.PopRenderTarget()
 end
 
 function ControlMonitorDraw()
 
-	render.PushRenderTarget(MonitorControlRT)
-
-	render.Clear(0, 0, 20, 255)
-
-	draw.DrawText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText", 850, 10, COLOR_WHITE, TEXT_ALIGN_CENTER)
+	draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText",
+		MonitorFrameWidth / 2, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	if UtilIsInterCycle() then
 
-		draw.DrawText("Перерыв", "MonitorText", 850, 380, COLOR_WHITE, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Перерыв", "MonitorText",
+			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
 		surface.SetFont("MonitorText")
@@ -113,36 +115,102 @@ function ControlMonitorDraw()
 
 		if table.IsEmpty(ScheduleList) then
 
-			draw.DrawText("Расписание не обнаружено", "MonitorText", 850, 380, COLOR_RED, TEXT_ALIGN_CENTER)
+			draw.SimpleText("Расписание не обнаружено", "MonitorTextSmall",
+				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
 
 			local ActiveElementIndex, ActiveElementTimeLeft = UtilGetActiveScheduleElementIndexAndTimeLeft(ScheduleList)
 
-			draw.DrawText(ScheduleList[ActiveElementIndex].Name, "MonitorText", 850, 350, COLOR_BLUE, TEXT_ALIGN_CENTER)
+			draw.SimpleText(ScheduleList[ActiveElementIndex].Name, "MonitorText",
+				MonitorFrameWidth / 2, MonitorFrameHeight / 2 - 10, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-			draw.DrawText(string.format("[%s]",
-				string.ToMinutesSeconds(ActiveElementTimeLeft)),
-				"MonitorTextSmall", 850, 470, COLOR_WHITE, TEXT_ALIGN_CENTER)
+			draw.SimpleText(string.format("[%s]", string.ToMinutesSeconds(ActiveElementTimeLeft)), "MonitorTextSmall",
+				MonitorFrameWidth / 2, MonitorFrameHeight / 2 + 20, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end
-
-	render.PopRenderTarget()
 end
 
 function LibraryMonitorDraw()
 
-	render.PushRenderTarget(MonitorLibraryRT)
-
-	render.Clear(0, 0, 20, 255)
-
 	if UtilIsInterCycle() then
 
-		draw.DrawText("Перерыв", "MonitorText", 850, 380, COLOR_WHITE, TEXT_ALIGN_CENTER)
+		draw.SimpleText("Перерыв", "MonitorText",
+			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	else
 
-		draw.DrawText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()),
-			"MonitorText", 850, 380, COLOR_WHITE, TEXT_ALIGN_CENTER)
+		draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText",
+			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+end
+
+function IsMonitorOpen()
+
+	return IsValid(MonitorFrame)
+end
+
+function ShowMonitor()
+
+	if IsMonitorOpen() then
+		
+		return
 	end
 
-	render.PopRenderTarget()
+	MsgN("ShowMonitor()")
+
+	MonitorFrame = vgui.Create("DFrame")
+
+	MonitorFrame:SetSize(MonitorFrameWidth, MonitorFrameHeight)
+
+	MonitorFrame:SetPos(ScrW() - MonitorFrameWidth - 15, 15)
+
+	MonitorFrame:SetTitle("")
+
+	--MonitorFrame:MakePopup()
+
+	MonitorFrame:SlideDown(0.3)
+
+	MonitorFrame:SetAlpha(0)
+
+	MonitorFrame:AlphaTo(255, 0.4, 0)
+
+	MonitorFrame:SetDraggable(false)
+
+	MonitorFrame:ShowCloseButton(false)
+
+	MonitorFrame.Paint = function(self, w, h)
+
+		DrawBlur(self, 3)
+
+		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, true, true, true)
+
+		if MonitorDrawFunction ~= nil then
+
+			--MsgN("MonitorDrawFunction")
+
+			MonitorDrawFunction()
+		end
+	end
 end
+
+function HideMonitor()
+
+	if not IsMonitorOpen() then
+		
+		return
+	end
+
+	MsgN("HideMonitor()")
+
+	MonitorFrame:SlideUp(0.3)
+
+	timer.Simple(0.4, function()
+
+		MonitorFrame:Remove()
+
+		MonitorFrame = nil
+
+		MonitorDrawFunction = nil
+	end)
+end
+
+concommand.Add('debug_timetable', function() ShowTimeTable('0:01', 'Перерыв') end)

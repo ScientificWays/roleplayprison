@@ -116,7 +116,7 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	
 	local speedMult = 3 + ((xDif + yDif) * 0.5)^1.01
 
-	local vertMult = math.max((math.Max(300 - (xDif + yDif), - 10) * 0.08)^1.01  + (zDif / 2), 0)
+	local vertMult = math.max((math.Max(300 - (xDif + yDif), - 10) * 0.08)^1.01 + (zDif / 2), 0)
 	
 	if Kidnapper:GetGroundEntity() == InPlayer then
 
@@ -169,85 +169,6 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 		
 		InPlayer.Cuff_NextDragDamage = CurTime() + 0.1
 	end
-end)
-
-timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
-
-	local AllPlayers = player.GetAll()
-
-	for Index, Player in ipairs(AllPlayers) do
-
-		if Player:Team() ~= TEAM_ROBBER and Player:Team() ~= TEAM_GUARD then
-
-			return
-		end
-
-		local OldEnergy = Player.Energy
-
-		if Player:IsSprinting() then
-
-			if Player.Energy >= 1.0 then
-
-				Player.Energy = Player.Energy - 1.0
-			else
-
-				Player.Energy = 0.0
-			end
-		else
-
-			if Player.Energy < UtilGetSprintDuration() then
-
-				Player.Energy = Player.Energy + 0.5
-			else
-
-				Player.Energy = UtilGetSprintDuration()
-			end
-		end
-
-		if OldEnergy == Player.Energy then
-
-			return
-		end
-
-		if Player.Energy < UtilGetSprintDuration() * 0.25 then
-
-			if Player.BreatheSound == nil then
-
-				Player.BreatheSound = CreateSound(Player, "player/breathe1.wav", RecipientFilter():AddAllPlayers())
-
-				Player.BreatheSound:Play()
-
-				--MsgN("Play sound")
-			end
-
-			Player.BreatheSound:ChangeVolume(1.0 - Player.Energy / (UtilGetSprintDuration() * 0.25))
-		else
-
-			--MsgN(Player.BreatheSound)
-
-			if Player.BreatheSound ~= nil then
-
-				Player.BreatheSound:Stop()
-
-				Player.BreatheSound = nil
-
-				--MsgN("Stop sound")
-			end
-		end
-
-		Player:SetJumpPower(Player:GetNWFloat("EnergyValue") * 200.0)
-
-		Player:SetNWFloat("EnergyValue", Player.Energy / UtilGetSprintDuration())
-
-		--MsgN(Player.Energy)
-	end
-end)
-
-hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData)
-
-	local FinalMaxSpeed = Lerp(InPlayer:GetNWFloat("EnergyValue"), 100, InMoveData:GetMaxClientSpeed())
-
-	InMoveData:SetMaxClientSpeed(FinalMaxSpeed)
 end)
 
 function GM:PlayerSay(InSender, InText, bTeamChat)
@@ -327,23 +248,16 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 			TryGiveStackableItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
 		end
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/foodadd" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/foodadd" or SeparatedStrings[1] == "/wateradd" then
 
-		for Index, Player in ipairs(player.GetAll()) do
+		if SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
-			if Player:GetName() == SeparatedStrings[2] then
+			for Index, Player in ipairs(player.GetAll()) do
 
-				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), true)
-			end
-		end
+				if Player:GetName() == SeparatedStrings[2] then
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/wateradd" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
-
-		for Index, Player in ipairs(player.GetAll()) do
-
-			if Player:GetName() == SeparatedStrings[2] then
-
-				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), false)
+					AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), SeparatedStrings[1] == "/foodadd")
+				end
 			end
 		end
 	end
