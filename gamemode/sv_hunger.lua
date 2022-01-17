@@ -1,6 +1,6 @@
 ---- Roleplay: Prison
 
-timer.Create("HungerTick", 24, 0, function()
+timer.Create("HungerTick", 24.0, 0, function()
 
 	local AllPlayers = player.GetAll()
 
@@ -72,6 +72,22 @@ hook.Add("OnEntityCreated", "NutritionSpawn", function(InEntity)
 			InEntity:SetNWBool("bShowHint", true)
 		end
 	end)
+end)
+
+hook.Add("OnPlayerPhysicsPickup", "NutritionPickup", function(InPlayer, InEntity)
+
+	if InEntity:GetNWBool("bFoodInstance") or InEntity:GetNWBool("bWaterInstance") then
+
+		InEntity:SetNWBool("bShowHint", false)
+	end
+end)
+
+hook.Add("OnPlayerPhysicsDrop", "NutritionDrop", function(InPlayer, InEntity, bThrown)
+
+	if InEntity:GetNWBool("bFoodInstance") or InEntity:GetNWBool("bWaterInstance") then
+
+		InEntity:SetNWBool("bShowHint", true)
+	end
 end)
 
 function AddNutrition(InPlayer, InValue, bFood)

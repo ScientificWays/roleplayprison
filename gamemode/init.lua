@@ -1,18 +1,23 @@
 ---- Roleplay: Prison
 
 AddCSLuaFile("sh_util.lua")
+AddCSLuaFile("sh_craft.lua")
+
 AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("cl_util.lua")
 
 AddCSLuaFile("cl_hud.lua")
-AddCSLuaFile("cl_util.lua")
 AddCSLuaFile("cl_network.lua")
 AddCSLuaFile("cl_monitors.lua")
 AddCSLuaFile("cl_pickrole.lua")
 AddCSLuaFile("cl_schedule.lua")
+AddCSLuaFile("cl_workbench.lua")
 AddCSLuaFile("cl_inspection.lua")
 AddCSLuaFile("cl_postprocess.lua")
 
 include("sh_util.lua")
+include("sh_craft.lua")
+
 include("sv_util.lua")
 
 include("sv_map.lua")
@@ -20,12 +25,14 @@ include("sv_task.lua")
 include("sv_work.lua")
 include("sv_voice.lua")
 include("sv_cycle.lua")
+include("sv_items.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
 include("sv_officer.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
 
+util.AddNetworkString("SendTryCraftItemToServer")
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
 
@@ -54,6 +61,8 @@ function GM:Initialize()
 	--GAMEMODE.round_state = ROUND_WAIT
 
 	--concommand.Add("schedulesetup", ToggleScheduleSetup)
+
+	net.Receive("SendTryCraftItemToServer", ServerReceiveTryCraftItem)
 
 	net.Receive("SendScheduleListToServer", ServerReceiveScheduleList)
 
@@ -86,14 +95,12 @@ end
 
 end]]
 
---Интерфейс крафта, крафт отмычек
 --Интерфейс вместо монитора
 --Дубинка, рация и их крафт
 --Заначки
 --Sit anywhere
 --Логика для побега и перехода в режим наблюдателя
 
---Радио
 --Предмет швабра
 --Система тревоги с освещением
 --Задержка включения камеры

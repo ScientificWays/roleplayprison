@@ -8,3 +8,13 @@
 
 	"wave"			"roleplayprison/phone_ring.wav"
 }
+"Library_RadioLoop"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1"
+	"pitch"			"100"
+
+	"soundlevel"		"SNDLVL_50dB"
+
+	"wave"			"roleplayprison/radio_loop.wav"
+}

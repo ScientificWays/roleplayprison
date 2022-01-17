@@ -1,12 +1,16 @@
 ---- Roleplay: Prison
 
 include("sh_util.lua")
+include("sh_craft.lua")
+
 include("cl_util.lua")
-include("cl_monitors.lua")
+
 include("cl_hud.lua")
+include("cl_network.lua")
 include("cl_pickrole.lua")
 include("cl_schedule.lua")
-include("cl_network.lua")
+include("cl_monitors.lua")
+include("cl_workbench.lua")
 include("cl_inspection.lua")
 include("cl_postprocess.lua")
 
@@ -23,33 +27,33 @@ surface.CreateFont("HUDTextSmall", {font = "Tahoma",
 									size = 18,
 									weight = 700})
 
-surface.CreateFont( "closebtn", {
+surface.CreateFont("closebtn", {
 	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 20,
-} )
+})
 
-surface.CreateFont( "title", {
+surface.CreateFont("title", {
 	font = "Tahoma",
 	extended = true,
 	weight = 600,
 	size = 15,
-} )
+})
 
-surface.CreateFont( "msg", {
+surface.CreateFont("msg", {
 	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 17,
-} )
+})
 
-surface.CreateFont( "txt", {
+surface.CreateFont("txt", {
 	font = "Tahoma",
 	extended = true,
 	weight = 500,
 	size = 17,
-} )
+})
 
 function GM:Initialize()
 
@@ -74,7 +78,7 @@ function GM:InitPostEntity()
 
 	WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
 
-	render.RedownloadAllLightmaps();
+	render.RedownloadAllLightmaps()
 
 	self.BaseClass:InitPostEntity()
 end

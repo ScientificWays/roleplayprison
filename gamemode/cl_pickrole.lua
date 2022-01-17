@@ -26,9 +26,14 @@ function TeamCanBePicked(TeamID)
 	end
 end
 
+function IsPickroleOpen()
+
+	return IsValid(MainRoleFrame) or IsValid(SubRoleFrame)
+end
+
 function GM:ShowTeam()
 
-	if IsValid(MainRoleFrame) then
+	if IsPickroleOpen() then
 
 		return
 	end
@@ -228,6 +233,11 @@ function GM:ShowTeam()
 end
 
 function GM:HideTeam()
+
+	if not IsPickroleOpen() then
+
+		return
+	end
 
 	--MsgN("HideTeam()")
 

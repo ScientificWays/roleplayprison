@@ -26,6 +26,7 @@ local IconFood					= Material("icon16/basket.png")
 local IconFoodSpawn				= Material("icon16/basket_add.png")
 local IconWater					= Material("icon16/cup.png")
 local IconWaterSpawn			= Material("icon16/cup_add.png")
+local IconCraft					= Material("icon16/plugin.png")
 
 local BlurMaterial = Material("pp/blurscreen")
 
@@ -107,6 +108,19 @@ local function SetHUDHintDataWaterSpawn()
 	HUDHintData.IconColor = COLOR_WHITE
 
 	HUDHintData.Text = "Питание"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataCraft()
+
+	--MsgN("SetHUDHintDataCraft()")
+
+	HUDHintData.Icon = IconCraft
+
+	HUDHintData.IconColor = COLOR_WHITE
+
+	HUDHintData.Text = "Верстак"
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -501,6 +515,12 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		SetHUDHintDataWaterSpawn()
 
 		return
+
+	elseif InTargetEntity:GetNWBool("bWorkbench") then
+
+		SetHUDHintDataCraft()
+
+		return
 		
 	elseif InTargetEntity:GetNWBool("bStash") then
 
@@ -593,7 +613,7 @@ function GM:HUDPaint()
 		TryDrawInventory(Client)
 	end
 
-	if not TryDrawTaskTime(Client) then
+	if not TryDrawTaskTime(Client) and not IsWorkbenchOpen() and not IsScheduleOpen() then
 
 		TryDrawHUDHintData(Client)
 	end

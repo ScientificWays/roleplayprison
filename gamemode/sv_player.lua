@@ -1,29 +1,35 @@
 ---- Roleplay: Prison
 
-local PlayerFallSounds = {
-	Sound("player/damage1.wav"),
-	Sound("player/damage2.wav"),
-	Sound("player/damage3.wav")
-}
-
-local DebugDude = {}
-
 function UpdatePlayerMonitorType(InPlayer)
 
 	if UtilCheckPlayerInArea(InPlayer, OfficerMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Officer")
 
+		InPlayer.MonitorTimeLeft = 10
+
 	elseif UtilCheckPlayerInArea(InPlayer, ControlMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Control")
 
+		InPlayer.MonitorTimeLeft = 10
+
 	elseif UtilCheckPlayerInArea(InPlayer, LibraryMonitorArea) then
 
 		InPlayer:SetNWString("ActiveMonitorType", "Library")
+
+		InPlayer.MonitorTimeLeft = 10
+
 	else
-			
-		InPlayer:SetNWString("ActiveMonitorType", "None")
+		
+		InPlayer.MonitorTimeLeft = InPlayer.MonitorTimeLeft - 1
+
+		if InPlayer.MonitorTimeLeft <= 0 then
+
+			InPlayer:SetNWString("ActiveMonitorType", "None")
+
+			InPlayer.MonitorTimeLeft = 0
+		end		
 	end
 end
 
@@ -53,42 +59,6 @@ function UpdatePlayerVoiceArea(InPlayer)
 	end
 
 	--MsgN(InPlayer:GetNWString("VoiceLocalArea"))
-end
-
-function TryGiveRoleplayItem(InPlayer, InItemNameStr, InItemNumStr)
-
-	local ItemNum = util.StringToType(InItemNumStr, "int")
-
-	if ItemNum == nil then
-
-		return
-	end
-
-	local ItemName = string.lower(InItemNameStr)
-
-	local VariableName = ""
-
-	MsgN(ItemNum)
-
-	if ItemName == "wood" then
-
-		VariableName = "DetailWoodNum"
-
-	elseif ItemName == "metal" then
-
-		VariableName = "DetailMetalNum"
-
-	elseif ItemName == "picklock" then
-
-		VariableName = "PicklockNum"
-	end
-
-	if VariableName ~= "" then
-
-		local FinalItemNum = InPlayer:GetNWInt(VariableName) + ItemNum
-
-		InPlayer:SetNWInt(VariableName, math.Clamp(FinalItemNum, 0, 99))
-	end
 end
 
 function OnPlayerHandcuffsOn(InPlayer)
@@ -336,7 +306,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Лёха" or SeparatedStrings[1] == "/лёха") then
 
-		DebugDude = player.CreateNextBot("Лёха")
+		local DebugDude = player.CreateNextBot("Лёха")
 
 		DebugDude:SetTeam(TEAM_GUARD)
 
@@ -344,7 +314,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Саня" or SeparatedStrings[1] == "/саня") then
 
-		DebugDude = player.CreateNextBot("Саня")
+		local DebugDude = player.CreateNextBot("Саня")
 
 		DebugDude:SetTeam(TEAM_ROBBER)
 
@@ -352,7 +322,10 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
-		TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
+		if not TryGiveWeaponItem(InSender, SeparatedStrings[2]) then
+
+			TryGiveStackableItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
+		end
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/foodadd" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
@@ -361,8 +334,6 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 			if Player:GetName() == SeparatedStrings[2] then
 
 				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), true)
-
-				return
 			end
 		end
 
@@ -373,8 +344,6 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 			if Player:GetName() == SeparatedStrings[2] then
 
 				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), false)
-
-				return
 			end
 		end
 	end
@@ -565,9 +534,17 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 						TryPickDetailFromWork)
 
 				return true
-			else
+			end
 
-				return false
+			if InTargetEntity:GetNWBool("bWorkbench") then
+
+				OnImplementTaskStart(InActivator,
+					InTargetEntity,
+					1.0,
+					nil,
+					function() InActivator:SendLua("ShowWorkbenchFrame()") end)
+
+				return true
 			end
 		end
 
@@ -575,7 +552,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 		if InTargetEntity:GetName() == "Escape_OnTrigger" then
 
-			
+			return true
 		end
 	end
 
@@ -587,6 +564,8 @@ function GM:PlayerInitialSpawn(InPlayer, bTransition)
 	InPlayer:SetTeam(TEAM_UNASSIGNED)
 
 	InPlayer:ConCommand("gm_showteam")
+
+	InPlayer.MonitorTimeLeft = 0
 end
 
 function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
@@ -702,6 +681,12 @@ function GM:PlayerSwitchWeapon(InPlayer, InOldWeapon, InNewWeapon)
 
 	return false
 end
+
+local PlayerFallSounds = {
+	Sound("player/damage1.wav"),
+	Sound("player/damage2.wav"),
+	Sound("player/damage3.wav")
+}
 
 function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 

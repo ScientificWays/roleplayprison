@@ -7,11 +7,6 @@ function GetReplicatedScheduleList()
 	return ClientScheduleList
 end
 
-function ClientReceiveScheduleList(InMessageLength, InPlayer)
-
-	ClientScheduleList = net.ReadTable()
-end
-
 function ClientSendScheduleList(InElementList)
 
 	net.Start("SendScheduleListToServer")
@@ -19,6 +14,22 @@ function ClientSendScheduleList(InElementList)
 	net.WriteTable(InElementList)
 
 	net.SendToServer()
+end
+
+function ClientSendTryCraftItem(InItemName)
+
+	--MsgN(string.format("ClientSendTryCraftItem() %s", InItemName))
+
+	net.Start("SendTryCraftItemToServer")
+
+	net.WriteString(InItemName)
+
+	net.SendToServer()
+end
+
+function ClientReceiveScheduleList(InMessageLength, InPlayer)
+
+	ClientScheduleList = net.ReadTable()
 end
 
 function ClientReceiveInspectData(InMessageLength, InPlayer)

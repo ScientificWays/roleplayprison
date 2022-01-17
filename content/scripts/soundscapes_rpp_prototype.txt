@@ -260,7 +260,20 @@
 		"volume"	"1.0"
 	}
 }
-"rpp_prototype.PrisonCleanCorridor"
+"rpp_prototype.PrisonOfficeCorridor"
+{
+
+	"dsp"	"18"
+	"dsp_volume" "1.0"
+
+	"playlooping"
+	{
+		"volume"	"0.2"
+		"wave"		"roleplayprison\ambient\office_loop.wav"
+		"pitch"		"100"
+	}
+}
+"rpp_prototype.PrisonOfficeRoom"
 {
 
 	"dsp"	"18"
@@ -269,7 +282,7 @@
 	"playlooping"
 	{
 		"volume"	"0.4"
-		"wave"		"ambient\atmosphere\underground_hall_loop1.wav"
+		"wave"		"roleplayprison\ambient\office_loop.wav"
 		"pitch"		"100"
 	}
 }

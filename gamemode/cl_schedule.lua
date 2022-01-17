@@ -85,7 +85,7 @@ local function UpdateScheduleList()
 	else
 		local y = 75
 
-		for i, ScheduleElementInfo in ipairs(NextCycleScheduleElementList) do
+		for Index, ScheduleElementInfo in ipairs(NextCycleScheduleElementList) do
 
 			local ScheduleElement = vgui.Create("DButton", ScheduleFrame)
 
@@ -97,7 +97,7 @@ local function UpdateScheduleList()
 
 			table.insert(PanelScheduleElementList, ScheduleElement)
 			
-			if i > 1 then
+			if Index > 1 then
 
 				local ScheduleElementUp = vgui.Create("DImageButton", ScheduleFrame)
 
@@ -109,7 +109,7 @@ local function UpdateScheduleList()
 
 				function ScheduleElementUp.DoClick()
 
-					MoveScheduleElementUp(i)
+					MoveScheduleElementUp(Index)
 
 					UpdateScheduleList()
 				end
@@ -117,7 +117,7 @@ local function UpdateScheduleList()
 				table.insert(PanelScheduleElementList, ScheduleElementUp)
 			end
 
-			if i < #NextCycleScheduleElementList then
+			if Index < #NextCycleScheduleElementList then
 
 				local ScheduleElementDown = vgui.Create("DImageButton", ScheduleFrame)
 
@@ -129,7 +129,7 @@ local function UpdateScheduleList()
 
 				function ScheduleElementDown.DoClick()
 
-					MoveScheduleElementDown(i)
+					MoveScheduleElementDown(Index)
 
 					UpdateScheduleList()
 				end
@@ -147,7 +147,7 @@ local function UpdateScheduleList()
 
 			function ScheduleElementRemove.DoClick()
 
-				RemoveScheduleElementFromList(i)
+				RemoveScheduleElementFromList(Index)
 
 				UpdateScheduleList()
 			end
@@ -194,9 +194,17 @@ local function UpdateScheduleList()
 	ConfirmElementButton:SetEnabled(bCanAccept)
 end
 
+function IsScheduleOpen()
+
+	return IsValid(ScheduleFrame)
+end
+
 function ShowScheduleSetup()
 
-	if IsValid(ScheduleFrame) then return end
+	if IsScheduleOpen() then
+
+		return
+	end
 	
 	ScheduleFrame = vgui.Create("DFrame")
 
@@ -273,12 +281,14 @@ end
 
 function HideScheduleSetup()
 
-	if (IsValid(ScheduleFrame)) then
-
-		ScheduleFrame:Remove()
-
-		ScheduleFrame = nil
+	if not IsScheduleOpen() then
+		
+		return
 	end
+	
+	ScheduleFrame:Remove()
+
+	ScheduleFrame = nil
 end
 
 function ToggleScheduleSetup()

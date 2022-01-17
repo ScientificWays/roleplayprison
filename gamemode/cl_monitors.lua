@@ -6,31 +6,37 @@ local MonitorLibraryRT = GetRenderTarget("_rt_MonitorLibrary", 2048, 2048)
 
 --local MonitorRTTexture = Material("models/rendertarget"):GetTexture("$basetexture")
 
-function GM:PostRenderVGUI()
+local OldMonitorType = ""
+
+timer.Create("MonitorTick", 1.0, 0, function()
 
 	local Client = LocalPlayer()
 
-	if engine.TickCount() % 60 == 0 then
+	if not IsValid(Client) then
 
-		local ActiveMonitorType = Client:GetNWString("ActiveMonitorType")
+		return
+	end
 
-		if ActiveMonitorType ~= "None" then
+	local ActiveMonitorType = Client:GetNWString("ActiveMonitorType")
 
-			if ActiveMonitorType == "Officer" then
+	if ActiveMonitorType == "None" then
 
-				OfficerMonitorDraw()
+		if ActiveMonitorType == "Officer" then
 
-			elseif ActiveMonitorType == "Control" then
+			OfficerMonitorDraw()
 
-				ControlMonitorDraw()
+		elseif ActiveMonitorType == "Control" then
 
-			elseif ActiveMonitorType == "Library" then
+			ControlMonitorDraw()
 
-				LibraryMonitorDraw()
-			end
+		elseif ActiveMonitorType == "Library" then
+
+			LibraryMonitorDraw()
 		end
 	end
-end
+
+	OldMonitorType = ActiveMonitorType
+end)
 
 function OfficerMonitorDraw()
 

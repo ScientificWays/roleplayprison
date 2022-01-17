@@ -195,8 +195,8 @@ function SetupMapEntityFlags()
 
 			SampleEntity:SetNWBool("bDetailPickup", true)
 
-			--Intentional no hint
-			SampleEntity:SetNWBool("bShowHint", false)
+			--No hint needed
+			--SampleEntity:SetNWBool("bShowHint", false)
 
 		elseif string.EndsWith(SampleEntityName, "_DetailSpawn") then
 
@@ -220,6 +220,14 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bWaterSpawn", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
+		elseif string.EndsWith(SampleEntityName, "_Workbench") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bWorkbench", true)
 
 			SampleEntity:SetNWBool("bShowHint", true)
 		end
