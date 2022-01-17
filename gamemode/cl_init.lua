@@ -79,38 +79,5 @@ function GM:InitPostEntity()
 	self.BaseClass:InitPostEntity()
 end
 
-function GM:Tick()
-
-	if engine.TickCount() % 10 ~= 0 then
-
-		return
-	end
-
-	ResetHUDHintData()
-
-	local ClientPlayer = LocalPlayer()
-
-	if not IsValid(ClientPlayer) then
-
-		return
-	end
-
-	UpdatePostProcessData(ClientPlayer)
-
-	if  not IsValid(ClientPlayer:GetActiveWeapon()) or ClientPlayer:GetActiveWeapon():GetClass() ~= "weapon_rpp_unarmed" then
-
-		return
-	end
-
-	local EyeTrace = ClientPlayer:GetEyeTrace()
-
-	if EyeTrace.Fraction * 32768 > 128 or not IsValid(EyeTrace.Entity) then
-
-		return
-	end
-
-	UpdateHUDHintData(ClientPlayer, EyeTrace.Entity)
-end
-
 function GM:AddDeathNotice() end
 function GM:DrawDeathNotice() end

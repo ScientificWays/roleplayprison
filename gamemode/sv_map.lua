@@ -195,6 +195,9 @@ function SetupMapEntityFlags()
 
 			SampleEntity:SetNWBool("bDetailPickup", true)
 
+			--Intentional no hint
+			SampleEntity:SetNWBool("bShowHint", false)
+
 		elseif string.EndsWith(SampleEntityName, "_DetailSpawn") then
 
 			MsgN(SampleEntityName.." is registered!")
@@ -202,7 +205,23 @@ function SetupMapEntityFlags()
 			SampleEntity:SetNWBool("bDetailSpawn", true)
 
 			--Will be true if will have at least 1 detail made
-			--SampleEntity:SetNWBool("bShowHint", true)
+			SampleEntity:SetNWBool("bShowHint", false)
+
+		elseif string.EndsWith(SampleEntityName, "_FoodSpawn") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bFoodSpawn", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
+		elseif string.EndsWith(SampleEntityName, "_WaterSpawn") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bWaterSpawn", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
 		end
 	end
 end

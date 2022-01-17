@@ -22,10 +22,94 @@ local IconServerSabotage		= Material("icon16/server.png")
 local IconGuardTask				= Material("icon16/folder_error.png")
 local IconRobberTask			= Material("icon16/cog.png")
 local IconDetailSpawn			= Material("icon16/brick.png")
+local IconFood					= Material("icon16/basket.png")
+local IconFoodSpawn				= Material("icon16/basket_add.png")
+local IconWater					= Material("icon16/cup.png")
+local IconWaterSpawn			= Material("icon16/cup_add.png")
 
 local BlurMaterial = Material("pp/blurscreen")
 
 local HUDHintData = {}
+
+timer.Create("HUDHintDataTick", 0.2, 0, function()
+
+	ResetHUDHintData()
+
+	local ClientPlayer = LocalPlayer()
+
+	if not IsValid(ClientPlayer) or ClientPlayer:GetNWFloat("TaskTimeLeft") > 0.0 then
+
+		return
+	end
+
+	UpdatePostProcessData(ClientPlayer)
+
+	if not IsValid(ClientPlayer:GetActiveWeapon()) or ClientPlayer:GetActiveWeapon():GetClass() ~= "weapon_rpp_unarmed" then
+
+		return
+	end
+
+	local EyeTrace = ClientPlayer:GetEyeTrace()
+
+	if EyeTrace.Fraction * 32768 > 128 or not IsValid(EyeTrace.Entity) then
+
+		return
+	end
+
+	UpdateHUDHintData(ClientPlayer, EyeTrace.Entity)
+end)
+
+local function SetHUDHintDataFood()
+
+	MsgN("SetHUDHintDataFood()")
+
+	HUDHintData.Icon = IconFood
+
+	HUDHintData.IconColor = COLOR_WHITE
+
+	HUDHintData.Text = "R"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataFoodSpawn()
+
+	--MsgN("SetHUDHintDataFoodSpawn()")
+
+	HUDHintData.Icon = IconFoodSpawn
+
+	HUDHintData.IconColor = COLOR_WHITE
+
+	HUDHintData.Text = "Питание"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataWater()
+
+	--MsgN("SetHUDHintDataWater()")
+
+	HUDHintData.Icon = IconWater
+
+	HUDHintData.IconColor = COLOR_WHITE
+
+	HUDHintData.Text = "R"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataWaterSpawn()
+
+	--MsgN("SetHUDHintDataWaterSpawn()")
+
+	HUDHintData.Icon = IconWaterSpawn
+
+	HUDHintData.IconColor = COLOR_WHITE
+
+	HUDHintData.Text = "Питание"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
 
 local function SetHUDHintDataScheduleSetup()
 
@@ -335,6 +419,8 @@ end
 
 function ResetHUDHintData()
 
+	--MsgN("ResetHUDHintData()")
+
 	--Default size and color defined here
 	HUDHintData = {Icon = nil, IconColor = COLOR_WHITE, IconSize = {x = 32, y = 32}, Text = nil, TotalNum = 0,
 					IconSize2 = {x = 32, y = 32},
@@ -343,7 +429,7 @@ end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
 
-	--MsgN(InTargetEntity)
+	--MsgN(InTargetEntity:GetNWBool("bFoodSpawn"))
 
 	if not InTargetEntity:GetNWBool("bShowHint") and not InTargetEntity:IsPlayer() then
 
@@ -389,6 +475,30 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 	elseif InTargetEntity:GetNWBool("bDetailSpawn") then
 
 		SetHUDHintDataDetailSpawn(InTargetEntity:GetNWString("TaskImplementer"))
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bFoodInstance") then
+
+		SetHUDHintDataFood()
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bFoodSpawn") then
+
+		SetHUDHintDataFoodSpawn()
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bWaterInstance") then
+
+		SetHUDHintDataWater()
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bWaterSpawn") then
+
+		SetHUDHintDataWaterSpawn()
 
 		return
 		
@@ -483,10 +593,7 @@ function GM:HUDPaint()
 		TryDrawInventory(Client)
 	end
 
-	if TryDrawTaskTime(Client) then
-
-		ResetHUDHintData()
-	else
+	if not TryDrawTaskTime(Client) then
 
 		TryDrawHUDHintData(Client)
 	end

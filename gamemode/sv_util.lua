@@ -124,6 +124,10 @@ function UtilChangePlayerFreeze(InPlayer, bAddFreeze)
 
 	InPlayer.FreezeNum = InPlayer.FreezeNum or 0
 
+	--MsgN("UtilChangePlayerFreeze()")
+
+	--MsgN(InPlayer.FreezeNum)
+
 	if bAddFreeze then
 
 		InPlayer.FreezeNum = InPlayer.FreezeNum + 1

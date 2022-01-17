@@ -6,11 +6,11 @@ local MaxBrignessValue = -0.3
 
 local MaxColorValue = 0.0
 
-local MaxDelayValue = 0.06
+local MaxAddAlphaValue = 0.06
 
 function UpdatePostProcessData(InPlayer)
 
-	--MsgN("UpdatePostProcessData()")
+	--MsgN(InPlayer:GetNWFloat("HungerValue"))
 
 	local TotalValue = (InPlayer:GetNWFloat("InjuryValue") + InPlayer:GetNWFloat("HungerValue")) / 2
 
@@ -27,7 +27,7 @@ function UpdatePostProcessData(InPlayer)
 
 	InPlayer:ConCommand(string.format("pp_colormod_color %f", Lerp(TotalValue, 1.0, MaxColorValue)))
 
-	InPlayer:ConCommand(string.format("pp_motionblur_delay %f", Lerp(TotalValue, 0.0, MaxDelayValue)))
+	InPlayer:ConCommand(string.format("pp_motionblur_addalpha %f", Lerp(TotalValue, 1.0, MaxAddAlphaValue)))
 
 	OldTotalValue = TotalValue
 end

@@ -201,48 +201,6 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	end
 end)
 
-timer.Create("HungerTick", 24, 0, function()
-
-	local AllPlayers = player.GetAll()
-
-	for Index, Player in ipairs(AllPlayers) do
-
-		if Player.Food >= 1 then
-
-			Player.Food = Player.Food - 1
-		else
-
-			Player.Food = 0
-		end
-
-		if Player.Water >= 1 then
-
-			Player.Water = Player.Water - 2
-		else
-
-			Player.Water = 0
-		end
-
-		Player:SetNWFloat("HungerValue", 1.0 - (Player.Food + Player.Water) / 200)
-
-		if Player.Food < 20 or Player.Water < 20 then
-
-			if Player:Health() > 15 then
-
-				Player:SetHealth(Player:Health() - 1)
-			end
-		end
-	end
-
-end)
-
-hook.Add("SetupMove", "HungerMove", function(InPlayer, InMoveData, InCommandData)
-
-	local VelocityMul = Lerp(InPlayer:GetNWFloat("HungerValue"), 1.0, 0.5)
-
-	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * VelocityMul)
-end)
-
 timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 
 	local AllPlayers = player.GetAll()
@@ -280,7 +238,7 @@ timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 
 			return
 		end
-		
+
 		if Player.Energy < UtilGetSprintDuration() * 0.25 then
 
 			if Player.BreatheSound == nil then
@@ -392,19 +350,33 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:Spawn()
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
 		TryGiveRoleplayItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/food" and SeparatedStrings[2] ~= nil then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/foodadd" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
-		InSender.Food = math.Round(tonumber(SeparatedStrings[2])) or InSender.Food
+		for Index, Player in ipairs(player.GetAll()) do
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/water" and SeparatedStrings[2] ~= nil then
+			if Player:GetName() == SeparatedStrings[2] then
 
-		InSender.Water = math.Round(tonumber(SeparatedStrings[2])) or InSender.Water
+				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), true)
 
-		print(InSender.Water)
+				return
+			end
+		end
+
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/wateradd" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
+
+		for Index, Player in ipairs(player.GetAll()) do
+
+			if Player:GetName() == SeparatedStrings[2] then
+
+				AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), false)
+
+				return
+			end
+		end
 	end
 
 	return ""
@@ -455,6 +427,17 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				ToggleGlobalSpeaker(InTargetEntity)
 			end
+
+			return false
+		end
+
+		if InTargetEntity:GetNWBool("bFoodSpawn") or InTargetEntity:GetNWBool("bWaterSpawn") then
+
+			OnImplementTaskStart(InActivator,
+				InTargetEntity,
+				1.0,
+				nil,
+				OnNutritionSpawn)
 
 			return false
 		end
@@ -656,7 +639,19 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		InPlayer:ConCommand("pp_colormod 1")
 
+		InPlayer:ConCommand("pp_colormod_addr 0")
+		InPlayer:ConCommand("pp_colormod_addg 0")
+		InPlayer:ConCommand("pp_colormod_addb 0")
+		InPlayer:ConCommand("pp_colormod_contrast 1")
+		InPlayer:ConCommand("pp_colormod_mulr 0")
+		InPlayer:ConCommand("pp_colormod_mulg 0")
+		InPlayer:ConCommand("pp_colormod_mulb 0")
+
 		InPlayer:ConCommand("pp_motionblur 1")
+
+		InPlayer:ConCommand("pp_motionblur_addalpha 1.0")
+		InPlayer:ConCommand("pp_motionblur_drawalpha 1.0")
+		InPlayer:ConCommand("pp_motionblur_delay 0.0")
 
 		InPlayer.Food = 100
 
@@ -700,7 +695,7 @@ end
 
 function GM:PlayerSwitchWeapon(InPlayer, InOldWeapon, InNewWeapon)
 
-	if InPlayer:GetNWBool("bHandcuffed") then
+	if InPlayer:GetNWBool("bHandcuffed") or InPlayer:GetNWFloat("TaskTimeLeft") > 0.0 then
 
 		return true
 	end
@@ -783,7 +778,7 @@ function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 		-- play CS:S fall sound if we got somewhat significant damage
 		if CalculatedDamage > 5 then
 
-			sound.Play(table.Random(PlayerFallSounds), InPlayer:GetMoveFromPos(), 55 + math.Clamp(CalculatedDamage, 0, 50), 100)
+			sound.Play(table.Random(PlayerFallSounds), InPlayer:GetShootPos(), 55 + math.Clamp(CalculatedDamage, 0, 50), 100)
 		end
 	end
 end

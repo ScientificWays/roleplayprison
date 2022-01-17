@@ -21,6 +21,7 @@ include("sv_work.lua")
 include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_player.lua")
+include("sv_hunger.lua")
 include("sv_officer.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
@@ -89,10 +90,10 @@ end]]
 --Интерфейс вместо монитора
 --Дубинка, рация и их крафт
 --Заначки
+--Sit anywhere
 --Логика для побега и перехода в режим наблюдателя
 
+--Радио
 --Предмет швабра
---Система выносливости и замедления от повреждений
---Система голода
 --Система тревоги с освещением
 --Задержка включения камеры

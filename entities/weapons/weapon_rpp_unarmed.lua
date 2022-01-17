@@ -31,6 +31,13 @@ SWEP.AllowDelete            = false
 SWEP.AllowDrop              = false
 SWEP.NoSights               = true
 
+local function CanTryInteract(InPlayer, InInteractEntity)
+
+	return IsValid(InInteractEntity)
+	and InInteractEntity:GetNWFloat("TaskTimeLeft") <= 0
+	and not InPlayer:GetNWBool("bHandcuffed")
+end
+
 local function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
 
 	local InputType = "Unlock"
@@ -66,8 +73,7 @@ end
 
 local function CanUsePicklock(InPlayer, InInteractEntity)
 
-	if not InPlayer:GetNWBool("bHandcuffed")
-	and InPlayer:GetNWInt("PicklockNum") > 0
+	if InPlayer:GetNWInt("PicklockNum") > 0
 	and InInteractEntity:GetNWBool("bWasLocked")
 	and (InInteractEntity:GetNWBool("bGuardLockable")
 	or InInteractEntity:GetNWBool("bOfficerLockable")
@@ -259,6 +265,22 @@ local function TryToggleKidnap(InPlayer, InInteractEntity)
 	return true
 end
 
+local function CanConsumeNutrition(InPlayer, InInteractEntity)
+
+	return IsValid(InInteractEntity)
+	and (InInteractEntity:GetNWBool("bWaterInstance") or InInteractEntity:GetNWBool("bFoodInstance"))
+end
+
+local function TryConsumeNutrition(InPlayer, InInteractEntity)
+
+	if not CanConsumeNutrition(InPlayer, InInteractEntity) then
+
+		return
+	end
+
+	OnNutritionConsume(InPlayer, InInteractEntity)
+end
+
 --[[local function TryImplementTask(InPlayer, InInteractEntity)
 
 	local PlayerName = InPlayer:GetName()
@@ -302,6 +324,11 @@ function SWEP:PrimaryAttack()
 
 	local PlayerOwner = self:GetOwner()
 
+	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
+
+		return
+	end
+
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
@@ -313,7 +340,7 @@ function SWEP:PrimaryAttack()
 
 	local InteractEntity = EyeTrace.Entity
 
-	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
+	if CanTryInteract(PlayerOwner, InteractEntity) then
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
@@ -342,6 +369,11 @@ function SWEP:SecondaryAttack()
 
 	local PlayerOwner = self:GetOwner()
 
+	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
+
+		return
+	end
+
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
@@ -353,7 +385,7 @@ function SWEP:SecondaryAttack()
 
 	local InteractEntity = EyeTrace.Entity
 
-	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
+	if CanTryInteract(PlayerOwner, InteractEntity) then
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
@@ -428,6 +460,11 @@ function SWEP:Reload()
 
 	local PlayerOwner = self:GetOwner()
 
+	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
+
+		return
+	end
+
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
@@ -439,7 +476,18 @@ function SWEP:Reload()
 
 	local InteractEntity = EyeTrace.Entity
 
-	if IsValid(InteractEntity) and not PlayerOwner:GetNWBool("bHandcuffed") then
+	if CanTryInteract(PlayerOwner, InteractEntity) then
+
+		if CanConsumeNutrition(PlayerOwner, InteractEntity) then
+
+			OnImplementTaskStart(PlayerOwner,
+					InteractEntity,
+					1.0,
+					function() UtilChangePlayerFreeze(InteractEntity, false) end,
+					TryConsumeNutrition)
+
+			return
+		end
 
 		if PlayerOwner:Team() == TEAM_GUARD then
 
@@ -460,7 +508,9 @@ function SWEP:Reload()
 end
 
 function SWEP:Deploy()
+
 	if SERVER and IsValid(self:GetOwner()) then
+
 		self:GetOwner():DrawViewModel(false)
 	end
 
@@ -470,11 +520,16 @@ function SWEP:Deploy()
 end
 
 function SWEP:Holster()
+
 	return true
 end
 
 function SWEP:DrawWorldModel()
+
+
 end
 
 function SWEP:DrawWorldModelTranslucent()
+
+
 end
