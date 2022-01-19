@@ -2,11 +2,13 @@
 
 AddCSLuaFile("sh_util.lua")
 AddCSLuaFile("sh_craft.lua")
+AddCSLuaFile("sh_stash.lua")
 
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("cl_util.lua")
 
 AddCSLuaFile("cl_hud.lua")
+AddCSLuaFile("cl_stash.lua")
 AddCSLuaFile("cl_network.lua")
 AddCSLuaFile("cl_monitors.lua")
 AddCSLuaFile("cl_pickrole.lua")
@@ -17,6 +19,7 @@ AddCSLuaFile("cl_postprocess.lua")
 
 include("sh_util.lua")
 include("sh_craft.lua")
+include("sh_stash.lua")
 
 include("sv_util.lua")
 
@@ -25,21 +28,29 @@ include("sv_task.lua")
 include("sv_work.lua")
 include("sv_voice.lua")
 include("sv_cycle.lua")
+include("sv_stash.lua")
 include("sv_items.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
 include("sv_energy.lua")
 include("sv_officer.lua")
+include("sv_skylight.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
 
 util.AddNetworkString("SendTryCraftItemToServer")
+util.AddNetworkString("SendTryInteractStashToServer")
+
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
 
-util.AddNetworkString("SendAndShowInspectDataToClient")
+util.AddNetworkString("SendInspectDataToClient")
 
 util.AddNetworkString("UpdateClientLightmaps")
+
+util.AddNetworkString("ClientOpenScheduleSetup")
+util.AddNetworkString("ClientOpenWorkbench")
+util.AddNetworkString("ClientOpenStash")
 
 function OnPlayerAreaUpdate()
 
@@ -64,6 +75,8 @@ function GM:Initialize()
 	--concommand.Add("schedulesetup", ToggleScheduleSetup)
 
 	net.Receive("SendTryCraftItemToServer", ServerReceiveTryCraftItem)
+
+	net.Receive("SendTryInteractStashToServer", ServerReceiveTryInteractStash)
 
 	net.Receive("SendScheduleListToServer", ServerReceiveScheduleList)
 
@@ -97,7 +110,6 @@ end
 end]]
 
 --Дубинка, рация и их крафт
---Заначки
 --Sit anywhere
 --Логика для побега и перехода в режим наблюдателя
 

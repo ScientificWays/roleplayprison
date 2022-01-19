@@ -2,10 +2,12 @@
 
 include("sh_util.lua")
 include("sh_craft.lua")
+include("sh_stash.lua")
 
 include("cl_util.lua")
 
 include("cl_hud.lua")
+include("cl_stash.lua")
 include("cl_network.lua")
 include("cl_pickrole.lua")
 include("cl_schedule.lua")
@@ -65,7 +67,11 @@ function GM:Initialize()
 
 	net.Receive("SendScheduleListToClients", ClientReceiveScheduleList)
 
-	net.Receive("SendAndShowInspectDataToClient", ClientReceiveInspectData)
+	net.Receive("SendInspectDataToClient", ClientReceiveInspectData)
+
+	net.Receive("ClientOpenScheduleSetup", ClientOpenScheduleSetup)
+	net.Receive("ClientOpenWorkbench", ClientOpenWorkbench)
+	net.Receive("ClientOpenStash", ClientOpenStash)
 
 	net.Receive("UpdateClientLightmaps", UpdateClientLightmaps)
 	

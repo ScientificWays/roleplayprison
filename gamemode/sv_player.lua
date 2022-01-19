@@ -316,11 +316,26 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 		if InTargetEntity:GetNWBool("bFoodSpawn") or InTargetEntity:GetNWBool("bWaterSpawn") then
 
-			OnImplementTaskStart(InActivator,
+			OnImplementTaskStart(
+				InActivator,
 				InTargetEntity,
 				1.0,
 				nil,
-				OnNutritionSpawn)
+				OnNutritionSpawn
+			)
+
+			return false
+		end
+
+		if InTargetEntity:GetNWBool("bStash") then
+
+			OnImplementTaskStart(
+				InActivator,
+				InTargetEntity,
+				1.0,
+				nil,
+				OnStashOpen
+			)
 
 			return false
 		end
@@ -331,7 +346,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				if InActivator:GetNWBool("bOfficer") and not IsOfficerPhoneEnabled() and not UtilIsScheduleSet() then
 
-					InActivator:SendLua("ToggleScheduleSetup()")
+					OnScheduleSetupOpen(InActivator, InTargetEntity)
 
 					return false
 				else
@@ -350,11 +365,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				if InTargetEntity:GetNWBool("bSabotaged") then
 
-					OnImplementTaskStart(InActivator,
+					OnImplementTaskStart(
+						InActivator,
 						InTargetEntity,
 						UtilGetServerRepairDuration(),
 						nil,
-						TryRepairServer)
+						TryRepairServer
+					)
 
 					return true
 				else
@@ -371,11 +388,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 					--Temporary disable ringing, true if no punishment
 					if OnOfficerAnswerPhone() then
 
-						OnImplementTaskStart(InActivator,
+						OnImplementTaskStart(
+							InActivator,
 							InTargetEntity,
 							UtilGetOfficerRoutineDuration(),
 							CancelOfficerAnswerPhone,
-							FinishOfficerAnswerPhone)
+							FinishOfficerAnswerPhone
+						)
 					end
 
 					return true
@@ -390,11 +409,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
 					and InActivator:GetName() == InTargetEntity:GetNWString("TaskImplementer") then
 
-					OnImplementTaskStart(InActivator,
+					OnImplementTaskStart(
+						InActivator,
 						InTargetEntity,
 						UtilGetGuardRoutineDuration(),
 						nil,
-						FinishGuardAccountingTask)
+						FinishGuardAccountingTask
+					)
 
 					return true
 				else
@@ -409,11 +430,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				if not InTargetEntity:GetNWBool("bSabotaged") then
 
-					OnImplementTaskStart(InActivator,
+					OnImplementTaskStart(
+						InActivator,
 						InTargetEntity,
 						UtilGetServerSabotageDuration(),
 						nil,
-						TrySabotageServer)
+						TrySabotageServer
+					)
 
 					return true
 				else
@@ -426,11 +449,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 				if InTargetEntity:GetNWString("NowImplemetingBy") == "" then
 
-					OnImplementTaskStart(InActivator,
+					OnImplementTaskStart(
+						InActivator,
 						InTargetEntity,
 						UtilGetRobberWorkDuration(),
 						nil,
-						FinishRobberWorkTask)
+						FinishRobberWorkTask
+					)
 
 					return true
 				else
@@ -441,22 +466,26 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 
 			if InTargetEntity:GetNWBool("bDetailPickup") and GetDetailNumInStack(InTargetEntity) > 0 then
 
-				OnImplementTaskStart(InActivator,
-						InTargetEntity,
-						UtilGetDetailPickupDuration(),
-						nil,
-						TryPickDetailFromWork)
+				OnImplementTaskStart(
+					InActivator,
+					InTargetEntity,
+					UtilGetDetailPickupDuration(),
+					nil,
+					TryPickDetailFromWork
+				)
 
 				return true
 			end
 
 			if InTargetEntity:GetNWBool("bWorkbench") then
 
-				OnImplementTaskStart(InActivator,
+				OnImplementTaskStart(
+					InActivator,
 					InTargetEntity,
 					1.0,
 					nil,
-					function() InActivator:SendLua("ShowWorkbenchFrame()") end)
+					OnWorkbenchOpen
+				)
 
 				return true
 			end

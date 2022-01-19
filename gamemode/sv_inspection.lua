@@ -64,7 +64,7 @@ function OnInspect(InPlayer, InTargetPlayer)
 		table.insert(InspectDataTable.IllegalWeaponNameList, Weapon:GetPrintName())
 	end
 
-	net.Start("SendAndShowInspectDataToClient")
+	net.Start("SendInspectDataToClient")
 
 	net.WriteTable(InspectDataTable)
 

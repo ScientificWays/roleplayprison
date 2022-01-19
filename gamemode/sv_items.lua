@@ -1,5 +1,12 @@
 ---- Roleplay: Prison
 
+function OnWorkbenchOpen(InPlayer, InStashEntity)
+
+	net.Start("ClientOpenWorkbench")
+
+	net.Send(InActivator)
+end
+
 function ServerReceiveTryCraftItem(InMessageLength, InPlayer)
 
 	local ItemName = net.ReadString()

@@ -46,6 +46,13 @@ function ServerResetScheduleList()
 	net.Broadcast()
 end
 
+function OnScheduleSetupOpen(InPlayer, InScheduleSetupEntity)
+
+	net.Start("ClientOpenScheduleSetup")
+
+	net.Send(InPlayer)
+end
+
 function TrySkipTaskDelayFor(InPlayerName)
 
 	local RoutineData = GuardRoutineTimeLeftTable[InPlayerName]

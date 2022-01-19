@@ -4,9 +4,14 @@ local InspectionFrame = nil
 
 local InspectionFrameWidth = 500
 
+function IsInspectionOpen()
+
+	return IsValid(InspectionFrame)
+end
+
 function ShowInspection(InInspectDataTable)
 
-	if IsValid(InspectionFrame) then
+	if IsInspectionOpen() then
 
 		InspectionFrame:Remove()
 	end
@@ -86,9 +91,7 @@ end
 
 function HideInspection()
 
-	if IsValid(InspectionFrame) then
-
-		MsgN("Valid InspectionFrame")
+	if IsInspectionOpen() then
 
 		InspectionFrame:SizeTo(0, 0, 0.9, 0.2, 0.1)
 

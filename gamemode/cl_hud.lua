@@ -340,6 +340,17 @@ local function SetHUDHintData3TradePicklock()
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
+local function SetHUDHintDataStash()
+
+	HUDHintData.Icon = IconHand
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	--HUDHintData.Text = "Заначка"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
 local function TryDrawInventory(InClient)
 
 	surface.SetDrawColor(COLOR_YELLOW)
@@ -563,7 +574,7 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		
 	elseif InTargetEntity:GetNWBool("bStash") then
 
-		SetHUDHintDataUsable()
+		SetHUDHintDataStash()
 
 		return
 	end
@@ -652,7 +663,9 @@ function GM:HUDPaint()
 
 	local Client = LocalPlayer()
 
-	bHideHUD = not Client:KeyDown(IN_WALK)
+	local bInteractInterfaceOpen = IsScheduleOpen() or IsWorkbenchOpen() or IsStashOpen()
+
+	bHideHUD = not Client:KeyDown(IN_WALK) and not bInteractInterfaceOpen
 
 	if not Client:Alive() or Client:Team() == TEAM_SPECTATOR or Client:Team() == TEAM_UNASSIGNED then
 
@@ -669,7 +682,7 @@ function GM:HUDPaint()
 		TryDrawInventory(Client)
 	end
 
-	if not TryDrawTaskTime(Client) and not IsWorkbenchOpen() and not IsScheduleOpen() then
+	if not TryDrawTaskTime(Client) and not bInteractInterfaceOpen then
 
 		TryDrawHUDHintData(Client)
 	end

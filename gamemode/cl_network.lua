@@ -39,6 +39,37 @@ function ClientReceiveInspectData(InMessageLength, InPlayer)
 	ShowInspection(InspectDataTable)
 end
 
+function ClientOpenScheduleSetup(InMessageLength, InPlayer)
+
+	ShowScheduleSetup()
+end
+
+function ClientOpenScheduleSetup(InMessageLength, InPlayer)
+
+	ShowScheduleSetup()
+end
+
+function ClientOpenScheduleSetup(InMessageLength, InPlayer)
+
+	ShowScheduleSetup()
+end
+
+function ClientOpenWorkbench(InMessageLength, InPlayer)
+
+	ShowWorkbench()
+end
+
+function ClientOpenStash(InMessageLength, InPlayer)
+
+	local StashEntityIndex = net.ReadInt(32)
+
+	--MsgN(StashEntityIndex)
+
+	--MsgN(Entity(StashEntityIndex))
+
+	ShowStash(Entity(StashEntityIndex))
+end
+
 function UpdateClientLightmaps(InMessageLength, InPlayer)
 
 	render.RedownloadAllLightmaps()
