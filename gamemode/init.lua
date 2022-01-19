@@ -78,7 +78,7 @@ function GM:InitPostEntity()
 
 	SetupMapAreas()
 
-	SetColorCorrectionEntities()
+	SetupSkyPaint()
 
 	local WorldEntity = game.GetWorld()
 

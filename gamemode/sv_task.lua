@@ -220,16 +220,19 @@ function OnImplementTaskProgress(InPlayer)
 
 		local CurrentPlayerAngles = InPlayer:EyeAngles()
 
+		local CurrentEntityPos = TaskData.TaskEntity:GetPos()
+
 		local CurrentYawDifference = math.abs(math.AngleDifference(CurrentPlayerAngles.Yaw, TaskData.Angles.Yaw))
 
 		local CurrentPitchDifference = math.abs(math.AngleDifference(CurrentPlayerAngles.Pitch, TaskData.Angles.Pitch))
 
-		local MaxDifference = math.max(CurrentYawDifference, CurrentPitchDifference)
+		local MaxAngleDifference = math.max(CurrentYawDifference, CurrentPitchDifference)
 
-		InPlayer:SetNWFloat("TaskCancelExtent", MaxDifference / 30.0 - 0.2)
+		InPlayer:SetNWFloat("TaskCancelExtent", MaxAngleDifference / 30.0 - 0.2)
 
-		if CurrentPlayerPos:DistToSqr(TaskData.Position) > 128.0
-			or MaxDifference > 30.0 then
+		if CurrentPlayerPos:DistToSqr(TaskData.Position) > 256.0		--16^2
+			or CurrentPlayerPos:DistToSqr(CurrentEntityPos) > 16384.0	--128^2
+			or MaxAngleDifference > 30.0 then
 
 			OnImplementTaskStop(InPlayer, true)
 		end

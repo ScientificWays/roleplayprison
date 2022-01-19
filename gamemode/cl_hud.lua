@@ -257,17 +257,6 @@ local function SetHUDHintDataServerSabotage(bRobberTeam)
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
-local function SetHUDHintDataHandcuffs()
-
-	HUDHintData.Icon = IconHandcuffs
-
-	HUDHintData.IconColor = COLOR_YELLOW
-
-	HUDHintData.Text = "ПКМ"
-
-	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
-end
-
 local function SetHUDHintData2Knock()
 
 	HUDHintData.Icon2 = IconKnock
@@ -279,24 +268,74 @@ local function SetHUDHintData2Knock()
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
+local function SetHUDHintDataHandcuffs()
+
+	HUDHintData.Icon = IconHandcuffs
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
 local function SetHUDHintData2Inspect()
 
-	HUDHintData.Icon3 = IconInspect
+	HUDHintData.Icon2 = IconInspect
 
-	HUDHintData.IconColor3 = COLOR_YELLOW
+	HUDHintData.IconColor2 = COLOR_YELLOW
 
-	HUDHintData.Text3 = "R"
+	HUDHintData.Text2 = "R"
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
 local function SetHUDHintData3Kidnap()
 
-	HUDHintData.Icon2 = IconHand
+	HUDHintData.Icon3 = IconHand
+
+	HUDHintData.IconColor3 = COLOR_YELLOW
+
+	HUDHintData.Text3 = "ЛКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataTradeWood()
+
+	MsgN("SetHUDHintDataTradeWood()")
+
+	HUDHintData.Icon = IconWood
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ЛКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintData2TradeMetal()
+
+	MsgN("SetHUDHintData2TradeMetal()")
+
+	HUDHintData.Icon2 = IconMetal
 
 	HUDHintData.IconColor2 = COLOR_YELLOW
 
-	HUDHintData.Text2 = "ЛКМ"
+	HUDHintData.Text2 = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintData3TradePicklock()
+
+	MsgN("SetHUDHintData3TradePicklock()")
+
+	HUDHintData.Icon3 = IconPicklock
+
+	HUDHintData.IconColor3 = COLOR_YELLOW
+
+	HUDHintData.Text3 = "R"
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -583,6 +622,23 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 			and InPlayer:GetNWInt("PicklockNum") > 0 then
 
 			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
+
+		elseif InTargetEntity:IsPlayer() and InTargetEntity:Team() == TEAM_ROBBER then
+
+			if InPlayer:GetNWInt("DetailWoodNum") > 0 then
+
+				SetHUDHintDataTradeWood()
+			end
+
+			if InPlayer:GetNWInt("DetailMetalNum") > 0 then
+
+				SetHUDHintData2TradeMetal()
+			end
+
+			if InPlayer:GetNWInt("PicklockNum") > 0 then
+
+				SetHUDHintData3TradePicklock()
+			end
 		end
 	end
 end

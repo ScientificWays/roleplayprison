@@ -27,24 +27,33 @@ function OnInspect(InPlayer, InTargetPlayer)
 
 	local StripDetailMetalNum = InTargetPlayer:GetNWInt("DetailMetalNum")
 
-	if math.random() < 0.8 then
+	local StripPicklockNum = InTargetPlayer:GetNWInt("PicklockNum")
+
+	if math.random() < 0.2 then
 
 		StripDetailWoodNum = math.Clamp(StripDetailWoodNum - math.random(1, 3), 0, 99)
 	end
 
-	if math.random() < 0.8 then
+	if math.random() < 0.2 then
 
 		StripDetailMetalNum = math.Clamp(StripDetailMetalNum - math.random(1, 3), 0, 99)
 	end
 
+	if math.random() < 0.2 then
+
+		StripPicklockNum = math.Clamp(StripPicklockNum - math.random(1, 3), 0, 99)
+	end
+
 	local InspectDataTable = {DetailWoodNum = StripDetailWoodNum,
 							DetailMetalNum = StripDetailMetalNum,
-							PicklockNum = InTargetPlayer:GetNWInt("PicklockNum"),
+							PicklockNum = StripPicklockNum,
 							IllegalWeaponNameList = {}}
 
 	InTargetPlayer:SetNWInt("DetailWoodNum", InTargetPlayer:GetNWInt("DetailWoodNum") - StripDetailWoodNum)
 
 	InTargetPlayer:SetNWInt("DetailMetalNum", InTargetPlayer:GetNWInt("DetailMetalNum") - StripDetailMetalNum)
+
+	InTargetPlayer:SetNWInt("PicklockNum", InTargetPlayer:GetNWInt("PicklockNum") - StripPicklockNum)
 
 	local IllegalWeaponList = GetIllegalWeaponList(InTargetPlayer)
 

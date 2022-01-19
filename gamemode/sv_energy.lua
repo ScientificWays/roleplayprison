@@ -78,13 +78,13 @@ function UpdatePlayerEnergyValue(InPlayer)
 
 	InPlayer.Energy = math.Clamp(InPlayer.Energy, 0.0, UtilGetSprintDuration())
 
-	MsgN(string.format("%s Energy: %f/%f", InPlayer:GetName(), InPlayer.Energy, UtilGetSprintDuration()))
+	--MsgN(string.format("%s Energy: %f/%f", InPlayer:GetName(), InPlayer.Energy, UtilGetSprintDuration()))
 
 	local FinalEnergyValue = InPlayer.Energy / UtilGetSprintDuration()
 
 	InPlayer:SetNWFloat("EnergyValue", FinalEnergyValue)
 
-	InPlayer:SetJumpPower(200.0 * FinalEnergyValue)
+	InPlayer:SetJumpPower(200.0 * math.Clamp(FinalEnergyValue + 0.5, 0.0, 1.0))
 end
 
 hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData)

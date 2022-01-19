@@ -295,6 +295,27 @@ end
 	return false
 end]]
 
+local function CanTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr)
+
+	return InInteractEntity:IsPlayer() and InInteractEntity:Team() == TEAM_ROBBER and InPlayer:GetNWInt(InItemNameStr) > 0
+end
+
+local function TryTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr)
+
+	MsgN(string.format("TryTradeStackableItem() %s", InItemNameStr))
+
+	if not CanTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr) then
+
+		return
+	end
+
+	InPlayer:SetNWInt(InItemNameStr, InPlayer:GetNWInt(InItemNameStr) - 1)
+
+	InInteractEntity:SetNWInt(InItemNameStr, InInteractEntity:GetNWInt(InItemNameStr) + 1)
+
+	InInteractEntity:EmitSound("HL2Player.PickupWeapon")
+end
+
 function SWEP:Initialize()
 
 	self:SetHoldType("normal")
@@ -342,18 +363,34 @@ function SWEP:PrimaryAttack()
 
 	if CanTryInteract(PlayerOwner, InteractEntity) then
 
+		if InteractEntity:GetClass() == "prop_door_rotating" then
+
+			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock",
+			60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
+		end
+
 		if PlayerOwner:Team() == TEAM_GUARD then
 
 			if TryToggleKidnap(PlayerOwner, InteractEntity) then
 
 				return
 			end
-		end
 
-		if InteractEntity:GetClass() == "prop_door_rotating" then
+		elseif PlayerOwner:Team() == TEAM_ROBBER then
 
-			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock",
-			60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
+			if CanTradeStackableItem(PlayerOwner, InteractEntity, "DetailWoodNum") then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetTradeDuration(),
+					nil,
+					function(InPlayer, InInteractEntity) TryTradeStackableItem(InPlayer, InInteractEntity, "DetailWoodNum") end
+				)
+				return
+			end
 		end
 	end
 end
@@ -398,12 +435,13 @@ function SWEP:SecondaryAttack()
 
 			if bToggleLock then
 
-				OnImplementTaskStart(PlayerOwner,
-						FinalInteractEntity,
-						UtilGetToggleLockDuration(),
-						nil,
-						TryToggleLock)
-
+				OnImplementTaskStart(
+					PlayerOwner,
+					FinalInteractEntity,
+					UtilGetToggleLockDuration(),
+					nil,
+					TryToggleLock
+				)
 				return
 			end
 
@@ -411,12 +449,13 @@ function SWEP:SecondaryAttack()
 
 				UtilChangePlayerFreeze(InteractEntity, true)
 
-				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
-						UtilGetHandcuffsOnDuration(),
-						function() UtilChangePlayerFreeze(InteractEntity, false) end,
-						TryHandcuffsOn)
-
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetHandcuffsOnDuration(),
+					function() UtilChangePlayerFreeze(InteractEntity, false) end,
+					TryHandcuffsOn
+				)
 				return
 			end
 
@@ -424,25 +463,41 @@ function SWEP:SecondaryAttack()
 
 				UtilChangePlayerFreeze(InteractEntity, true)
 
-				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
-						UtilGetHandcuffsOffDuration(),
-						function() UtilChangePlayerFreeze(InteractEntity, false) end,
-						TryHandcuffsOff)
-
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetHandcuffsOffDuration(),
+					function() UtilChangePlayerFreeze(InteractEntity, false) end,
+					TryHandcuffsOff
+				)
 				return
 			end
 
 		elseif PlayerOwner:Team() == TEAM_ROBBER then
 
+			if CanTradeStackableItem(PlayerOwner, InteractEntity, "DetailMetalNum") then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetTradeDuration(),
+					nil,
+					function(InPlayer, InInteractEntity) TryTradeStackableItem(InPlayer, InInteractEntity, "DetailMetalNum") end
+				)
+				return
+			end
+
 			if CanUsePicklock(PlayerOwner, InteractEntity) then
 
-				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
-						UtilGetPicklockUseDuration(),
-						nil,
-						TryUsePicklock)
-
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetPicklockUseDuration(),
+					nil,
+					TryUsePicklock
+				)
 				return
 			end
 		end
@@ -480,11 +535,13 @@ function SWEP:Reload()
 
 		if CanConsumeNutrition(PlayerOwner, InteractEntity) then
 
-			OnImplementTaskStart(PlayerOwner,
-					InteractEntity,
-					1.0,
-					function() UtilChangePlayerFreeze(InteractEntity, false) end,
-					TryConsumeNutrition)
+			OnImplementTaskStart(
+				PlayerOwner,
+				InteractEntity,
+				1.0,
+				function() UtilChangePlayerFreeze(InteractEntity, false) end,
+				TryConsumeNutrition
+			)
 
 			return
 		end
@@ -495,12 +552,30 @@ function SWEP:Reload()
 
 				UtilChangePlayerFreeze(InteractEntity, true)
 
-				OnImplementTaskStart(PlayerOwner,
-						InteractEntity,
-						UtilGetInspectionDuration(),
-						function() UtilChangePlayerFreeze(InteractEntity, false) end,
-						TryInspect)
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetInspectionDuration(),
+					function() UtilChangePlayerFreeze(InteractEntity, false) end,
+					TryInspect
+				)
 
+				return
+			end
+
+		elseif PlayerOwner:Team() == TEAM_ROBBER then
+
+			if CanTradeStackableItem(PlayerOwner, InteractEntity, "PicklockNum") then
+
+				UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetTradeDuration(),
+					nil,
+					function(InPlayer, InInteractEntity) TryTradeStackableItem(InPlayer, InInteractEntity, "PicklockNum") end
+				)
 				return
 			end
 		end

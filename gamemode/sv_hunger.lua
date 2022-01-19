@@ -33,6 +33,13 @@ timer.Create("HungerTick", 24.0, 0, function()
 
 				Player:SetHealth(Player:Health() - 1)
 			end
+
+		elseif Player.Food > 50 and Player.Water > 50 then
+
+			if Player:Health() < 100 then
+
+				Player:SetHealth(Player:Health() + 1)
+			end
 		end
 
 		UpdatePlayerHungerValue(Player)
@@ -94,7 +101,7 @@ function UpdatePlayerHungerValue(InPlayer)
 
 	InPlayer.Water = math.Clamp(InPlayer.Water, 0.0, 100.0)
 
-	MsgN(string.format("%s Food: %i, Water: %s", InPlayer:GetName(), InPlayer.Food, InPlayer.Water))
+	--MsgN(string.format("%s Food: %i, Water: %s", InPlayer:GetName(), InPlayer.Food, InPlayer.Water))
 
 	InPlayer:SetNWFloat("HungerValue", 1.0 - (InPlayer.Food + InPlayer.Water) / 200)
 end

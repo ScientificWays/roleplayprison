@@ -97,6 +97,11 @@ function UtilGetSprintDuration()
 	return GetConVar("sk_sprint_duration"):GetFloat()
 end
 
+function UtilGetTradeDuration()
+
+	return GetConVar("sk_trade_duration"):GetFloat()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

@@ -14,7 +14,7 @@
 	"volume"		"1"
 	"pitch"			"100"
 
-	"soundlevel"		"SNDLVL_50dB"
+	"soundlevel"		"SNDLVL_65dB"
 
 	"wave"			"roleplayprison/radio_loop.wav"
 }

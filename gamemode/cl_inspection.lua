@@ -40,7 +40,7 @@ function ShowInspection(InInspectDataTable)
 		draw.RoundedBoxEx(0, 0, 20, w, 5, Color(255, 255, 255), true, true, true, true)
 	end
 
-	DetailWoodInfo = vgui.Create("DLabel", InspectionFrame)
+	local DetailWoodInfo = vgui.Create("DLabel", InspectionFrame)
 
 	DetailWoodInfo:SetPos(50, 50)
 
@@ -50,7 +50,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailWoodInfo:SetText(string.format("Деревянные детали: %i", InInspectDataTable.DetailWoodNum))
 
-	DetailMetalInfo = vgui.Create("DLabel", InspectionFrame)
+	local DetailMetalInfo = vgui.Create("DLabel", InspectionFrame)
 
 	DetailMetalInfo:SetPos(50, 70)
 
@@ -60,11 +60,21 @@ function ShowInspection(InInspectDataTable)
 
 	DetailMetalInfo:SetText(string.format("Металлические детали: %i", InInspectDataTable.DetailMetalNum))
 
+	local PicklockInfo = vgui.Create("DLabel", InspectionFrame)
+
+	PicklockInfo:SetPos(50, 90)
+
+	PicklockInfo:SetSize(InspectionFrameWidth - 50, 20)
+
+	PicklockInfo:SetFont("txt")
+
+	PicklockInfo:SetText(string.format("Отмычки: %i", InInspectDataTable.PicklockNum))
+
 	for Index, PrintName in ipairs(InInspectDataTable.IllegalWeaponNameList) do
 
 		local IllegalWeaponInfo = vgui.Create("DLabel", InspectionFrame)
 
-		IllegalWeaponInfo:SetPos(50, 80 + Index * 20)
+		IllegalWeaponInfo:SetPos(50, 100 + Index * 20)
 
 		IllegalWeaponInfo:SetSize(InspectionFrameWidth - 50, 20)
 

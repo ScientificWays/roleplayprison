@@ -241,7 +241,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:Spawn()
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
 
 		if not TryGiveWeaponItem(InSender, SeparatedStrings[2]) then
 

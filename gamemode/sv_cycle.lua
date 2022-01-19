@@ -187,7 +187,7 @@ function StartNewCycle()
 
 		ClearDetailPickups()
 
-		TrySetMapDayState(1.0)
+		TrySetMapDayState(0.0)
 	else
 
 		WorldEntity:SetNWBool("bInterCycle", true)
@@ -196,7 +196,7 @@ function StartNewCycle()
 
 		UpdateMapLockablesState()
 
-		TrySetMapNightState(1.0)
+		TrySetMapNightState(0.0)
 	end
 end
 
@@ -223,7 +223,9 @@ function CycleUpdate()
 
 	--MsgN(WorldEntity:GetNWInt("CurrentCycleTimeSeconds"))
 
-	if CurrentCycleTimeSeconds >= UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60 then
+	local CurrentCycleDurationSeconds = UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60
+
+	if CurrentCycleTimeSeconds >= CurrentCycleDurationSeconds then
 
 		OnCycleEnd()
 
@@ -232,18 +234,20 @@ function CycleUpdate()
 		return
 	end
 
-	local LeftCycleTimeSeconds = UtilGetLeftCycleTimeSeconds()
+--[[	local LeftCycleTimeSeconds = UtilGetLeftCycleTimeSeconds()
 
 	if LeftCycleTimeSeconds <= 150 then
 
 		if UtilIsInterCycle() then
 
-			TrySetMapDayState(1.0 - LeftCycleTimeSeconds / 150)
+			TrySetMapDayState(LeftCycleTimeSeconds / 150)
 		else
 
-			TrySetMapNightState(1.0 - LeftCycleTimeSeconds / 150)
+			TrySetMapNightState(LeftCycleTimeSeconds / 150)
 		end
-	end
+	end--]]
+
+	TryUpdateSkyPaintAndLightmapsState(CurrentCycleTimeSeconds / CurrentCycleDurationSeconds)
 
 	local AllGuards = team.GetPlayers(TEAM_GUARD)
 
