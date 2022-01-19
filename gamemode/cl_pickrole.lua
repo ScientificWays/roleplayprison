@@ -6,9 +6,11 @@ local SubRoleFrame = nil
 local MainFrameWidth, MainFrameHeight = 250, 300
 local SubFrameWidth, SubFrameHeight = 200, 200
 
-local MainRoleList = {[1] = true, [2] = true}
+local TEAM_GUARD, TEAM_ROBBER = 1, 2
 
-local SubRoleList = {[1] = {"Охранник"}, [2] = {"Заключенный"}}
+local MainRoleList = {[TEAM_GUARD] = true, [TEAM_ROBBER] = true}
+
+local SubRoleList = {[TEAM_GUARD] = {"Охранник"}, [TEAM_ROBBER] = {"Заключенный"}}
 
 function TeamCanBePicked(TeamID)
 
@@ -58,14 +60,14 @@ function GM:ShowTeam()
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, false, true, false)
 
-		draw.SimpleText('Выбрать роль', 'title',
+		draw.SimpleText("Выбрать роль", "HUDTextSmall",
 			MainFrameWidth / 2, 12, Color(255, 255, 255, 255),
 			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 		draw.RoundedBoxEx(0, 0, 20, w, 5, Color(255, 255, 255), true, true, true, true)
 	end
 
-	local PickRoleScrollPanel = vgui.Create('DScrollPanel', MainRoleFrame)
+	local PickRoleScrollPanel = vgui.Create("DScrollPanel", MainRoleFrame)
 
 	PickRoleScrollPanel:Dock(FILL)
 
@@ -94,7 +96,7 @@ function GM:ShowTeam()
 
 		if MainRoleList[ID] ~= nil then 
 
-			local MainRoleButton = PickRoleScrollPanel:Add('DButton')
+			local MainRoleButton = PickRoleScrollPanel:Add("DButton")
 
 			MainRoleButton:SetSize(10, 50)
 
@@ -121,7 +123,7 @@ function GM:ShowTeam()
 					draw.RoundedBoxEx(10, 0, 0, self.lerp, h, Color(116, 0, 255, 255), true, false, true, false)
 				end
 
-				draw.SimpleText(team.GetName(ID), 'txt', MainFrameWidth/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				draw.SimpleText(team.GetName(ID), "HUDTextSmall", MainFrameWidth/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 			end
 
 			MainRoleButton.DoClick = function()
@@ -158,7 +160,7 @@ function GM:ShowTeam()
 						draw.RoundedBoxEx(0, 0, 20, w, 5, Color(255, 255, 255), true, true, true, true)
 					end
 
-					local SubRoleScrollPanel = vgui.Create('DScrollPanel', SubRoleFrame)
+					local SubRoleScrollPanel = vgui.Create("DScrollPanel", SubRoleFrame)
 
 					SubRoleScrollPanel:Dock(FILL)
 
@@ -183,7 +185,7 @@ function GM:ShowTeam()
 
 					for Index, SampleSubRole in ipairs(SubRoleList[ID]) do
 
-						local SubRoleButton = SubRoleScrollPanel:Add('DButton')
+						local SubRoleButton = SubRoleScrollPanel:Add("DButton")
 
 						SubRoleButton:SetSize(SubFrameWidth, 50)
 
@@ -210,7 +212,7 @@ function GM:ShowTeam()
 								draw.RoundedBoxEx(10, 0, 0, self.LerpValue, h, Color(116, 0, 255, 255), true, false, true, false)
 							end
 
-							draw.SimpleText(SampleSubRole, 'txt', SubFrameWidth / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+							draw.SimpleText(SampleSubRole, "HUDTextSmall", SubFrameWidth / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 						end
 
 						SubRoleButton.DoClick = function()

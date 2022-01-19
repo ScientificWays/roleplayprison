@@ -64,10 +64,8 @@ function ShowStash(InStashEntity)
 	StashFrame:ShowCloseButton(false)
 
 	StashFrame.Paint = function(self, w, h)
-		--[[ DrawBlur(self, 3)
-		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, true, true, true)
-		draw.SimpleText("Обыск места", "title", ws/2, 12, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		draw.RoundedBoxEx(0, 0, 25, w, 4, Color(255, 255, 255), true, true, true, true)--]] 
+		
+		
 	end
 
 	local ItemSlot = vgui.Create("DButton", StashFrame)
@@ -159,6 +157,8 @@ function ShowStash(InStashEntity)
 				--MsgN("DoClick", InStashEntity:EntIndex(), StackableData.Name)
 
 				net.SendToServer()
+
+				--SendDoAnimationToServer(ACT_GMOD_GESTURE_ITEM_PLACE)
 			end
 
 			print("Клик")
@@ -205,6 +205,8 @@ function ShowStash(InStashEntity)
 			net.WriteString("Weapon")
 
 			net.SendToServer()
+
+			--SendDoAnimationToServer(ACT_GMOD_GESTURE_ITEM_PLACE)
 		end
 
 		print("Клик")

@@ -38,7 +38,7 @@ function ShowInspection(InInspectDataTable)
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, true, true, true)
 
-		draw.SimpleText('Досмотр', 'title',
+		draw.SimpleText("Досмотр", "HUDTextSmall",
 			InspectionFrameWidth / 2, 12, Color(255, 255, 255, 255),
 			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
@@ -51,7 +51,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailWoodInfo:SetSize(InspectionFrameWidth - 50, 20)
 
-	DetailWoodInfo:SetFont("txt")
+	DetailWoodInfo:SetFont("HUDTextSmall")
 
 	DetailWoodInfo:SetText(string.format("Деревянные детали: %i", InInspectDataTable.DetailWoodNum))
 
@@ -61,7 +61,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailMetalInfo:SetSize(InspectionFrameWidth - 50, 20)
 
-	DetailMetalInfo:SetFont("txt")
+	DetailMetalInfo:SetFont("HUDTextSmall")
 
 	DetailMetalInfo:SetText(string.format("Металлические детали: %i", InInspectDataTable.DetailMetalNum))
 
@@ -71,7 +71,7 @@ function ShowInspection(InInspectDataTable)
 
 	PicklockInfo:SetSize(InspectionFrameWidth - 50, 20)
 
-	PicklockInfo:SetFont("txt")
+	PicklockInfo:SetFont("HUDTextSmall")
 
 	PicklockInfo:SetText(string.format("Отмычки: %i", InInspectDataTable.PicklockNum))
 

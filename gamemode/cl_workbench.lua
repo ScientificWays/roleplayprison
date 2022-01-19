@@ -60,9 +60,9 @@ function ShowWorkbenchFrame()
 
 			draw.RoundedBoxEx(10, 5, 5, 120, 120, Color(0, 0, 0, 200), true, true, true, true)
 
-			draw.SimpleText(ItemData.PrintName, "msg", 65, 110, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.SimpleText(ItemData.PrintName, "HUDTextSmall", 65, 110, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-			surface.SetDrawColor(255, 255, 255)
+			surface.SetDrawColor(COLOR_WHITE)
 
 			surface.SetMaterial(ItemData.Icon)
 

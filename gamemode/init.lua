@@ -15,6 +15,7 @@ AddCSLuaFile("cl_pickrole.lua")
 AddCSLuaFile("cl_schedule.lua")
 AddCSLuaFile("cl_workbench.lua")
 AddCSLuaFile("cl_inspection.lua")
+AddCSLuaFile("cl_animations.lua")
 AddCSLuaFile("cl_postprocess.lua")
 
 include("sh_util.lua")
@@ -38,6 +39,17 @@ include("sv_skylight.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
 
+--Sit anywhere
+AddCSLuaFile("sitanywhere/helpers.lua")
+AddCSLuaFile("sitanywhere/client/sit.lua")
+AddCSLuaFile("sitanywhere/ground_sit.lua")
+
+include("sitanywhere/helpers.lua")
+include("sitanywhere/server/sit.lua")
+include("sitanywhere/ground_sit.lua")
+include("sitanywhere/server/unstuck.lua")
+--Sit anywhere
+
 util.AddNetworkString("SendTryCraftItemToServer")
 util.AddNetworkString("SendTryInteractStashToServer")
 
@@ -51,6 +63,9 @@ util.AddNetworkString("UpdateClientLightmaps")
 util.AddNetworkString("ClientOpenScheduleSetup")
 util.AddNetworkString("ClientOpenWorkbench")
 util.AddNetworkString("ClientOpenStash")
+
+util.AddNetworkString("SendDoAnimationToServer")
+util.AddNetworkString("MulticastDoAnimation")
 
 function OnPlayerAreaUpdate()
 
@@ -80,6 +95,21 @@ function GM:Initialize()
 
 	net.Receive("SendScheduleListToServer", ServerReceiveScheduleList)
 
+	net.Receive("SendDoAnimationToServer", function(InMessageLength, InPlayer)
+
+		local Gesture = net.ReadInt(32)
+
+		net.Start("MulticastDoAnimation")
+
+		net.WriteInt(Gesture, 32)
+
+		net.WriteInt(InPlayer:EntIndex(), 32)
+
+		MsgN(string.format("%s %i", InPlayer, Gesture))
+
+		net.Broadcast()
+	end)
+
 	self.BaseClass:Initialize()
 end
 
@@ -103,6 +133,18 @@ function GM:InitPostEntity()
 
 	self.BaseClass:InitPostEntity()
 end
+
+local ShowAnimationsBindLastSend = 0.0
+
+hook.Add("PlayerButtonDown", "ShowAnimationsBind", function(InPlayer, InButton)
+
+	if InButton == KEY_F1 and CurTime() - ShowAnimationsBindLastSend > 0.0 then
+
+		InPlayer:SendLua("ShowAnimations()")
+
+		ShowAnimationsBindLastSend = CurTime()
+	end
+end)
 
 --[[function GM:Tick()
 
