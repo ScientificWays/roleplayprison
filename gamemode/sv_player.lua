@@ -33,34 +33,6 @@ function UpdatePlayerMonitorType(InPlayer)
 	end
 end
 
-function UpdatePlayerSpeakerState(InPlayer)
-
-	if UtilCheckPlayerInArea(InPlayer, ControlSpeakerArea) then
-
-		InPlayer:SetNWBool("bGlobalSpeaker", true)
-	else
-
-		InPlayer:SetNWBool("bGlobalSpeaker", false)
-	end
-end
-
-function UpdatePlayerVoiceArea(InPlayer)
-
-	if UtilCheckPlayerInArea(InPlayer, LocalPunishmentArea) then
-
-		InPlayer:SetNWString("VoiceLocalArea", "LocalPunishmentArea")
-
-	elseif UtilCheckPlayerInArea(InPlayer, LocalOutside1Area) then
-
-		InPlayer:SetNWString("VoiceLocalArea", "LocalOutside1Area")
-	else
-
-		InPlayer:SetNWString("VoiceLocalArea", "")
-	end
-
-	--MsgN(InPlayer:GetNWString("VoiceLocalArea"))
-end
-
 function OnPlayerHandcuffsOn(InPlayer)
 
 	MsgN(string.format("%s OnPlayerHandcuffsOn()", InPlayer:GetName()))
@@ -491,11 +463,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			end
 		end
 
-	elseif InInput == "Trigger" --[[and InActivator:Team() == TEAM_ROBBER--]] then
+	elseif InInput == "Trigger" and InActivator:Team() == TEAM_ROBBER and not InActivator:GetNWBool("bEscaped") then
 
 		if InTargetEntity:GetName() == "Escape_OnTrigger" then
 
-			return true
+			OnRobberEscape(InActivator)
+
+			return false
 		end
 	end
 
@@ -513,16 +487,38 @@ end
 
 function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
-	if (InNewTeam == TEAM_SPECTATOR) then
+	--[[if InNewTeam == TEAM_SPECTATOR then
 
-		local PlayerEyePos = InPlayer:EyePos()
-
-		InPlayer:SetPos(PlayerEyePos)
-	end
+		return
+	end--]]
 
 	InPlayer:Spawn()
 
 	PrintMessage(HUD_PRINTTALK, Format("%s присоединился к '%s'", InPlayer:Nick(), team.GetName(InNewTeam)))
+end
+
+function GM:PlayerRequestTeam(InPlayer, InTeamID)
+
+	if InPlayer:GetNWBool("bEscaped") then
+
+		return
+	end
+
+	-- This team isn't joinable
+	if not team.Joinable(InTeamID) then
+
+		ply:ChatPrint("You can't join that team")
+
+		return
+	end
+
+	-- This team isn't joinable
+	if not GAMEMODE:PlayerCanJoinTeam(InPlayer, InTeamID) then
+
+		return
+	end
+
+	GAMEMODE:PlayerJoinTeam(InPlayer, InTeamID)
 end
 
 function GM:PlayerSpawnAsSpectator(InPlayer)
@@ -574,6 +570,8 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		InPlayer:ConCommand("pp_motionblur_addalpha 1.0")
 		InPlayer:ConCommand("pp_motionblur_drawalpha 1.0")
 		InPlayer:ConCommand("pp_motionblur_delay 0.0")
+
+		InPlayer:ConCommand("mp_show_voice_icons 0")
 
 		InPlayer.Food = 100
 

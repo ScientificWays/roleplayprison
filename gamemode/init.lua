@@ -34,7 +34,9 @@ include("sv_items.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
 include("sv_energy.lua")
+include("sv_escape.lua")
 include("sv_officer.lua")
+include("sv_glitches.lua")
 include("sv_skylight.lua")
 include("sv_sabotage.lua")
 include("sv_inspection.lua")
@@ -134,15 +136,13 @@ function GM:InitPostEntity()
 	self.BaseClass:InitPostEntity()
 end
 
-local ShowAnimationsBindLastSend = 0.0
-
 hook.Add("PlayerButtonDown", "ShowAnimationsBind", function(InPlayer, InButton)
 
-	if InButton == KEY_F1 and CurTime() - ShowAnimationsBindLastSend > 0.0 then
+	if InButton == KEY_F1 and CurTime() - (InPlayer.ShowAnimationsBindLastSend or 0.0) > 0.0 then
 
 		InPlayer:SendLua("ShowAnimations()")
 
-		ShowAnimationsBindLastSend = CurTime()
+		InPlayer.ShowAnimationsBindLastSend = CurTime()
 	end
 end)
 
@@ -152,8 +152,7 @@ end)
 end]]
 
 --Дубинка, рация и их крафт
---Sit anywhere
---Логика для побега и перехода в режим наблюдателя
+--Иконки войс чата
 
 --Предмет швабра
 --Система тревоги с освещением
