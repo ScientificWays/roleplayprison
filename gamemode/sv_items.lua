@@ -4,7 +4,7 @@ function OnWorkbenchOpen(InPlayer, InStashEntity)
 
 	net.Start("ClientOpenWorkbench")
 
-	net.Send(InActivator)
+	net.Send(InPlayer)
 end
 
 function ServerReceiveTryCraftItem(InMessageLength, InPlayer)

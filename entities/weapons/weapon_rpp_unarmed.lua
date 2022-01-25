@@ -37,7 +37,7 @@ SWEP.NoSights				= true
 local function CanTryInteract(InPlayer, InInteractEntity)
 
 	return IsValid(InInteractEntity)
-	and InInteractEntity:GetNWFloat("TaskTimeLeft") <= 0
+	and InInteractEntity:GetNWString("NowImplemetingBy") == ""
 	and not InPlayer:GetNWBool("bHandcuffed")
 end
 

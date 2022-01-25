@@ -1,6 +1,6 @@
 ---- Roleplay: Prison
 
-timer.Create("GlitchesTimer", 48.0, 0, function()
+--[[timer.Create("GlitchesTimer", 48.0, 0, function()
 
 	MsgN("Glitches!")
 
@@ -20,4 +20,4 @@ timer.Create("GlitchesTimer", 48.0, 0, function()
 			end)
 		end
 	end
-end)
+end)--]]
