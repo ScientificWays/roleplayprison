@@ -42,6 +42,8 @@ function PLAYER:Loadout()
 
 	self.Player:GiveAmmo(60, "357", true)
 	self.Player:Give("weapon_357")
+	
+	self.Player:Give("weapon_rpp_broom")
 end
 
 player_manager.RegisterClass("player_guard", PLAYER, "player_default")
