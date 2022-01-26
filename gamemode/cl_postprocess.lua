@@ -12,9 +12,9 @@ function UpdatePostProcessData(InPlayer)
 
 	--MsgN(InPlayer:GetNWFloat("HungerValue"))
 
-	local TotalValue = (InPlayer:GetNWFloat("InjuryValue") + InPlayer:GetNWFloat("HungerValue")) / 2
+	local TotalValue = InPlayer:GetNWFloat("InjuryValue") * 0.65 + InPlayer:GetNWFloat("HungerValue") / 2
 
-	TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) / 3, 0.0, 1.0)
+	TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) / 4, 0.0, 1.0)
 
 	--MsgN(TotalValue)
 

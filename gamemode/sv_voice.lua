@@ -42,7 +42,7 @@ function UpdatePlayerVoiceArea(InPlayer)
 		InPlayer:SetNWString("VoiceLocalArea", "")
 	end
 
-	MsgN(InPlayer:GetNWString("VoiceLocalArea"))
+	--MsgN(InPlayer:GetNWString("VoiceLocalArea"))
 end
 
 function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
@@ -51,7 +51,9 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 
 		return true, false
 
-	elseif InListener:GetNWBool("bHasTalkie") and InTalker:GetNWBool("bUsingTalkie") then
+	elseif InListener:HasWeapon("weapon_rpp_talkie")
+		and InTalker:GetActiveWeapon():GetClass() == "weapon_rpp_talkie"
+		and InListener:GetNWFloat("TalkieFrequency") == InTalker:GetNWFloat("TalkieFrequency") then
 
 		return true, false
 

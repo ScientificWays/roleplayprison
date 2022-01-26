@@ -188,7 +188,7 @@ function OnImplementTaskStart(InPlayer, InTaskStartEntity, InDuration, InCancelC
 	InTaskStartEntity:SetNWString("NowImplemetingBy", PlayerName)
 
 	PlayerTaskDataList[PlayerName] = {TaskEntity = InTaskStartEntity,
-		Position = InPlayer:GetPos(),
+		Position = InPlayer:EyePos(),
 		Angles = InPlayer:EyeAngles(),
 		CancelCallback = InCancelCallback or function(InPlayer, InTaskEntity) end,
 		FinishCallback = InFinishCallback or function(InPlayer, InTaskEntity) end}
@@ -216,7 +216,7 @@ function OnImplementTaskProgress(InPlayer)
 
 		OnImplementTaskStop(InPlayer, false)
 	else
-		local CurrentPlayerPos = InPlayer:GetPos()
+		local CurrentPlayerPos = InPlayer:EyePos()
 
 		local CurrentPlayerAngles = InPlayer:EyeAngles()
 

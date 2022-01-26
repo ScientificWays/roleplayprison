@@ -39,6 +39,8 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_rpp_unarmed")
 	self.Player:Give("weapon_rpp_fists")
 	self.Player:Give("weapon_stunstick")
+	self.Player:Give("weapon_rpp_talkie")
+	self.Player:Give("weapon_medkit")
 
 	self.Player:GiveAmmo(60, "357", true)
 	self.Player:Give("weapon_357")

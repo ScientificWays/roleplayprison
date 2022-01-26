@@ -180,6 +180,17 @@ local function SetHUDHintDataLockable(bWasLocked)
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
+local function SetHUDHintDataPicklock()
+
+	HUDHintData.Icon = IconPicklock
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	HUDHintData.Text = "ПКМ"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
 local function SetHUDHintDataUsable()
 
 	HUDHintData.Icon = IconHand
@@ -384,6 +395,18 @@ local function TryDrawInventory(InClient)
 	surface.DrawText(InClient:GetNWInt("PicklockNum"))
 end
 
+local function TryDrawPlayerInfo(InClient)
+
+	draw.SimpleText(string.format("%s %s", InClient:GetNWString("RPName"), InClient:GetNWString("RPSurname")),
+		"HUDText", ScrW() - 50, ScrH() - 150, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+end
+
+local function TryDrawTalkieInfo(InClient)
+
+	draw.SimpleText(string.format("%.1f", InClient:GetNWFloat("TalkieFrequency")),
+		"HUDText", ScrW() - 50, ScrH() - 200, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+end
+
 local function TryDrawHandcuffed(InClient)
 
 	local CurrentAlpha = math.abs(math.sin(CurTime())) * 255
@@ -452,7 +475,7 @@ local function TryDrawTaskTime(InClient)
 
 		local TextColor = ColorAlpha(COLOR_YELLOW, 255 * (1.0 - InClient:GetNWFloat("TaskCancelExtent")))
 
-		draw.DrawText(string.format("%.1f", TaskTimeLeft),
+		draw.SimpleText(string.format("%.1f", TaskTimeLeft),
 			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 64, TextColor, TEXT_ALIGN_CENTER)
 
 		return true
@@ -507,7 +530,7 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		return
 	end
 
-	if InTargetEntity:GetClass() == "prop_door_rotating" then
+	if InTargetEntity:GetClass() == "prop_door_rotating" or InTargetEntity:GetNWBool("bCellDoor") then
 
 		SetHUDHintData2Knock()
 	end
@@ -632,7 +655,11 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 			and (InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable"))
 			and InPlayer:GetNWInt("PicklockNum") > 0 then
 
-			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
+			SetHUDHintDataPicklock()
+
+		elseif InTargetEntity:GetNWBool("bCellDoor") and InPlayer:GetNWInt("PicklockNum") > 0 then
+
+			SetHUDHintDataPicklock()
 
 		elseif InTargetEntity:IsPlayer() and InTargetEntity:Team() == TEAM_ROBBER then
 
@@ -656,7 +683,26 @@ end
 
 function GM:HUDDrawTargetID()
 
-	
+	local Client = LocalPlayer()
+
+	local EyeTrace = Client:GetEyeTrace()
+
+	MsgN(EyeTrace.Entity)
+
+	if not EyeTrace.Hit or not EyeTrace.HitNonWorld then
+
+		return
+	end
+
+	if EyeTrace.Entity:IsPlayer() then
+
+		PlayerRPName = EyeTrace.Entity:GetNWString("RPName")
+
+		PlayerRPSurname = EyeTrace.Entity:GetNWString("RPSurname")
+
+		draw.SimpleText(string.format("%s %s", PlayerRPName, PlayerRPSurname),
+			"HUDText", ScrW() / 2, ScrH() / 2 + 50, self:GetTeamColor(EyeTrace.Entity), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
 end
 
 function GM:HUDPaint()
@@ -669,17 +715,26 @@ function GM:HUDPaint()
 
 	if not Client:Alive() or Client:Team() == TEAM_SPECTATOR or Client:Team() == TEAM_UNASSIGNED then
 
-		if hook.Run("HUDShouldDraw", "RPPSpecHUD") then
-
-			 --SpecHUDPaint(Client)
-		end
+		--SpecHUDPaint(Client)
 
 		return
 	end
 
-	if hook.Run("HUDShouldDraw", "RPPInventory") and Client:Team() == TEAM_ROBBER then
+	if not bHideHUD then
 
-		TryDrawInventory(Client)
+		TryDrawPlayerInfo(Client)
+
+		if Client:Team() == TEAM_ROBBER then
+
+			TryDrawInventory(Client)
+		end
+
+		hook.Run("HUDDrawTargetID")
+	end
+
+	if Client:GetActiveWeapon():GetClass() == "weapon_rpp_talkie" then
+
+		TryDrawTalkieInfo(Client)
 	end
 
 	if not TryDrawTaskTime(Client) and not bInteractInterfaceOpen then
@@ -700,6 +755,7 @@ local ElementsToHide = {["CHudHealth"] = true,
 						["CHudSecondaryAmmo"] = true,
 						["CHudCrosshair"] = true,
 						["RPPInventory"] = true,
+						["RPPPlayerInfo"] = true,
 						["RPPSpecHUD"] = true}
 
 function GM:HUDShouldDraw(ElementName)

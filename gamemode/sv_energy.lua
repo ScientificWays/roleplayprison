@@ -32,7 +32,7 @@ timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 
 			if Player.Energy < UtilGetSprintDuration() then
 
-				Player.Energy = Player.Energy + 0.5
+				Player.Energy = Player.Energy + 2.0
 			else
 
 				Player.Energy = UtilGetSprintDuration()

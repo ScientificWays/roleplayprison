@@ -31,6 +31,7 @@ include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_stash.lua")
 include("sv_items.lua")
+include("sv_names.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
 include("sv_energy.lua")
@@ -113,6 +114,8 @@ function GM:Initialize()
 	end)
 
 	self.BaseClass:Initialize()
+
+	RunConsoleCommand("sv_skyname", "painted")
 end
 
 function GM:InitPostEntity()
@@ -151,12 +154,13 @@ end)
 
 end]]
 
+--Предмет швабра
 --Дубинка, рация и их крафт
+--Помощь снять наручники
+--Интерфейс расписания
 --Иконки войс чата
 
---Удары по решетке
---Помощь снять наручники
---Темнота при возрождении
---Предмет швабра
+--Затемнение экрана при побеге на уровне кода
+--Веревка для наручников
 --Система тревоги с освещением
 --Задержка включения камеры

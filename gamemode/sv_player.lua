@@ -154,7 +154,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= "" then
 
-		AddOfficerVote(InSender, table.concat(SeparatedStrings, " ", 2))
+		AddOfficerVote(InSender, SeparatedStrings)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
 
@@ -197,7 +197,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 			TrySkipTaskDelayFor(table.concat(SeparatedStrings, " ", 3))
 		end
 
-	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Лёха" or SeparatedStrings[1] == "/лёха") then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/Лёха" then
 
 		local DebugDude = player.CreateNextBot("Лёха")
 
@@ -205,7 +205,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:Spawn()
 
-	elseif InSender:IsAdmin() and (SeparatedStrings[1] == "/Саня" or SeparatedStrings[1] == "/саня") then
+	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/Саня" then
 
 		local DebugDude = player.CreateNextBot("Саня")
 
@@ -215,22 +215,23 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
 
-		if not TryGiveWeaponItem(InSender, SeparatedStrings[2]) then
+		local GivePlayer = UtilGetPlayerByRPName(SeparatedStrings[2])
 
-			TryGiveStackableItem(InSender, SeparatedStrings[2], SeparatedStrings[3] or "1")
+		if IsValid(GivePlayer) then
+
+			if not TryGiveWeaponItem(GivePlayer, SeparatedStrings[3]) then
+
+				TryGiveStackableItem(GivePlayer, SeparatedStrings[3], SeparatedStrings[4] or "1")
+			end
 		end
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/foodadd" or SeparatedStrings[1] == "/wateradd" then
 
 		if SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
-			for Index, Player in ipairs(player.GetAll()) do
+			local TargetPlayer = UtilGetPlayerByRPName(SeparatedStrings[2])
 
-				if Player:GetName() == SeparatedStrings[2] then
-
-					AddNutrition(Player, math.Round(tonumber(SeparatedStrings[3]) or 0), SeparatedStrings[1] == "/foodadd")
-				end
-			end
+			AddNutrition(TargetPlayer, math.Round(tonumber(SeparatedStrings[3]) or 0), SeparatedStrings[1] == "/foodadd")
 		end
 	end
 
@@ -483,6 +484,12 @@ function GM:PlayerInitialSpawn(InPlayer, bTransition)
 	InPlayer:ConCommand("gm_showteam")
 
 	InPlayer.MonitorTimeLeft = 0
+
+	local NewRPName, NewRPSurname = GetRandomPlayerNameAndSurname()
+
+	InPlayer:SetNWString("RPName", NewRPName)
+
+	InPlayer:SetNWString("RPSurname", NewRPSurname)
 end
 
 function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
@@ -525,11 +532,11 @@ function GM:PlayerSpawnAsSpectator(InPlayer)
 
 	InPlayer:StripWeapons()
 
-	if (InPlayer:Team() == TEAM_UNASSIGNED) then
+	if InPlayer:Team() == TEAM_UNASSIGNED then
 
-	  InPlayer:Spectate(OBS_MODE_FIXED)
+		InPlayer:Spectate(OBS_MODE_FIXED)
 
-	  return
+		return
 	end
 
 	InPlayer:SetTeam(TEAM_SPECTATOR)
@@ -573,6 +580,8 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		InPlayer:ConCommand("mp_show_voice_icons 0")
 
+		InPlayer.MonitorTimeLeft = 0
+
 		InPlayer.Food = 100
 
 		InPlayer.Water = 100
@@ -585,6 +594,8 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		hook.Run("PlayerSetModel", InPlayer)
 	end
+	
+	InPlayer:SetNWFloat("InjuryValue", 0.0)
 	
 	net.Start("SendScheduleListToClients")
 

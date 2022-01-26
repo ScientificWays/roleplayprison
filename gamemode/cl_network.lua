@@ -56,7 +56,7 @@ end
 
 function ClientOpenWorkbench(InMessageLength, InPlayer)
 
-	ShowWorkbench()
+	ShowWorkbenchFrame()
 end
 
 function ClientOpenStash(InMessageLength, InPlayer)

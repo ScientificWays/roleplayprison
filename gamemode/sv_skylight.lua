@@ -195,12 +195,6 @@ function TryUpdateSkyPaintAndLightmapsState(InAlpha)
 			UpdateSkyPaintAndLightmaps(DUSK, NIGHT, InAlpha)
 
 			--MsgN(string.format("DUSK-NIGHT %f", InAlpha))
-
-		elseif InAlpha > 0.75 then
-
-			UpdateSkyPaintAndLightmaps(NIGHT, DAWN, math.Remap(InAlpha, 0.75, 1.0, 0.0, 1.0))
-
-			--MsgN(string.format("NIGHT-DAWN %f", InAlpha))
 		else
 
 			UpdateSkyPaintAndLightmaps(NIGHT, NIGHT, 0.0)
@@ -209,15 +203,21 @@ function TryUpdateSkyPaintAndLightmapsState(InAlpha)
 		end
 	else
 
-		if InAlpha < 0.25 then
+		if InAlpha < 0.2 then
 
-			UpdateSkyPaintAndLightmaps(DAWN, DAY, math.Remap(InAlpha, 0.0, 0.25, 0.0, 1.0))
+			UpdateSkyPaintAndLightmaps(NIGHT, DAWN, math.Remap(InAlpha, 0.0, 0.2, 0.0, 1.0))
+
+			--MsgN(string.format("NIGHT-DAWN %f", InAlpha))
+
+		elseif InAlpha < 0.4 then
+
+			UpdateSkyPaintAndLightmaps(DAWN, DAY, math.Remap(InAlpha, 0.2, 0.4, 0.0, 1.0))
 
 			--MsgN(string.format("DAWN-DAY %f", InAlpha))
 
-		elseif InAlpha > 0.75 then
+		elseif InAlpha > 0.8 then
 
-			UpdateSkyPaintAndLightmaps(DAY, DUSK, math.Remap(InAlpha, 0.75, 1.0, 0.0, 1.0))
+			UpdateSkyPaintAndLightmaps(DAY, DUSK, math.Remap(InAlpha, 0.8, 1.0, 0.0, 1.0))
 
 			--MsgN(string.format("DAY-DUSK %f", InAlpha))
 		else

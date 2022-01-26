@@ -2,22 +2,23 @@
 
 AddCSLuaFile()
 
-SWEP.HoldType				= "normal"
+SWEP.PrintName				= "Unarmed"
+--SWEP.Author				= "zana"
+SWEP.Purpose				= "Roleplay unarmed."
 
-if CLIENT then
-
-	SWEP.PrintName			= "Unarmed"
-	SWEP.Slot				= 0
-
-	SWEP.ViewModelFOV		= 10
-end
+SWEP.Slot					= 2
+SWEP.SlotPos				= 0
 
 SWEP.Base                   = "weapon_base"
-SWEP.m_WeaponDeploySpeed    = "0.5"
 
-SWEP.ViewModel              = "models/weapons/v_hands.mdl"
---SWEP.WorldModel             = "models/weapons/w_crowbar.mdl"
+SWEP.Spawnable				= false
 
+SWEP.ViewModel				= "models/weapons/v_crowbar.mdl"
+SWEP.WorldModel				= "models/weapons/w_crowbar.mdl"
+SWEP.ViewModelFOV			= 10
+SWEP.UseHands				= false
+
+SWEP.DrawAmmo				= false
 SWEP.DrawCrosshair			= false
 
 SWEP.Primary.ClipSize		= -1
@@ -28,11 +29,10 @@ SWEP.Primary.Ammo			= "none"
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
-SWEP.Secondary.Ammo	= "none"
+SWEP.Secondary.Ammo			= "none"
 
 SWEP.AllowDelete			= false
 SWEP.AllowDrop				= false
-SWEP.NoSights				= true
 
 local function CanTryInteract(InPlayer, InInteractEntity)
 
@@ -77,9 +77,8 @@ end
 local function CanUsePicklock(InPlayer, InInteractEntity)
 
 	if InPlayer:GetNWInt("PicklockNum") > 0
-	and InInteractEntity:GetNWBool("bWasLocked")
-	and (InInteractEntity:GetNWBool("bGuardLockable")
-	or InInteractEntity:GetNWBool("bOfficerLockable")
+	and ((InInteractEntity:GetNWBool("bWasLocked")
+	and (InInteractEntity:GetNWBool("bGuardLockable") or InInteractEntity:GetNWBool("bOfficerLockable")))
 	or InInteractEntity:GetNWBool("bCellDoor")) then
 
 		return true, InInteractEntity
@@ -107,7 +106,15 @@ local function TryUsePicklock(InPlayer, InInteractEntity)
 
 	if math.random() < UtilGetPicklockOpenChance() then
 
-		ChangeLockableState(InPlayer, FinalInteractEntity, false)
+		MsgN(FinalInteractEntity:GetNWBool("bCellDoor"))
+
+		if FinalInteractEntity:GetNWBool("bCellDoor") then
+
+			FinalInteractEntity:Input("FireUser1")
+		else
+
+			ChangeLockableState(InPlayer, FinalInteractEntity, false)
+		end
 	else
 
 		InPlayer:EmitSound("Metal_Box.BulletImpact",
@@ -173,6 +180,36 @@ local function TryToggleUser1(InPlayer, InInteractEntity)
 		InInteractEntity:Fire("FireUser1", nil, 0, InPlayer, InInteractEntity)
 
 		return true
+	end
+
+	return false
+end
+
+local function TryKnockDoor(InPlayer, InInteractEntity)
+
+	MsgN("TryKnockDoor()")
+
+	if InInteractEntity:GetClass() == "prop_door_rotating" then
+
+		InInteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock",
+		60, math.random(90, 110), math.random(0.9, 1.1), CHAN_AUTO, 0, 1)
+
+		return true
+	end
+
+	if InInteractEntity:GetNWBool("bCellDoor") then
+
+		InInteractEntity:EmitSound("MetalGrate.ImpactSoft",
+		60, math.random(90, 110), math.random(0.9, 1.1), CHAN_AUTO, 0, 1)
+
+		return true
+	end
+
+	InteractEntityParent = InInteractEntity:GetParent()
+
+	if IsValid(InteractEntityParent) then
+
+		return TryKnockDoor(InPlayer, InteractEntityParent)
 	end
 
 	return false
@@ -366,10 +403,9 @@ function SWEP:PrimaryAttack()
 
 	if CanTryInteract(PlayerOwner, InteractEntity) then
 
-		if InteractEntity:GetClass() == "prop_door_rotating" then
+		if TryKnockDoor(PlayerOwner, InteractEntity) then
 
-			InteractEntity:EmitSound("d1_trainstation_03.breakin_doorknock",
-			60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
+			return
 		end
 
 		if PlayerOwner:Team() == TEAM_GUARD then
@@ -591,7 +627,9 @@ function SWEP:Deploy()
 
 	if SERVER and IsValid(PlayerOwner) then
 
-		PlayerOwner:DrawViewModel(true)
+		PlayerOwner:DrawViewModel(false)
+
+		--MsgN("DrawViewModel(false)")
 	end
 
 	self:DrawShadow(false)

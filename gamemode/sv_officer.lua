@@ -62,46 +62,29 @@ function ReleaseOfficerPlayer()
 	end
 end
 
-function AddOfficerVote(Voter, VotedName)
+function AddOfficerVote(InVoter, InVotedName)
 
-	if Voter:Team() ~= TEAM_GUARD then
+	if InVoter:Team() ~= TEAM_GUARD then
 
 		PrintMessage(HUD_PRINTTALK, "Только охранники могут голосовать!")
 
 		return
 	end
 
-	local GuardPlayers = team.GetPlayers(TEAM_GUARD)
+	local VotedPlayer = UtilGetPlayerByRPName(InVotedName)
 
-	local VoterName = Voter:GetName()
+	local VoterName = InVoter:GetName()
 
-	local AdaptedVotedName = string.lower(VotedName)
+	if IsValid(VotedPlayer) and VotedPlayer:Team() == TEAM_GUARD then
 
-	if VotedName == "лёха" then
+		OfficerVoterAndVotedList[InVoter] = VotedPlayer
 
-		AdaptedVotedName = "Лёха"
+		PrintMessage(HUD_PRINTTALK, string.format("%s хочет, чтобы %s был офицером.", VoterName, InVotedName))
+
+		return
 	end
 
-	for i, ply in ipairs(GuardPlayers) do
-
-		if string.lower(ply:GetName()) == AdaptedVotedName then
-
-			OfficerVoterAndVotedList[Voter] = ply
-
-			local PrintVotedName = ply:GetName()
-
-			if AdaptedVotedName == "Лёха" then
-
-				PrintVotedName = "Лёху"
-			end
-
-			PrintMessage(HUD_PRINTTALK, string.format("%s проголосовал за %s", VoterName, PrintVotedName))
-
-			return
-		end
-	end
-
-	PrintMessage(HUD_PRINTTALK, string.format("%s не является охранником!", VotedName))
+	PrintMessage(HUD_PRINTTALK, string.format("%s не является охранником!", InVotedName))
 
 	return
 end
@@ -138,7 +121,7 @@ function FinishOfficerVote()
 
 		PrintMessage(HUD_PRINTTALK, "Никто не проголосовал! Выбор случайного игрока...")
 
-		SetOfficerPlayer(table.Random(player.GetAll()))
+		SetOfficerPlayer(table.Random(team.GetPlayers(TEAM_GUARD)))
 	end
 
 	table.Empty(OfficerVoterAndVotedList)

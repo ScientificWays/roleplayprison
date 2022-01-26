@@ -151,3 +151,18 @@ function UtilChangePlayerFreeze(InPlayer, bAddFreeze)
 		InPlayer:Freeze(true)
 	end
 end
+
+function UtilGetPlayerByRPName(InName)
+
+	local AllPlayers = player.GetAll()
+
+	for Index, SamplePlayer in ipairs(AllPlayers) do
+
+		if SamplePlayer:GetNWString("RPName") == InName then
+
+			return SamplePlayer
+		end
+	end
+
+	return nil
+end

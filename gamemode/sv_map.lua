@@ -122,6 +122,12 @@ function SetupMapEntityFlags()
 
 			SampleEntity:SetNWBool("bShowHint", true)
 
+		elseif string.EndsWith(SampleEntityName, "_CellDoor") then
+
+			SampleEntity:SetNWBool("bCellDoor", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
 		elseif string.EndsWith(SampleEntityName, "_AlarmButton") then
 
 			SampleEntity:SetNWBool("bAlarmButton", true)

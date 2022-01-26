@@ -2,33 +2,39 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName = "Broom"
---SWEP.Author = "zana"
-SWEP.Purpose = "Roleplay broom."
+SWEP.PrintName				= "Broom"
+--SWEP.Author				= "zana"
+SWEP.Purpose				= "Roleplay broom."
 
-SWEP.Slot = 0
-SWEP.SlotPos = 4
+SWEP.Slot					= 2
+SWEP.SlotPos				= 1
 
-SWEP.Spawnable = true
+SWEP.Base                   = "weapon_base"
 
-SWEP.ViewModel = Model("models/weapons/c_rpp_broom.mdl")
-SWEP.WorldModel = Model("")
-SWEP.ViewModelFOV = 54
-SWEP.UseHands = true
+SWEP.Spawnable				= true
 
-SWEP.Primary.ClipSize = -1
-SWEP.Primary.DefaultClip = -1
-SWEP.Primary.Automatic = true
-SWEP.Primary.Ammo = "none"
+SWEP.ViewModel				= Model("models/weapons/c_rpp_broom.mdl")
+SWEP.WorldModel				= Model("")
+SWEP.ViewModelFOV			= 54
+SWEP.UseHands				= true
 
-SWEP.Secondary.ClipSize = -1
-SWEP.Secondary.DefaultClip = -1
-SWEP.Secondary.Automatic = true
-SWEP.Secondary.Ammo = "none"
+SWEP.DrawAmmo				= false
+SWEP.DrawCrosshair			= true
 
-SWEP.DrawAmmo = false
+SWEP.Primary.ClipSize		= -1
+SWEP.Primary.DefaultClip	= -1
+SWEP.Primary.Automatic		= true
+SWEP.Primary.Ammo			= "none"
 
-SWEP.HitDistance = 96
+SWEP.Secondary.ClipSize		= -1
+SWEP.Secondary.DefaultClip	= -1
+SWEP.Secondary.Automatic	= true
+SWEP.Secondary.Ammo			= "none"
+
+SWEP.AllowDelete			= true
+SWEP.AllowDrop				= true
+
+SWEP.HitDistance = 96.0
 
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Wood_Plank.ImpactHard")
@@ -44,12 +50,14 @@ end
 
 function SWEP:PrimaryAttack(bSecondary)
 
-	if self.Owner:IsPlayer() then
+	local PlayerOwner = self.Owner
 
-		self.Owner:LagCompensation(false)
+	if PlayerOwner:IsPlayer() then
+
+		PlayerOwner:LagCompensation(false)
 	end
 
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	PlayerOwner:SetAnimation(PLAYER_ATTACK1)
 
 	--[[local anim = "fists_left"
 	if (right) then anim = "fists_right" end
@@ -65,19 +73,21 @@ function SWEP:PrimaryAttack(bSecondary)
 		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 	end
 
-	self:EmitSound(SwingSound)
+	--MsgN("EmitSound()")
+
+	PlayerOwner:EmitSound(SwingSound)
 
 	self:SetNextPrimaryFire(CurTime() + 1.0)
 
 	self:SetNextSecondaryFire(CurTime() + 1.0)
 
-	MsgN(self:SequenceDuration())
+	--MsgN(self:SequenceDuration())
 
 	timer.Create(string.format("weapon_damage_%s", self:EntIndex()), self:SequenceDuration() * 0.1, 1, function()
 
 		if IsValid(self) then
 
-			self:DealDamage()
+			self:DealDamage(bSecondary)
 		end
 	end)
 	
@@ -95,12 +105,21 @@ function SWEP:SecondaryAttack()
 	self:PrimaryAttack(true)
 end
 
-function SWEP:DealDamage()
+function SWEP:DealDamage(bSecondary)
+
+	local PlayerOwner = self.Owner
+
+	local FinalHitDistance = self.HitDistance
+
+	if bSecondary then
+
+		FinalHitDistance = 64.0
+	end
 
 	local AttackTrace = util.TraceLine({
-		start = self.Owner:GetShootPos(),
-		endpos = self.Owner:GetShootPos() + self.Owner:GetAimVector() * 64,
-		filter = self.Owner
+		start = PlayerOwner:GetShootPos(),
+		endpos = PlayerOwner:GetShootPos() + PlayerOwner:GetAimVector() * FinalHitDistance,
+		filter = PlayerOwner
 	})
 
 	local AttackTraceEntity = AttackTrace.Entity
@@ -109,7 +128,7 @@ function SWEP:DealDamage()
 
 		if AttackTrace.Hit and not game.SinglePlayer() then
 
-			self:EmitSound(HitSound)
+			PlayerOwner:EmitSound(HitSound)
 		end
 	end
 
@@ -121,7 +140,7 @@ function SWEP:DealDamage()
 
 		local ApplyDamageInfo = DamageInfo()
 
-		local Attacker = self.Owner
+		local Attacker = PlayerOwner
 
 		if not IsValid(Attacker) then
 
@@ -134,25 +153,25 @@ function SWEP:DealDamage()
 
 		if bSecondary then
 
-			ApplyDamageInfo:SetDamage(math.random(16, 32))
+			ApplyDamageInfo:SetDamage(math.random(10, 14))
 
 		else
-			ApplyDamageInfo:SetDamage(math.random(8, 12))
+			ApplyDamageInfo:SetDamage(math.random(4, 8))
 		end
 
-		ApplyDamageInfo:SetDamageForce(self.Owner:GetRight() * 4912 * PushScale + self.Owner:GetForward() * 9998 * PushScale)
+		ApplyDamageInfo:SetDamageForce(PlayerOwner:GetRight() * 4912 * PushScale + PlayerOwner:GetForward() * 9998 * PushScale)
 
 		--[[if (anim == "fists_left") then
 
-			ApplyDamageInfo:SetDamageForce(self.Owner:GetRight() * 4912 * PushScale + self.Owner:GetForward() * 9998 * PushScale) --Yes we need those specific numbers
+			ApplyDamageInfo:SetDamageForce(PlayerOwner:GetRight() * 4912 * PushScale + PlayerOwner:GetForward() * 9998 * PushScale) --Yes we need those specific numbers
 
 		elseif (anim == "fists_right") then
 
-			ApplyDamageInfo:SetDamageForce(self.Owner:GetRight() * -4912 * PushScale + self.Owner:GetForward() * 9989 * PushScale)
+			ApplyDamageInfo:SetDamageForce(PlayerOwner:GetRight() * -4912 * PushScale + PlayerOwner:GetForward() * 9989 * PushScale)
 
 		elseif (anim == "fists_uppercut") then
 
-			ApplyDamageInfo:SetDamageForce(self.Owner:GetUp() * 5158 * PushScale + self.Owner:GetForward() * 10012 * PushScale)
+			ApplyDamageInfo:SetDamageForce(PlayerOwner:GetUp() * 5158 * PushScale + PlayerOwner:GetForward() * 10012 * PushScale)
 
 			ApplyDamageInfo:SetDamage(math.random(12, 24))
 		end--]]
@@ -161,7 +180,7 @@ function SWEP:DealDamage()
 
 		AttackTraceEntity:TakeDamageInfo(ApplyDamageInfo)
 
-		SuppressHostEvents(self.Owner)
+		SuppressHostEvents(PlayerOwner)
 
 		AttackHit = true
 	end
@@ -172,7 +191,7 @@ function SWEP:DealDamage()
 
 		if (IsValid(phys)) then
 
-			phys:ApplyForceOffset(self.Owner:GetAimVector() * 80 * phys:GetMass() * PushScale, AttackTrace.HitPos)
+			phys:ApplyForceOffset(PlayerOwner:GetAimVector() * 80 * phys:GetMass() * PushScale, AttackTrace.HitPos)
 		end
 	end
 end

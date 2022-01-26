@@ -27,7 +27,7 @@ function ClearDetailPickups()
 
 		table.Empty(PickupData.DetailEntityList)
 
-		SampleEntity:SetNWBool("bShowHint", false)
+		TemplateEntity:SetNWBool("bShowHint", false)
 	end
 end
 
