@@ -52,7 +52,7 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 		return true, false
 
 	elseif InListener:HasWeapon("weapon_rpp_talkie")
-		and InTalker:GetActiveWeapon():GetClass() == "weapon_rpp_talkie"
+		and IsValid(InTalker:GetActiveWeapon()) and InTalker:GetActiveWeapon():GetClass() == "weapon_rpp_talkie"
 		and InListener:GetNWFloat("TalkieFrequency") == InTalker:GetNWFloat("TalkieFrequency") then
 
 		return true, false
