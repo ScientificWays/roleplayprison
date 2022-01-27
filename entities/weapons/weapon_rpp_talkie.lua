@@ -71,11 +71,18 @@ function SWEP:GetClass()
 	return "weapon_rpp_talkie"
 end
 
+function SWEP:Equip()
+
+	local PlayerOwner = self:GetOwner()
+
+	PlayerOwner:SetNWFloat("TalkieFrequency", 0.0)
+end
+
 function SWEP:OnDrop()
 
 	local PlayerOwner = self:GetOwner()
 
-	InPlayer:SetNWFloat("TalkieFrequency", 0.0)
+	PlayerOwner:SetNWFloat("TalkieFrequency", 0.0)
 end
 
 function SWEP:ShouldDropOnDie()

@@ -16,7 +16,7 @@ function UpdatePostProcessData(InPlayer)
 
 		--MsgN(InPlayer:GetNWFloat("HungerValue"))
 
-		local TotalValue = InPlayer:GetNWFloat("InjuryValue") * 0.65 + InPlayer:GetNWFloat("HungerValue") / 2
+		TotalValue = InPlayer:GetNWFloat("InjuryValue") * 0.65 + InPlayer:GetNWFloat("HungerValue") / 2
 
 		if InPlayer:GetNWBool("bStunned") then
 

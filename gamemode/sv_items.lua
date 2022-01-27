@@ -16,13 +16,15 @@ end
 
 function TryGiveWeaponItem(InPlayer, InItemNameStr)
 
-	if ItemData.Name == "club" then
+	MsgN(InItemNameStr)
+
+	if InItemNameStr == "club" then
 
 		InPlayer:Give("weapon_rpp_club")
 
 		return true
 
-	elseif ItemData.Name == "talkie" then
+	elseif InItemNameStr == "talkie" then
 
 		InPlayer:Give("weapon_rpp_talkie")
 

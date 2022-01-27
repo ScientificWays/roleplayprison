@@ -66,6 +66,8 @@ function TryAddWeaponToStash(InPlayer, InStashEntity)
 		InStashEntity:SetNWString("StashItemName", ActiveWeaponClassName)
 
 		InStashEntity:SetNWInt("StashItemNum", 0)
+
+		InPlayer:StripWeapon(ActiveWeaponClassName)
 	end
 end
 
@@ -77,7 +79,7 @@ function TryPickItemFromStash(InPlayer, InStashEntity)
 		
 		local StashItemName = InStashEntity:GetNWString("StashItemName")
 
-		if StashItemName == "weapon_rpp_club" or StashItemName == "weapon_rpp_club" then
+		if StashItemName == "weapon_rpp_club" or StashItemName == "weapon_rpp_talkie" then
 
 			InPlayer:Give(StashItemName)
 		else
@@ -87,9 +89,13 @@ function TryPickItemFromStash(InPlayer, InStashEntity)
 
 		InStashEntity:SetNWInt("StashItemNum", InStashEntity:GetNWInt("StashItemNum") - 1)
 
-		if InStashEntity:GetNWInt("StashItemNum") == 0 then
+		MsgN(InStashEntity:GetNWInt("StashItemNum"))
+
+		if InStashEntity:GetNWInt("StashItemNum") <= 0 then
 
 			InStashEntity:SetNWString("StashItemName", "")
+
+			InStashEntity:SetNWInt("StashItemNum", 0)
 		end
 	end
 end

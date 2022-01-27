@@ -39,6 +39,8 @@ timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 			end
 		end
 
+		MsgN(Format("%s %s %s", Player:GetName(), OldEnergy, Player.Energy))
+
 		if OldEnergy == Player.Energy then
 
 			return

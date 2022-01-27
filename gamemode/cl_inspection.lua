@@ -83,7 +83,7 @@ function ShowInspection(InInspectDataTable)
 
 		IllegalWeaponInfo:SetSize(InspectionFrameWidth - 50, 20)
 
-		IllegalWeaponInfo:SetFont("txt")
+		IllegalWeaponInfo:SetFont("HUDTextSmall")
 
 		IllegalWeaponInfo:SetText(Format("Нелегальное оружие: %s", language.GetPhrase(PrintName)))
 	end
