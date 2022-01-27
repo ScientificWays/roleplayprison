@@ -18,11 +18,24 @@ end
 
 function ClientSendTryCraftItem(InItemName)
 
-	--MsgN(string.format("ClientSendTryCraftItem() %s", InItemName))
+	--MsgN(Format("ClientSendTryCraftItem() %s", InItemName))
 
 	net.Start("SendTryCraftItemToServer")
 
 	net.WriteString(InItemName)
+
+	net.SendToServer()
+end
+
+function ClientSendRequestJoinTeam(InTeamID, bMale)
+
+	MsgN(Format("ClientSendRequestJoinTeam() %i, %s", InTeamID, bMale))
+
+	net.Start("SendRequestJoinTeamToServer")
+
+	net.WriteInt(InTeamID, 32)
+
+	net.WriteBool(bMale)
 
 	net.SendToServer()
 end

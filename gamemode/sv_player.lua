@@ -35,7 +35,7 @@ end
 
 function OnPlayerHandcuffsOn(InPlayer)
 
-	MsgN(string.format("%s OnPlayerHandcuffsOn()", InPlayer:GetName()))
+	MsgN(Format("%s OnPlayerHandcuffsOn()", InPlayer:GetName()))
 
 	InPlayer:SetNWBool("bHandcuffed", true)
 
@@ -44,10 +44,18 @@ end
 
 function OnPlayerHandcuffsOff(InPlayer)
 
-	MsgN(string.format("%s OnPlayerHandcuffsOff()", InPlayer:GetName()))
+	MsgN(Format("%s OnPlayerHandcuffsOff()", InPlayer:GetName()))
 
 	InPlayer:SetNWBool("bHandcuffed", false)
 end
+
+hook.Add("SetupMove", "StunMove", function(InPlayer, InMoveData, InCommandData)
+
+	if InPlayer.StunNum ~= nil and InPlayer.StunNum > 0 then
+
+		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.3)
+	end
+end)
 
 hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandData)
 
@@ -58,7 +66,7 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	
 	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.6)
 
-	local Kidnapper = InPlayer:GetNWEntity("Kidnapper")
+	local Kidnapper = Entity(InPlayer:GetNWInt("KidnapperIndex"))
 
 	if not IsValid(Kidnapper) or Kidnapper == InPlayer then
 
@@ -485,23 +493,47 @@ function GM:PlayerInitialSpawn(InPlayer, bTransition)
 
 	InPlayer.MonitorTimeLeft = 0
 
-	local NewRPName, NewRPSurname = GetRandomPlayerNameAndSurname()
-
-	InPlayer:SetNWString("RPName", NewRPName)
-
-	InPlayer:SetNWString("RPSurname", NewRPSurname)
+	InPlayer:SetNWBool("bMale", true)
 end
 
 function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
-	--[[if InNewTeam == TEAM_SPECTATOR then
+	if InNewTeam == TEAM_SPECTATOR then
+
+		InPlayer:Spawn()
+
+		PrintMessage(HUD_PRINTTALK, Format("%s теперь наблюдает за игрой", InPlayer:Nick()))
 
 		return
-	end--]]
+	end
+
+	local NewModel, NewRPName, NewRPSurname = GetNewPlayerIdentity(InNewTeam == TEAM_GUARD, InPlayer:GetNWBool("bMale"))
+
+	InPlayer.RPModel = NewModel
+
+	MsgN(NewModel)
+
+	InPlayer:SetNWString("RPName", NewRPName)
+
+	InPlayer:SetNWString("RPSurname", NewRPSurname)
 
 	InPlayer:Spawn()
 
-	PrintMessage(HUD_PRINTTALK, Format("%s присоединился к '%s'", InPlayer:Nick(), team.GetName(InNewTeam)))
+	PrintMessage(HUD_PRINTTALK, Format("%s присоединился к '%s' как %s %s", InPlayer:Nick(), team.GetName(InNewTeam),
+		NewRPName, NewRPSurname))
+end
+
+function ServerReceiveRequestJoinTeam(InMessageLength, InPlayer)
+
+	local TeamID = net.ReadInt(32)
+
+	local bMale = net.ReadBool()
+
+	MsgN(Format("ServerReceiveRequestJoinTeam() %i, %s", TeamID, bMale))
+
+	InPlayer:SetNWBool("bMale", bMale)
+
+	GAMEMODE:PlayerRequestTeam(InPlayer, TeamID)
 end
 
 function GM:PlayerRequestTeam(InPlayer, InTeamID)
@@ -514,7 +546,7 @@ function GM:PlayerRequestTeam(InPlayer, InTeamID)
 	-- This team isn't joinable
 	if not team.Joinable(InTeamID) then
 
-		ply:ChatPrint("You can't join that team")
+		InPlayer:ChatPrint("Вы не можете присоединиться к этой команде")
 
 		return
 	end
@@ -578,8 +610,6 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		InPlayer:ConCommand("pp_motionblur_drawalpha 1.0")
 		InPlayer:ConCommand("pp_motionblur_delay 0.0")
 
-		InPlayer:ConCommand("mp_show_voice_icons 0")
-
 		InPlayer.MonitorTimeLeft = 0
 
 		InPlayer.Food = 100
@@ -589,13 +619,14 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		InPlayer.Energy = UtilGetSprintDuration()
 
 		InPlayer:SetNWFloat("EnergyValue", 1.0)
+	
+		InPlayer:SetNWFloat("InjuryValue", 0.0)
 
 		hook.Run("PlayerLoadout", InPlayer)
 
 		hook.Run("PlayerSetModel", InPlayer)
 	end
-	
-	InPlayer:SetNWFloat("InjuryValue", 0.0)
+
 	
 	net.Start("SendScheduleListToClients")
 

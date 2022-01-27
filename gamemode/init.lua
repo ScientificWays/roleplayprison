@@ -31,12 +31,12 @@ include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_stash.lua")
 include("sv_items.lua")
-include("sv_names.lua")
 include("sv_player.lua")
 include("sv_hunger.lua")
 include("sv_energy.lua")
 include("sv_escape.lua")
 include("sv_officer.lua")
+include("sv_identity.lua")
 include("sv_glitches.lua")
 include("sv_skylight.lua")
 include("sv_sabotage.lua")
@@ -52,6 +52,8 @@ include("sitanywhere/server/sit.lua")
 include("sitanywhere/ground_sit.lua")
 include("sitanywhere/server/unstuck.lua")
 --Sit anywhere
+
+util.AddNetworkString("SendRequestJoinTeamToServer")
 
 util.AddNetworkString("SendTryCraftItemToServer")
 util.AddNetworkString("SendTryInteractStashToServer")
@@ -92,6 +94,8 @@ function GM:Initialize()
 
 	--concommand.Add("schedulesetup", ToggleScheduleSetup)
 
+	net.Receive("SendRequestJoinTeamToServer", ServerReceiveRequestJoinTeam)
+
 	net.Receive("SendTryCraftItemToServer", ServerReceiveTryCraftItem)
 
 	net.Receive("SendTryInteractStashToServer", ServerReceiveTryInteractStash)
@@ -108,7 +112,7 @@ function GM:Initialize()
 
 		net.WriteInt(InPlayer:EntIndex(), 32)
 
-		MsgN(string.format("%s %i", InPlayer, Gesture))
+		MsgN(Format("%s %i", InPlayer, Gesture))
 
 		net.Broadcast()
 	end)
@@ -116,6 +120,10 @@ function GM:Initialize()
 	self.BaseClass:Initialize()
 
 	RunConsoleCommand("sv_skyname", "painted")
+
+	RunConsoleCommand("mp_show_voice_icons", "0")
+
+	RunConsoleCommand("sv_defaultdeployspeed", "1")
 end
 
 function GM:InitPostEntity()
@@ -154,12 +162,15 @@ end)
 
 end]]
 
+--World модели
+--Тест наручников
 --Предмет швабра
 --Дубинка, рация и их крафт
---Помощь снять наручники
 --Интерфейс расписания
 --Иконки войс чата
 
+--В карцере ускоренный голод
+--Арсенал копов
 --Затемнение экрана при побеге на уровне кода
 --Веревка для наручников
 --Система тревоги с освещением

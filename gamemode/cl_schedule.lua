@@ -93,7 +93,7 @@ local function UpdateScheduleList()
 
 			ScheduleElement:SetSize(150, 20)
 
-			ScheduleElement:SetText(string.format("%s (%i мин)", ScheduleElementInfo.Name, ScheduleElementInfo.DurationMinutes))
+			ScheduleElement:SetText(Format("%s (%i мин)", ScheduleElementInfo.Name, ScheduleElementInfo.DurationMinutes))
 
 			table.insert(PanelScheduleElementList, ScheduleElement)
 			
@@ -169,7 +169,7 @@ local function UpdateScheduleList()
 
 		bCanAccept = ElementsDurationMinutes == RequiredDurationMinutes
 
-		TimeLabel:SetText(string.format("Заполнение (мин): %i из %i", ElementsDurationMinutes, RequiredDurationMinutes))
+		TimeLabel:SetText(Format("Заполнение (мин): %i из %i", ElementsDurationMinutes, RequiredDurationMinutes))
 
 		table.insert(PanelScheduleElementList, TimeLabel)
 	end
@@ -243,7 +243,7 @@ function ShowScheduleSetup()
 
 		RecommendedElement:SetSize(190, 20)
 
-		RecommendedElement:SetText(string.format("%s (%i мин)", RecommendedElementName, RecommendedElementDuration))
+		RecommendedElement:SetText(Format("%s (%i мин)", RecommendedElementName, RecommendedElementDuration))
 			
 		y = y + 30
 	end

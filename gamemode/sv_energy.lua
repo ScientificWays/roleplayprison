@@ -78,7 +78,7 @@ function UpdatePlayerEnergyValue(InPlayer)
 
 	InPlayer.Energy = math.Clamp(InPlayer.Energy, 0.0, UtilGetSprintDuration())
 
-	--MsgN(string.format("%s Energy: %f/%f", InPlayer:GetName(), InPlayer.Energy, UtilGetSprintDuration()))
+	--MsgN(Format("%s Energy: %f/%f", InPlayer:GetName(), InPlayer.Energy, UtilGetSprintDuration()))
 
 	local FinalEnergyValue = InPlayer.Energy / UtilGetSprintDuration()
 

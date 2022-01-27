@@ -10,7 +10,7 @@ local TEAM_GUARD, TEAM_ROBBER = 1, 2
 
 local MainRoleList = {[TEAM_GUARD] = true, [TEAM_ROBBER] = true}
 
-local SubRoleList = {[TEAM_GUARD] = {"Охранник"}, [TEAM_ROBBER] = {"Заключенный"}}
+local SubRoleList = {[TEAM_GUARD] = {"Мужчина", "Женщина"}, [TEAM_ROBBER] = {"Мужчина"--[[, "Женщина"--]]}}
 
 function TeamCanBePicked(TeamID)
 
@@ -221,13 +221,13 @@ function GM:ShowTeam()
 
 								self:HideTeam()
 
-								RunConsoleCommand("changeteam", ID)
+								ClientSendRequestJoinTeam(ID, Index == 1)
 							end
 						end
 					end
 				else
 
-					MsgN(string.format("SubRole is empty for %s!", team.GetName(ID)))
+					MsgN(Format("SubRole is empty for %s!", team.GetName(ID)))
 				end
 			end
 		end

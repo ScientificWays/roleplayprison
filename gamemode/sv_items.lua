@@ -74,7 +74,7 @@ end
 
 function TryCraftItem(InPlayer, InItemName)
 
-	--MsgN(string.format("TryCraftItem(), %s", InItemName))
+	--MsgN(Format("TryCraftItem(), %s", InItemName))
 
 	local ItemData = {}
 
@@ -82,7 +82,7 @@ function TryCraftItem(InPlayer, InItemName)
 
 	for Index, SampleItemData in ipairs(CraftDataList) do
 
-		--MsgN(string.format("%s == %s", SampleItemData.Name, InItemName))
+		--MsgN(Format("%s == %s", SampleItemData.Name, InItemName))
 
 		if SampleItemData.Name == InItemName then
 

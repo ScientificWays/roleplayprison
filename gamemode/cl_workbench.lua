@@ -108,10 +108,10 @@ function ShowWorkbenchFrame()
 				
 				local Client = LocalPlayer()
 
-				draw.SimpleText(string.format("Деревянные детали: %i/%i", Client:GetNWInt("DetailWoodNum"), ItemData.Wood),
+				draw.SimpleText(Format("Деревянные детали: %i/%i", Client:GetNWInt("DetailWoodNum"), ItemData.Wood),
 					"HUDTextSmall", 20, h / 2 - 20, ColorAlpha(COLOR_WHITE, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
-				draw.SimpleText(string.format("Металлически детали: %i/%i", Client:GetNWInt("DetailMetalNum"), ItemData.Metal),
+				draw.SimpleText(Format("Металлически детали: %i/%i", Client:GetNWInt("DetailMetalNum"), ItemData.Metal),
 					"HUDTextSmall", 20, h / 2 + 20, ColorAlpha(COLOR_WHITE, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 			end
 

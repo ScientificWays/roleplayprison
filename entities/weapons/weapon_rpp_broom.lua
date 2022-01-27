@@ -14,7 +14,7 @@ SWEP.Base                   = "weapon_base"
 SWEP.Spawnable				= true
 
 SWEP.ViewModel				= Model("models/weapons/c_rpp_broom.mdl")
-SWEP.WorldModel				= Model("")
+SWEP.WorldModel				= Model("models/weapons/w_rpp_broom.mdl")
 SWEP.ViewModelFOV			= 54
 SWEP.UseHands				= true
 
@@ -83,7 +83,7 @@ function SWEP:PrimaryAttack(bSecondary)
 
 	--MsgN(self:SequenceDuration())
 
-	timer.Create(string.format("weapon_damage_%s", self:EntIndex()), self:SequenceDuration() * 0.1, 1, function()
+	timer.Create(Format("weapon_damage_%s", self:EntIndex()), self:SequenceDuration() * 0.1, 1, function()
 
 		if IsValid(self) then
 
@@ -91,7 +91,7 @@ function SWEP:PrimaryAttack(bSecondary)
 		end
 	end)
 	
-	timer.Create(string.format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+	timer.Create(Format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
 
 		if IsValid(self) then
 
@@ -131,8 +131,6 @@ function SWEP:DealDamage(bSecondary)
 			PlayerOwner:EmitSound(HitSound)
 		end
 	end
-
-	local AttackHit = false
 
 	local PushScale = phys_pushscale:GetFloat()
 
@@ -181,8 +179,6 @@ function SWEP:DealDamage(bSecondary)
 		AttackTraceEntity:TakeDamageInfo(ApplyDamageInfo)
 
 		SuppressHostEvents(PlayerOwner)
-
-		AttackHit = true
 	end
 
 	if IsValid(AttackTraceEntity) then
@@ -198,12 +194,12 @@ end
 
 function SWEP:OnRemove()
 
-	timer.Stop(string.format("weapon_idle_%s", self:EntIndex()))
+	timer.Stop(Format("weapon_idle_%s", self:EntIndex()))
 end
 
 function SWEP:Holster()
 
-	timer.Stop(string.format("weapon_idle_%s", self:EntIndex()))
+	timer.Stop(Format("weapon_idle_%s", self:EntIndex()))
 
 	return true
 end

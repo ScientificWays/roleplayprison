@@ -208,10 +208,10 @@ local function SetHUDHintDataGuardTask(InImplementerName, InNowImplemetingBy)
 
 	if InNowImplemetingBy == "" then
 
-		HUDHintData.Text = string.format("Задание для %s", InImplementerName)
+		HUDHintData.Text = Format("Задание для %s", InImplementerName)
 	else
 
-		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
+		HUDHintData.Text = Format("Выполняет %s", InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -232,7 +232,7 @@ local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
 		end
 	else
 
-		HUDHintData.Text = string.format("Выполняет %s", InNowImplemetingBy)
+		HUDHintData.Text = Format("Выполняет %s", InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -247,7 +247,7 @@ local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
 		HUDHintData.Text = "Произведенные детали"
 	else
 
-		HUDHintData.Text = string.format("Подбирает %s", InNowImplemetingBy)
+		HUDHintData.Text = Format("Подбирает %s", InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -397,14 +397,14 @@ end
 
 local function TryDrawPlayerInfo(InClient)
 
-	draw.SimpleText(string.format("%s %s", InClient:GetNWString("RPName"), InClient:GetNWString("RPSurname")),
+	draw.SimpleText(Format("%s %s", InClient:GetNWString("RPName"), InClient:GetNWString("RPSurname")),
 		"HUDText", ScrW() - 50, ScrH() - 150, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 end
 
 local function TryDrawTalkieInfo(InClient)
 
-	draw.SimpleText(string.format("%.1f", InClient:GetNWFloat("TalkieFrequency")),
-		"HUDText", ScrW() - 50, ScrH() - 200, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+	draw.SimpleText(Format("%.1f", InClient:GetNWFloat("TalkieFrequency")),
+		"HUDText", ScrW() - 50, ScrH() - 300, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 end
 
 local function TryDrawHandcuffed(InClient)
@@ -475,7 +475,7 @@ local function TryDrawTaskTime(InClient)
 
 		local TextColor = ColorAlpha(COLOR_YELLOW, 255 * (1.0 - InClient:GetNWFloat("TaskCancelExtent")))
 
-		draw.SimpleText(string.format("%.1f", TaskTimeLeft),
+		draw.SimpleText(Format("%.1f", TaskTimeLeft),
 			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 64, TextColor, TEXT_ALIGN_CENTER)
 
 		return true
@@ -663,19 +663,24 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 		elseif InTargetEntity:IsPlayer() and InTargetEntity:Team() == TEAM_ROBBER then
 
-			if InPlayer:GetNWInt("DetailWoodNum") > 0 then
+			if InTargetEntity:GetNWBool("bHandcuffed") then
 
-				SetHUDHintDataTradeWood()
-			end
+				SetHUDHintDataHandcuffs()
+			else
+				if InPlayer:GetNWInt("DetailWoodNum") > 0 then
 
-			if InPlayer:GetNWInt("DetailMetalNum") > 0 then
+					SetHUDHintDataTradeWood()
+				end
 
-				SetHUDHintData2TradeMetal()
-			end
+				if InPlayer:GetNWInt("DetailMetalNum") > 0 then
 
-			if InPlayer:GetNWInt("PicklockNum") > 0 then
+					SetHUDHintData2TradeMetal()
+				end
 
-				SetHUDHintData3TradePicklock()
+				if InPlayer:GetNWInt("PicklockNum") > 0 then
+
+					SetHUDHintData3TradePicklock()
+				end
 			end
 		end
 	end
@@ -700,7 +705,7 @@ function GM:HUDDrawTargetID()
 
 		PlayerRPSurname = EyeTrace.Entity:GetNWString("RPSurname")
 
-		draw.SimpleText(string.format("%s %s", PlayerRPName, PlayerRPSurname),
+		draw.SimpleText(Format("%s %s", PlayerRPName, PlayerRPSurname),
 			"HUDText", ScrW() / 2, ScrH() / 2 + 50, self:GetTeamColor(EyeTrace.Entity), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 end

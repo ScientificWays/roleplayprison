@@ -31,7 +31,7 @@ net.Receive("MulticastDoAnimation", function(InMessageLength, InPlayer)
 
 	local Player = Entity(PlayerEntityIndex)
 
-	MsgN(string.format("%s %i", Player, Gesture))
+	MsgN(Format("%s %i", Player, Gesture))
 
 	Player:AnimRestartGesture(GESTURE_SLOT_CUSTOM, Gesture, true)
 end)

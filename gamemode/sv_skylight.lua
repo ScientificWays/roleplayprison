@@ -90,7 +90,7 @@ local function TryUpdateLightStyle(InNewLightStyle)
 
 		end)
 
-		MsgN(string.format("New light style: %s", InNewLightStyle))
+		MsgN(Format("New light style: %s", InNewLightStyle))
 
 		OldLightStyle = InNewLightStyle
 	end
@@ -194,12 +194,12 @@ function TryUpdateSkyPaintAndLightmapsState(InAlpha)
 
 			UpdateSkyPaintAndLightmaps(DUSK, NIGHT, InAlpha)
 
-			--MsgN(string.format("DUSK-NIGHT %f", InAlpha))
+			--MsgN(Format("DUSK-NIGHT %f", InAlpha))
 		else
 
 			UpdateSkyPaintAndLightmaps(NIGHT, NIGHT, 0.0)
 
-			--MsgN(string.format("NIGHT-NIGHT %f", InAlpha))
+			--MsgN(Format("NIGHT-NIGHT %f", InAlpha))
 		end
 	else
 
@@ -207,24 +207,24 @@ function TryUpdateSkyPaintAndLightmapsState(InAlpha)
 
 			UpdateSkyPaintAndLightmaps(NIGHT, DAWN, math.Remap(InAlpha, 0.0, 0.2, 0.0, 1.0))
 
-			--MsgN(string.format("NIGHT-DAWN %f", InAlpha))
+			--MsgN(Format("NIGHT-DAWN %f", InAlpha))
 
 		elseif InAlpha < 0.4 then
 
 			UpdateSkyPaintAndLightmaps(DAWN, DAY, math.Remap(InAlpha, 0.2, 0.4, 0.0, 1.0))
 
-			--MsgN(string.format("DAWN-DAY %f", InAlpha))
+			--MsgN(Format("DAWN-DAY %f", InAlpha))
 
 		elseif InAlpha > 0.8 then
 
 			UpdateSkyPaintAndLightmaps(DAY, DUSK, math.Remap(InAlpha, 0.8, 1.0, 0.0, 1.0))
 
-			--MsgN(string.format("DAY-DUSK %f", InAlpha))
+			--MsgN(Format("DAY-DUSK %f", InAlpha))
 		else
 
 			UpdateSkyPaintAndLightmaps(DAY, DAY, 0.0)
 
-			--MsgN(string.format("DAY-DAY %f", InAlpha))
+			--MsgN(Format("DAY-DAY %f", InAlpha))
 		end
 	end
 end

@@ -36,7 +36,7 @@ local StashStackableDataList = {
 
 function ShowStash(InStashEntity)
 
-	MsgN(string.format("ShowStash() %s", InStashEntity))
+	MsgN(Format("ShowStash() %s", InStashEntity))
 
 	if IsStashOpen() then
 

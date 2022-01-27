@@ -152,6 +152,32 @@ function UtilChangePlayerFreeze(InPlayer, bAddFreeze)
 	end
 end
 
+function UtilChangePlayerStun(InPlayer, bAddStun)
+
+	InPlayer.StunNum = InPlayer.StunNum or 0
+
+	--MsgN("UtilChangePlayerStun()")
+
+	--MsgN(InPlayer.StunNum)
+
+	if bAddStun then
+
+		InPlayer.StunNum = InPlayer.StunNum + 1
+	else
+
+		InPlayer.StunNum = InPlayer.StunNum - 1
+	end
+
+	if InPlayer.StunNum <= 0 then
+
+		InPlayer.StunNum = 0
+
+		InPlayer:SetNWBool("bStunned", false)
+	else
+		InPlayer:SetNWBool("bStunned", true)
+	end
+end
+
 function UtilGetPlayerByRPName(InName)
 
 	local AllPlayers = player.GetAll()

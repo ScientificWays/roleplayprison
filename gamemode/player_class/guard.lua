@@ -32,6 +32,11 @@ function PLAYER:Init()
 
 end
 
+function PLAYER:SetModel()
+
+	SetupRPModel(self.Player)
+end
+
 function PLAYER:Loadout()
  
 	self.Player:RemoveAllItems()

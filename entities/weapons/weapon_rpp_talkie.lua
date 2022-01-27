@@ -2,7 +2,7 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName				= "Talkie"
+SWEP.PrintName				= "Рация"
 --SWEP.Author				= "zana"
 SWEP.Purpose				= "Roleplay talkie."
 
@@ -14,7 +14,7 @@ SWEP.Base                   = "weapon_base"
 SWEP.Spawnable				= true
 
 SWEP.ViewModel				= Model("models/weapons/c_rpp_talkie.mdl")
-SWEP.WorldModel				= Model("")
+SWEP.WorldModel				= Model("models/weapons/w_rpp_talkie.mdl")
 SWEP.ViewModelFOV			= 54
 SWEP.UseHands				= true
 
@@ -58,12 +58,12 @@ local function UpdatePlayerFrequency(InPlayer, bAdd)
 
 	InPlayer:SetNWFloat("TalkieFrequency", math.Clamp(NewFrequency, 100.0, 107.0))
 
-	InPlayer:EmitSound(table.Random(FrequencySwitchSoundList))
+	InPlayer:EmitSound(table.Random(FrequencySwitchSoundList), 50)
 end
 
 function SWEP:Initialize()
 
-	self:SetHoldType("normal")
+	self:SetHoldType("slam")
 end
 
 function SWEP:GetClass()
@@ -73,6 +73,9 @@ end
 
 function SWEP:OnDrop()
 
+	local PlayerOwner = self:GetOwner()
+
+	InPlayer:SetNWFloat("TalkieFrequency", 0.0)
 end
 
 function SWEP:ShouldDropOnDie()
@@ -91,9 +94,19 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextSecondaryFire(CurTime() + 2.0)
 
+	self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+
 	local PlayerOwner = self:GetOwner()
 
 	UpdatePlayerFrequency(PlayerOwner, true)
+	
+	timer.Create(Format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+
+		if IsValid(self) then
+
+			self:SendWeaponAnim(ACT_VM_IDLE)
+		end
+	end)
 end
 
 function SWEP:SecondaryAttack()
@@ -109,9 +122,19 @@ function SWEP:SecondaryAttack()
 
 	self:SetNextSecondaryFire(CurTime() + 2.0)
 
+	self:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
+
 	local PlayerOwner = self:GetOwner()
 
 	UpdatePlayerFrequency(PlayerOwner, false)
+
+	timer.Create(Format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+
+		if IsValid(self) then
+
+			self:SendWeaponAnim(ACT_VM_IDLE)
+		end
+	end)
 end
 
 function SWEP:Deploy()
@@ -142,12 +165,7 @@ function SWEP:Holster()
 	return true
 end
 
-function SWEP:DrawWorldModel()
+function SWEP:DrawWorldModel(InFlags)
 
-
-end
-
-function SWEP:DrawWorldModelTranslucent()
-
-
+	self:DrawModel(InFlags)
 end

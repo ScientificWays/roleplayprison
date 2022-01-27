@@ -78,7 +78,7 @@ function OfficerMonitorDraw()
 
 					if (Index == ActiveElementIndex) then
 
-						RowText = string.format("%s [%s]", ScheduleElement.Name, string.ToMinutesSeconds(ActiveElementTimeLeft))
+						RowText = Format("%s [%s]", ScheduleElement.Name, string.ToMinutesSeconds(ActiveElementTimeLeft))
 
 						RowColor = COLOR_BLUE
 					else
@@ -124,7 +124,7 @@ function ControlMonitorDraw()
 			draw.SimpleText(ScheduleList[ActiveElementIndex].Name, "MonitorText",
 				MonitorFrameWidth / 2, MonitorFrameHeight / 2 - 10, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
-			draw.SimpleText(string.format("[%s]", string.ToMinutesSeconds(ActiveElementTimeLeft)), "MonitorTextSmall",
+			draw.SimpleText(Format("[%s]", string.ToMinutesSeconds(ActiveElementTimeLeft)), "MonitorTextSmall",
 				MonitorFrameWidth / 2, MonitorFrameHeight / 2 + 20, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end

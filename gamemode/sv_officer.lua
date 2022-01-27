@@ -26,7 +26,7 @@ end
 
 function PunishOfficerPlayer(InSeconds)
 
-	MsgN(string.format("PunishOfficerPlayer() for %s seconds", InSeconds))
+	MsgN(Format("PunishOfficerPlayer() for %s seconds", InSeconds))
 
 	local OfficerPlayer = UtilGetOfficerPlayer()
 
@@ -79,12 +79,12 @@ function AddOfficerVote(InVoter, InVotedName)
 
 		OfficerVoterAndVotedList[InVoter] = VotedPlayer
 
-		PrintMessage(HUD_PRINTTALK, string.format("%s хочет, чтобы %s был офицером.", VoterName, InVotedName))
+		PrintMessage(HUD_PRINTTALK, Format("%s хочет, чтобы %s был офицером.", VoterName, InVotedName))
 
 		return
 	end
 
-	PrintMessage(HUD_PRINTTALK, string.format("%s не является охранником!", InVotedName))
+	PrintMessage(HUD_PRINTTALK, Format("%s не является охранником!", InVotedName))
 
 	return
 end
@@ -143,5 +143,5 @@ function SetOfficerPlayer(InPlayer)
 
 	InPlayer:SetNWBool("bOfficer", true)
 
-	PrintMessage(HUD_PRINTTALK, string.format("Теперь %s офицер!", InPlayer:GetName()))
+	PrintMessage(HUD_PRINTTALK, Format("Теперь %s офицер!", InPlayer:GetName()))
 end

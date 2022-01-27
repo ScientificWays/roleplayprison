@@ -53,7 +53,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailWoodInfo:SetFont("HUDTextSmall")
 
-	DetailWoodInfo:SetText(string.format("Деревянные детали: %i", InInspectDataTable.DetailWoodNum))
+	DetailWoodInfo:SetText(Format("Деревянные детали: %i", InInspectDataTable.DetailWoodNum))
 
 	local DetailMetalInfo = vgui.Create("DLabel", InspectionFrame)
 
@@ -63,7 +63,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailMetalInfo:SetFont("HUDTextSmall")
 
-	DetailMetalInfo:SetText(string.format("Металлические детали: %i", InInspectDataTable.DetailMetalNum))
+	DetailMetalInfo:SetText(Format("Металлические детали: %i", InInspectDataTable.DetailMetalNum))
 
 	local PicklockInfo = vgui.Create("DLabel", InspectionFrame)
 
@@ -73,7 +73,7 @@ function ShowInspection(InInspectDataTable)
 
 	PicklockInfo:SetFont("HUDTextSmall")
 
-	PicklockInfo:SetText(string.format("Отмычки: %i", InInspectDataTable.PicklockNum))
+	PicklockInfo:SetText(Format("Отмычки: %i", InInspectDataTable.PicklockNum))
 
 	for Index, PrintName in ipairs(InInspectDataTable.IllegalWeaponNameList) do
 
@@ -85,7 +85,7 @@ function ShowInspection(InInspectDataTable)
 
 		IllegalWeaponInfo:SetFont("txt")
 
-		IllegalWeaponInfo:SetText(string.format("Нелегальное оружие: %s", language.GetPhrase(PrintName)))
+		IllegalWeaponInfo:SetText(Format("Нелегальное оружие: %s", language.GetPhrase(PrintName)))
 	end
 end
 

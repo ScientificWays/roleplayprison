@@ -32,13 +32,13 @@ end
 
 function OnRobberEscape(InRobberPlayer)
 
-	MsgN(string.format("OnRobberEscape() %s", InRobberPlayer))
+	MsgN(Format("OnRobberEscape() %s", InRobberPlayer))
 
 	local EscapeUnusedViewList = GetEscapeUnusedViewList()
 
 	local SampleEscapeView = table.Random(EscapeUnusedViewList)
 
-	MsgN(string.format("SampleEscapeView %s", SampleEscapeView))
+	MsgN(Format("SampleEscapeView %s", SampleEscapeView))
 
 	InRobberPlayer:SetNWBool("bEscaped", true)
 

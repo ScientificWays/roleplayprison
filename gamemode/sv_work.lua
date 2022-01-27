@@ -69,7 +69,7 @@ function GetDetailNumInStack(InPickupEntity)
 
 		if IsValid(TemplateEntity) and DetailPickupList[TemplateEntity] ~= nil then
 
-			MsgN(string.format("GetDetailNumInStack() return %i", DetailPickupList[TemplateEntity]:Num()))
+			MsgN(Format("GetDetailNumInStack() return %i", DetailPickupList[TemplateEntity]:Num()))
 
 			return DetailPickupList[TemplateEntity]:Num()
 		end
@@ -135,14 +135,14 @@ function TryAddDetailForWork(InWorkEntity)
 
 			--NewDetailEntity:Spawn()
 
-			--[[MsgN(string.format("Detail num now %i (%i)", PickupData:Num(), #PickupData.DetailEntityList))
+			--[[MsgN(Format("Detail num now %i (%i)", PickupData:Num(), #PickupData.DetailEntityList))
 
 			MsgN(table.ToString(PickupData))
 
-			MsgN(string.format("Template detail pos: %s, angles: %s, model: %s",
+			MsgN(Format("Template detail pos: %s, angles: %s, model: %s",
 				TemplateEntity:GetPos(), TemplateEntity:GetAngles(), TemplateEntity:GetModel()))
 
-			MsgN(string.format("New detail pos: %s, angles: %s, model: %s",
+			MsgN(Format("New detail pos: %s, angles: %s, model: %s",
 				NewDetailEntity:GetPos(), NewDetailEntity:GetAngles(), NewDetailEntity:GetModel()))]]
 		end
 	end
@@ -178,9 +178,9 @@ function TryPickDetailFromWork(InPickingPlayer, InPickupEntity)
 
 				local LastAddedDetail = table.remove(PickupData.DetailEntityList)
 
-				MsgN(string.format("Add detail %s for %s", PickupData.DetailType, InPickingPlayer:GetName()))
+				MsgN(Format("Add detail %s for %s", PickupData.DetailType, InPickingPlayer:GetName()))
 
-				MsgN(string.format("Remove entity %s", LastAddedDetail))
+				MsgN(Format("Remove entity %s", LastAddedDetail))
 
 				LastAddedDetail:Remove()
 

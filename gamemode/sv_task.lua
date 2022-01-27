@@ -25,7 +25,7 @@ function OnTaskTimeout(InTaskType)
 
 	OfficerPunishmentDuration = OfficerPunishmentDuration + UtilGetOfficerPunishmentDuration() / TimeoutTaskNum
 
-	MsgN(string.format("OnTaskTimeout() %s, punishment duration now %i", InTaskType, OfficerPunishmentDuration))
+	MsgN(Format("OnTaskTimeout() %s, punishment duration now %i", InTaskType, OfficerPunishmentDuration))
 
 	TryEnableOfficerPhone()
 end
@@ -126,11 +126,11 @@ function EnableGuardAccountingTask(InGuardPlayer)
 
 		SampleSpot:SetNWFloat("TaskTimeLeft", UtilGetGuardRoutineDuration())
 
-		MsgN(string.format("Enable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
+		MsgN(Format("Enable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
 	else
 		UpdateGuardRoutine(GuardName)
 
-		MsgN(string.format("All spots are occupied! Skip routine for %s", GuardName))
+		MsgN(Format("All spots are occupied! Skip routine for %s", GuardName))
 	end
 end
 
@@ -150,7 +150,7 @@ function DisableGuardAccountingTask(InGuardPlayer)
 
 			SampleSpot:SetNWFloat("TaskTimeLeft", 0)
 
-			MsgN(string.format("Disable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
+			MsgN(Format("Disable guard %s accounting task with %s...", GuardName, SampleSpot:GetName()))
 
 			break
 		end
@@ -177,7 +177,7 @@ function OnImplementTaskStart(InPlayer, InTaskStartEntity, InDuration, InCancelC
 
 	local PlayerName = InPlayer:GetName()
 
-	timer.Create(string.format("%s_Task", PlayerName), 0.1, 0, function()
+	timer.Create(Format("%s_Task", PlayerName), 0.1, 0, function()
 		OnImplementTaskProgress(InPlayer)
 	end)
 
@@ -243,7 +243,7 @@ function OnImplementTaskStop(InPlayer, bCancel)
 
 	MsgN("OnImplementTaskStop()")
 
-	timer.Remove(string.format("%s_Task", InPlayer:GetName()))
+	timer.Remove(Format("%s_Task", InPlayer:GetName()))
 
 	local PlayerName = InPlayer:GetName()
 

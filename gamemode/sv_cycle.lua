@@ -66,7 +66,7 @@ end
 
 function UpdateGuardRoutine(InPlayerName)
 
-	--MsgN(string.format("UpdateGuardRoutine() %s", InPlayerName))
+	--MsgN(Format("UpdateGuardRoutine() %s", InPlayerName))
 
 	GuardRoutineTimeLeftTable[InPlayerName] = {DelayLeft = UtilGetRoutineDelay(), TimeLeft = UtilGetRoutineTimeout()}
 
@@ -91,7 +91,7 @@ local function SetupCycleStartGuardRoutine()
 
 		GuardRoutineTimeLeftTable[SampleGuardName] = {DelayLeft = AdjustedRoutineDelay, TimeLeft = UtilGetRoutineTimeout()}
 
-		MsgN(string.format("Set first routine delay for %s: adjusted from %i to %i",
+		MsgN(Format("Set first routine delay for %s: adjusted from %i to %i",
 			SampleGuardName, BaseRoutineDelay, AdjustedRoutineDelay))
 
 		table.RemoveByValue(AllGuards, SampleGuard)
@@ -102,7 +102,7 @@ local function HandleGuardRoutine(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetName()
 
-	--MsgN(string.format("HandleGuardRoutine() for %s", GuardName))
+	--MsgN(Format("HandleGuardRoutine() for %s", GuardName))
 
 	local RoutineData = GuardRoutineTimeLeftTable[GuardName]
 

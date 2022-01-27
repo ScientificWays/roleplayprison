@@ -2,7 +2,7 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName				= "Unarmed"
+SWEP.PrintName				= "Свободные руки"
 --SWEP.Author				= "zana"
 SWEP.Purpose				= "Roleplay unarmed."
 
@@ -250,7 +250,7 @@ local function TryHandcuffsOff(InPlayer, InInteractEntity)
 
 	OnPlayerHandcuffsOff(InInteractEntity)
 
-	UtilChangePlayerFreeze(InInteractEntity, false)
+	--UtilChangePlayerFreeze(InInteractEntity, false)
 end
 
 local function CanInspect(InPlayer, InInteractEntity)
@@ -278,20 +278,20 @@ local function TryToggleKidnap(InPlayer, InInteractEntity)
 		return false
 	end
 
-	local CurrentKidnapper = InInteractEntity:GetNWEntity("Kidnapper", nil)
+	local CurrentKidnapper = Entity(InInteractEntity:GetNWInt("KidnapperIndex", -1))
 
 	if IsValid(CurrentKidnapper) then
 
-		InInteractEntity:SetNWEntity("Kidnapper", nil)
+		InInteractEntity:SetNWInt("KidnapperIndex", -1)
 
-		timer.Remove(string.format("%s_kidnap", InInteractEntity:GetName()))
+		timer.Remove(Format("%s_kidnap", InInteractEntity:GetName()))
 
-		MsgN(string.format("Release %s from %s", InInteractEntity:GetName(), InPlayer:GetName()))
+		MsgN(Format("Release %s from %s", InInteractEntity:GetName(), InPlayer:GetName()))
 	else
 
-		InInteractEntity:SetNWEntity("Kidnapper", InPlayer)
+		InInteractEntity:SetNWInt("KidnapperIndex", InPlayer:EntIndex())
 
-		timer.Create(string.format("%s_kidnap", InInteractEntity:GetName()), 0.5, 0, function()
+		timer.Create(Format("%s_kidnap", InInteractEntity:GetName()), 0.5, 0, function()
 
 			if InInteractEntity:GetPos():DistToSqr(InPlayer:GetPos()) > 9216.0 then
 
@@ -299,7 +299,7 @@ local function TryToggleKidnap(InPlayer, InInteractEntity)
 			end
 		end)
 
-		MsgN(string.format("%s kidnapped %s", InPlayer:GetName(), InInteractEntity:GetName()))
+		MsgN(Format("%s kidnapped %s", InPlayer:GetName(), InInteractEntity:GetName()))
 	end
 
 	return true
@@ -342,7 +342,7 @@ end
 
 local function TryTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr)
 
-	MsgN(string.format("TryTradeStackableItem() %s", InItemNameStr))
+	MsgN(Format("TryTradeStackableItem() %s", InItemNameStr))
 
 	if not CanTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr) then
 
@@ -500,13 +500,13 @@ function SWEP:SecondaryAttack()
 
 			if CanHandcuffsOff(PlayerOwner, InteractEntity) then
 
-				UtilChangePlayerFreeze(InteractEntity, true)
+				--UtilChangePlayerFreeze(InteractEntity, true)
 
 				OnImplementTaskStart(
 					PlayerOwner,
 					InteractEntity,
 					UtilGetHandcuffsOffDuration(),
-					function() UtilChangePlayerFreeze(InteractEntity, false) end,
+					--[[function() UtilChangePlayerFreeze(InteractEntity, false) end--]]nil,
 					TryHandcuffsOff
 				)
 				return
@@ -536,6 +536,21 @@ function SWEP:SecondaryAttack()
 					UtilGetPicklockUseDuration(),
 					nil,
 					TryUsePicklock
+				)
+				return
+			end
+
+
+			if CanHandcuffsOff(PlayerOwner, InteractEntity) then
+
+				--UtilChangePlayerFreeze(InteractEntity, true)
+
+				OnImplementTaskStart(
+					PlayerOwner,
+					InteractEntity,
+					UtilGetHandcuffsOffDuration() * 2.0,
+					--[[function() UtilChangePlayerFreeze(InteractEntity, false) end--]]nil,
+					TryHandcuffsOff
 				)
 				return
 			end
