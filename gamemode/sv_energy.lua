@@ -19,9 +19,11 @@ timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 
 				Player.Energy = Player.Energy - 1.0
 
-				Player.Food = Player.Food - 0.05
+				Player.Food = Player.Food - 0.02
 
-				Player.Water = Player.Water - 0.1
+				Player.Water = Player.Water - 0.04
+
+				MsgN(Format("Hunger sprint tick for %s", Player:Nick()))
 
 				UpdatePlayerHungerValue(Player)
 			else
@@ -39,12 +41,12 @@ timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
 			end
 		end
 
-		MsgN(Format("%s %s %s", Player:GetName(), OldEnergy, Player.Energy))
-
 		if OldEnergy == Player.Energy then
 
 			return
 		end
+
+		MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
 
 		if Player.Energy < UtilGetSprintDuration() * 0.25 then
 

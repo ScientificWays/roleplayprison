@@ -143,5 +143,5 @@ function SetOfficerPlayer(InPlayer)
 
 	InPlayer:SetNWBool("bOfficer", true)
 
-	PrintMessage(HUD_PRINTTALK, Format("Теперь %s офицер!", InPlayer:GetName()))
+	PrintMessage(HUD_PRINTTALK, Format("Теперь %s %s офицер!", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")))
 end

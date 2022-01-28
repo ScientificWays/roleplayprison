@@ -153,6 +153,14 @@ function SWEP:Deploy()
 		--PlayerOwner:SetNWBool("bUsingTalkie", true)
 
 		UpdatePlayerFrequency(PlayerOwner, nil)
+		
+		timer.Create(Format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+
+			if IsValid(self) then
+
+				self:SendWeaponAnim(ACT_VM_IDLE)
+			end
+		end)
 	end
 
 	self:DrawShadow(false)

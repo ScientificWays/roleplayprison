@@ -51,14 +51,13 @@ function PLAYER:Loadout()
 	self.Player:RemoveAllItems()
  
 	self.Player:SetNWInt("DetailWoodNum", 0)
-	
 	self.Player:SetNWInt("DetailMetalNum", 0)
-
 	self.Player:SetNWInt("PicklockNum", 0)
 
 	self.Player:Give("weapon_rpp_unarmed")
-
 	self.Player:Give("weapon_rpp_fists")
+
+	--self.Player:Give("weapon_rpp_club")
 end
  
 player_manager.RegisterClass("player_robber", PLAYER, "player_default")

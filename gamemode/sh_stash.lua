@@ -34,5 +34,5 @@ function CanPickItemFromStash(InPlayer, InStashEntity)
 
 	local StashItemName = InStashEntity:GetNWString("StashItemName")
 
-	return StashItemName ~= "" and not InPlayer:HasWeapon(StashItemName)
+	return StashItemName ~= "" and (not InPlayer:HasWeapon(StashItemName) or InPlayer:Team() == TEAM_GUARD)
 end

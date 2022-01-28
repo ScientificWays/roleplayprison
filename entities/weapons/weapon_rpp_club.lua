@@ -13,8 +13,8 @@ SWEP.Base                   = "weapon_base"
 
 SWEP.Spawnable				= true
 
-SWEP.ViewModel				= Model("models/weapons/c_rpp_club.mdl")
-SWEP.WorldModel				= Model("models/weapons/w_rpp_club.mdl")
+SWEP.ViewModel				= Model("models/weapons/c_rpp_bat.mdl")
+SWEP.WorldModel				= Model("models/weapons/w_rpp_bat.mdl")
 SWEP.ViewModelFOV			= 54
 SWEP.UseHands				= true
 
@@ -111,13 +111,14 @@ function SWEP:DealDamage()
 
 	local AttackTraceEntity = AttackTrace.Entity
 
-	if CLIENT then
+	if SERVER then
 
-		if AttackTrace.Hit and not game.SinglePlayer() then
+		if AttackTrace.Hit then
 
 			PlayerOwner:EmitSound(HitSound)
 
-			timer.Create(Format("weapon_remove_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+			--Delay calculated from half of attack animation duration minus delay for DealDamage()
+			timer.Create(Format("weapon_remove_%s", self:EntIndex()), self:SequenceDuration() / 2 - self:SequenceDuration() * 0.1, 1, function()
 
 				if IsValid(self) then
 
@@ -146,12 +147,23 @@ function SWEP:DealDamage()
 
 		ApplyDamageInfo:SetDamage(math.random(20, 28))
 
-		UtilChangePlayerStun(AttackTraceEntity, true)
+		if AttackTraceEntity:IsNPC() or AttackTraceEntity:IsPlayer() then
 
-		timer.Create(Format("weapon_debuff_%s", self:EntIndex()), 3.0, 1, function()
+			UtilChangePlayerStun(AttackTraceEntity, true)
 
-			UtilChangePlayerStun(AttackTraceEntity, false)
-		end)
+			local TimerName = Format("weapon_debuff_%s", self:EntIndex())
+
+			if timer.Exists(TimerName) then
+
+				UtilChangePlayerStun(AttackTraceEntity, false)
+			else
+
+				timer.Create(TimerName, 3.0, 1, function()
+
+					UtilChangePlayerStun(AttackTraceEntity, false)
+				end)
+			end
+		end
 
 		ApplyDamageInfo:SetDamageForce(PlayerOwner:GetRight() * 6912 * PushScale + PlayerOwner:GetForward() * 12998 * PushScale)
 
@@ -186,6 +198,26 @@ function SWEP:DealDamage()
 			phys:ApplyForceOffset(PlayerOwner:GetAimVector() * 80 * phys:GetMass() * PushScale, AttackTrace.HitPos)
 		end
 	end
+end
+
+function SWEP:Deploy()
+
+	local PlayerOwner = self:GetOwner()
+
+	if SERVER and IsValid(PlayerOwner) then
+
+		timer.Create(Format("weapon_idle_%s", self:EntIndex()), self:SequenceDuration(), 1, function()
+
+			if IsValid(self) then
+
+				self:SendWeaponAnim(ACT_VM_IDLE)
+			end
+		end)
+	end
+
+	self:DrawShadow(false)
+
+	return true
 end
 
 function SWEP:OnRemove()

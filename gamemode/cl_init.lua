@@ -68,5 +68,13 @@ function GM:InitPostEntity()
 	self.BaseClass:InitPostEntity()
 end
 
+function GM:OnPlayerChat(InPlayer, InText, bTeamChat, bIsDead)
+
+	chat.AddText(team.GetColor(InPlayer:Team()), Format("%s %s: ", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")),
+		COLOR_WHITE, InText)
+
+	return true
+end
+
 function GM:AddDeathNotice() end
 function GM:DrawDeathNotice() end

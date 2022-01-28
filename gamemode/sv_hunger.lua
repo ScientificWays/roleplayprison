@@ -43,6 +43,8 @@ timer.Create("HungerTick", 24.0, 0, function()
 		end
 
 		UpdatePlayerHungerValue(Player)
+
+		Player:SetNWFloat("InjuryValue", 1.0 - Player:Health() / 100.0)
 	end
 end)
 
@@ -103,7 +105,7 @@ function UpdatePlayerHungerValue(InPlayer)
 
 	--MsgN(Format("%s Food: %i, Water: %s", InPlayer:GetName(), InPlayer.Food, InPlayer.Water))
 
-	InPlayer:SetNWFloat("HungerValue", 1.0 - (InPlayer.Food + InPlayer.Water) / 200)
+	InPlayer:SetNWFloat("HungerValue", 1.0 - math.Clamp((InPlayer.Food + InPlayer.Water) * 2, 0, 200) / 200)
 end
 
 function AddNutrition(InPlayer, InValue, bFood)

@@ -449,7 +449,7 @@ local function TryDrawHUDHintData(InClient)
 
 	local TextBiasY = 0
 
-	local DrawX = ScrW() / 2 - (HUDHintData.TotalNum - 1) * 24
+	local DrawX = ScrW() / 2 - (HUDHintData.TotalNum or 0 - 1) * 24
 
 	if DrawHUDHintElement(DrawX, HUDHintData.Icon2, HUDHintData.IconColor2, HUDHintData.IconSize2, HUDHintData.Text2) then
 
@@ -737,7 +737,7 @@ function GM:HUDPaint()
 		hook.Run("HUDDrawTargetID")
 	end
 
-	if Client:GetActiveWeapon():GetClass() == "weapon_rpp_talkie" then
+	if IsValid(Client:GetActiveWeapon()) and Client:GetActiveWeapon():GetClass() == "weapon_rpp_talkie" then
 
 		TryDrawTalkieInfo(Client)
 	end

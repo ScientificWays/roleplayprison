@@ -98,11 +98,11 @@ local function SetupCycleStartGuardRoutine()
 	end
 end
 
-local function HandleGuardRoutine(InGuardPlayer)
+local function GuardRoutineTick(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetName()
 
-	--MsgN(Format("HandleGuardRoutine() for %s", GuardName))
+	--MsgN(Format("GuardRoutineTick() for %s", GuardName))
 
 	local RoutineData = GuardRoutineTimeLeftTable[GuardName]
 
@@ -217,6 +217,18 @@ function OnCycleEnd()
 		ServerResetScheduleList()
 
 		table.Empty(GuardRoutineTimeLeftTable)
+
+		local AllGuards = team.GetPlayers(TEAM_GUARD)
+
+		for Index, SampleGuard in ipairs(AllGuards) do
+
+			if not SampleGuard:GetNWBool("bOfficer") then
+
+				DisableGuardAccountingTask(SampleGuard)
+			end
+		end
+
+		TryDisableOfficerPhone()
 	end
 end
 
@@ -296,7 +308,7 @@ function CycleUpdate()
 			if SampleGuard:GetNWBool("bOfficer") and UtilIsOfficerPunished() then
 
 			else
-				HandleGuardRoutine(SampleGuard)
+				GuardRoutineTick(SampleGuard)
 			end
 		end
 	end

@@ -155,6 +155,8 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if InText[1] ~= "/" then
 
+		MsgN(Format("Chat text: %s ", InText))
+
 		return InText
 	end
 
@@ -519,7 +521,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
 	InPlayer:Spawn()
 
-	PrintMessage(HUD_PRINTTALK, Format("%s присоединился к '%s' как %s %s", InPlayer:Nick(), team.GetName(InNewTeam),
+	PrintMessage(HUD_PRINTTALK, Format("%s теперь за роль '%s' как %s %s", InPlayer:Nick(), team.GetName(InNewTeam),
 		NewRPName, NewRPSurname))
 end
 
@@ -626,7 +628,6 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		hook.Run("PlayerSetModel", InPlayer)
 	end
-
 	
 	net.Start("SendScheduleListToClients")
 

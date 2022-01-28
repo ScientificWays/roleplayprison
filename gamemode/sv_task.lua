@@ -33,6 +33,7 @@ end
 function ResetTaskTimeouts()
 
 	OfficerPunishmentDuration = 0
+	
 	TimeoutTaskNum = 0
 end
 

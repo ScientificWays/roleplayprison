@@ -419,7 +419,7 @@ function SWEP:PrimaryAttack()
 
 			if CanTradeStackableItem(PlayerOwner, InteractEntity, "DetailWoodNum") then
 
-				UtilChangePlayerFreeze(InteractEntity, true)
+				--UtilChangePlayerFreeze(InteractEntity, true)
 
 				OnImplementTaskStart(
 					PlayerOwner,
@@ -516,7 +516,7 @@ function SWEP:SecondaryAttack()
 
 			if CanTradeStackableItem(PlayerOwner, InteractEntity, "DetailMetalNum") then
 
-				UtilChangePlayerFreeze(InteractEntity, true)
+				--UtilChangePlayerFreeze(InteractEntity, true)
 
 				OnImplementTaskStart(
 					PlayerOwner,
@@ -621,7 +621,7 @@ function SWEP:Reload()
 
 			if CanTradeStackableItem(PlayerOwner, InteractEntity, "PicklockNum") then
 
-				UtilChangePlayerFreeze(InteractEntity, true)
+				--UtilChangePlayerFreeze(InteractEntity, true)
 
 				OnImplementTaskStart(
 					PlayerOwner,
