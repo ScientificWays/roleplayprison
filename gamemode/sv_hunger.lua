@@ -101,7 +101,7 @@ function UpdatePlayerHungerValue(InPlayer)
 
 	InPlayer.Water = math.Clamp(InPlayer.Water, 0.0, 100.0)
 
-	--MsgN(Format("%s Food: %i, Water: %s", InPlayer:GetName(), InPlayer.Food, InPlayer.Water))
+	--MsgN(Format("%s Food: %i, Water: %s", InPlayer:GetNWString("RPName"), InPlayer.Food, InPlayer.Water))
 
 	InPlayer:SetNWFloat("HungerValue", 1.0 - math.Clamp((InPlayer.Food + InPlayer.Water) * 2, 0, 200) / 200)
 end

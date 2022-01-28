@@ -9,6 +9,7 @@ AddCSLuaFile("cl_util.lua")
 
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_stash.lua")
+AddCSLuaFile("cl_voice.lua")
 AddCSLuaFile("cl_network.lua")
 AddCSLuaFile("cl_monitors.lua")
 AddCSLuaFile("cl_pickrole.lua")
@@ -162,8 +163,7 @@ end)
 
 end]]
 
---Запоминание имен при вылетах
---World модели
+--CSS контент
 --Предмет швабра, выбрасывание предметов и подбор только на E
 --Интерфейс расписания
 --Иконки войс чата

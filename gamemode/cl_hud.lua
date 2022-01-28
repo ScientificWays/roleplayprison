@@ -228,7 +228,7 @@ local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
 			HUDHintData.Text = "Начать работу"
 		else
 
-			HUDHintData.Text = "Работа для заключенного"
+			HUDHintData.Text = "Работа для заключённого"
 		end
 	else
 
@@ -244,7 +244,7 @@ local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
 
 	if InNowImplemetingBy == "" then
 
-		HUDHintData.Text = "Произведенные детали"
+		HUDHintData.Text = "Произведённые детали"
 	else
 
 		HUDHintData.Text = Format("Подбирает %s", InNowImplemetingBy)

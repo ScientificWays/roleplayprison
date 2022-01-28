@@ -98,12 +98,12 @@ function FinishOfficerAnswerPhone(InOfficerPlayer, InTaskStartEntity)
 
 	MsgN("FinishOfficerAnswerPhone()")
 
-	UpdateGuardRoutine(InOfficerPlayer:GetName())
+	UpdateGuardRoutine(InOfficerPlayer:GetNWString("RPName"))
 end
 
 function EnableGuardAccountingTask(InGuardPlayer)
 
-	local GuardName = InGuardPlayer:GetName()
+	local GuardName = InGuardPlayer:GetNWString("RPName")
 
 	local PotentialSpots = ents.FindByName("*_GuardTask")
 
@@ -137,13 +137,13 @@ end
 
 function DisableGuardAccountingTask(InGuardPlayer)
 
-	local GuardName = InGuardPlayer:GetName()
+	local GuardName = InGuardPlayer:GetNWString("RPName")
 
 	local PotentialSpots = ents.FindByName("*_GuardTask")
 
 	for Index, SampleSpot in ipairs(PotentialSpots) do
 
-		if SampleSpot:GetNWString("TaskImplementer") == InGuardPlayer:GetNWString("RPName") then
+		if SampleSpot:GetNWString("TaskImplementer") == GuardName then
 
 			SampleSpot:Fire("FireUser2")
 
@@ -164,7 +164,7 @@ function FinishGuardAccountingTask(InGuardPlayer, InTaskStartEntity)
 
 	DisableGuardAccountingTask(InGuardPlayer)
 
-	UpdateGuardRoutine(InGuardPlayer:GetName())
+	UpdateGuardRoutine(InGuardPlayer:GetNWString("RPName"))
 end
 
 function FinishRobberWorkTask(InRobberPlayer, InTaskStartEntity)
@@ -176,7 +176,7 @@ end
 
 function OnImplementTaskStart(InPlayer, InTaskStartEntity, InDuration, InCancelCallback, InFinishCallback)
 
-	local PlayerName = InPlayer:GetName()
+	local PlayerName = InPlayer:GetNWString("RPName")
 
 	timer.Create(Format("%s_Task", PlayerName), 0.1, 0, function()
 		OnImplementTaskProgress(InPlayer)
@@ -199,9 +199,14 @@ function OnImplementTaskProgress(InPlayer)
 
 	local SpeedMul = 1.0
 
-	local PlayerName = InPlayer:GetName()
+	local PlayerName = InPlayer:GetNWString("RPName")
 
 	local TaskData = PlayerTaskDataList[PlayerName]
+
+	if not IsValid(TaskData.TaskEntity) then
+
+		OnImplementTaskStop(InPlayer, true)
+	end
 
 	if (string.EndsWith(TaskData.TaskEntity:GetName(), "_Wood_RobberTask") and UtilIsWorkWoodBuffed())
 	or (string.EndsWith(TaskData.TaskEntity:GetName(), "_Metal_RobberTask") and UtilIsWorkMetalBuffed()) then
@@ -244,9 +249,9 @@ function OnImplementTaskStop(InPlayer, bCancel)
 
 	MsgN("OnImplementTaskStop()")
 
-	timer.Remove(Format("%s_Task", InPlayer:GetName()))
+	timer.Remove(Format("%s_Task", InPlayer:GetNWString("RPName")))
 
-	local PlayerName = InPlayer:GetName()
+	local PlayerName = InPlayer:GetNWString("RPName")
 
 	local TaskData = PlayerTaskDataList[PlayerName]
 
@@ -256,7 +261,10 @@ function OnImplementTaskStop(InPlayer, bCancel)
 
 	InPlayer:SetNWFloat("TaskCancelExtent", 0.0)
 
-	TaskData.TaskEntity:SetNWString("NowImplemetingBy", "")
+	if IsValid(TaskData.TaskEntity) then
+
+		TaskData.TaskEntity:SetNWString("NowImplemetingBy", "")
+	end
 
 	if bCancel then
 

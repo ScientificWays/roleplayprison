@@ -42,7 +42,7 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 			if OldEnergy ~= Player.Energy then
 
-				MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
+				--MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
 
 				if Player.Energy < UtilGetSprintDuration() * 0.25 then
 
@@ -80,7 +80,7 @@ function UpdatePlayerEnergyValue(InPlayer)
 
 	InPlayer.Energy = math.Clamp(InPlayer.Energy, 0.0, UtilGetSprintDuration())
 
-	--MsgN(Format("%s Energy: %f/%f", InPlayer:GetName(), InPlayer.Energy, UtilGetSprintDuration()))
+	--MsgN(Format("%s Energy: %f/%f", InPlayer:GetNWString("RPName"), InPlayer.Energy, UtilGetSprintDuration()))
 
 	local FinalEnergyValue = InPlayer.Energy / UtilGetSprintDuration()
 

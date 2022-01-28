@@ -593,7 +593,7 @@ function SWEP:Reload()
 				PlayerOwner,
 				InteractEntity,
 				1.0,
-				function() UtilChangePlayerFreeze(InteractEntity, false) end,
+				nil,
 				TryConsumeNutrition
 			)
 

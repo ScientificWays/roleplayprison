@@ -178,7 +178,7 @@ function TryPickDetailFromWork(InPickingPlayer, InPickupEntity)
 
 				local LastAddedDetail = table.remove(PickupData.DetailEntityList)
 
-				MsgN(Format("Add detail %s for %s", PickupData.DetailType, InPickingPlayer:GetName()))
+				MsgN(Format("Add detail %s for %s", PickupData.DetailType, InPickingPlayer:GetNWString("RPName")))
 
 				MsgN(Format("Remove entity %s", LastAddedDetail))
 

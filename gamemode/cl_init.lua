@@ -8,6 +8,7 @@ include("cl_util.lua")
 
 include("cl_hud.lua")
 include("cl_stash.lua")
+include("cl_voice.lua")
 include("cl_network.lua")
 include("cl_pickrole.lua")
 include("cl_schedule.lua")

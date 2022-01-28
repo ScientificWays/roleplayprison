@@ -33,22 +33,6 @@ function UpdatePlayerMonitorType(InPlayer)
 	end
 end
 
-function OnPlayerHandcuffsOn(InPlayer)
-
-	MsgN(Format("%s OnPlayerHandcuffsOn()", InPlayer:GetName()))
-
-	InPlayer:SetNWBool("bHandcuffed", true)
-
-	InPlayer:SetActiveWeapon(InPlayer:GetWeapon("weapon_rpp_unarmed"))
-end
-
-function OnPlayerHandcuffsOff(InPlayer)
-
-	MsgN(Format("%s OnPlayerHandcuffsOff()", InPlayer:GetName()))
-
-	InPlayer:SetNWBool("bHandcuffed", false)
-end
-
 hook.Add("SetupMove", "StunMove", function(InPlayer, InMoveData, InCommandData)
 
 	if InPlayer.StunNum ~= nil and InPlayer.StunNum > 0 then
@@ -56,6 +40,26 @@ hook.Add("SetupMove", "StunMove", function(InPlayer, InMoveData, InCommandData)
 		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
 	end
 end)
+
+function OnPlayerHandcuffsOn(InPlayer)
+
+	MsgN(Format("%s OnPlayerHandcuffsOn()", InPlayer:GetNWString("RPName")))
+
+	InPlayer:SetNWBool("bHandcuffed", true)
+
+	InPlayer:SetActiveWeapon(InPlayer:GetWeapon("weapon_rpp_unarmed"))
+
+	InPlayer:GetWeapon("weapon_rpp_unarmed"):SetHoldType("fist")
+end
+
+function OnPlayerHandcuffsOff(InPlayer)
+
+	MsgN(Format("%s OnPlayerHandcuffsOff()", InPlayer:GetNWString("RPName")))
+
+	InPlayer:SetNWBool("bHandcuffed", false)
+
+	InPlayer:GetWeapon("weapon_rpp_unarmed"):SetHoldType("normal")
+end
 
 hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandData)
 
@@ -213,6 +217,8 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		DebugDude:SetTeam(TEAM_GUARD)
 
+		DebugDude:SetNWString("RPName", "Лёха")
+
 		DebugDude:Spawn()
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/Саня" then
@@ -220,6 +226,8 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 		local DebugDude = player.CreateNextBot("Саня")
 
 		DebugDude:SetTeam(TEAM_ROBBER)
+
+		DebugDude:SetNWString("RPName", "Саня")
 
 		DebugDude:Spawn()
 
@@ -509,7 +517,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 		return
 	end
 
-	local NewModel, NewRPName, NewRPSurname = GetNewPlayerIdentity(InNewTeam == TEAM_GUARD, InPlayer:GetNWBool("bMale"))
+	local NewModel, NewRPName, NewRPSurname = GetNewPlayerIdentity(InPlayer, InNewTeam == TEAM_GUARD, InPlayer:GetNWBool("bMale"))
 
 	InPlayer.RPModel = NewModel
 

@@ -5,14 +5,15 @@ GM.Website = "N/A"
 GM.TeamBased = true
 GM.SecondsBetweenTeamSwitches = 0
 
-COLOR_WHITE  = Color(255, 255, 255, 255)
-COLOR_BLACK  = Color(0, 0, 0, 255)
+COLOR_WHITE  		= Color(255, 255, 255, 255)
+COLOR_TRANSPARENT	= Color(255, 255, 255, 0)
+COLOR_BLACK  		= Color(0, 0, 0, 255)
 
-COLOR_RED    = Color(255, 0, 0, 255)
-COLOR_YELLOW = Color(200, 200, 0, 255)
-COLOR_GREEN  = Color(0, 255, 0, 255)
-COLOR_CYAN   = Color(0, 255, 255, 255)
-COLOR_BLUE   = Color(0, 0, 255, 255)
+COLOR_RED    		= Color(255, 0, 0, 255)
+COLOR_YELLOW 		= Color(200, 200, 0, 255)
+COLOR_GREEN  		= Color(0, 255, 0, 255)
+COLOR_CYAN   		= Color(0, 255, 255, 255)
+COLOR_BLUE   		= Color(0, 0, 255, 255)
 
 include("player_class/guard.lua")
 include("player_class/robber.lua")
@@ -104,15 +105,27 @@ function UtilGetCycleDurationMinutes(bInterCycle)
 	end
 end
 
+function UtilGetPlayerFullRPName(InPlayer)
+
+	return Format("%s %s", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname"))
+end
+
+function UtilCanHearByTalkie(InListener, InTalker)
+
+	return InListener:HasWeapon("weapon_rpp_talkie")
+	and IsValid(InTalker:GetActiveWeapon()) and InTalker:GetActiveWeapon():GetClass() == "weapon_rpp_talkie"
+	and InListener:GetNWFloat("TalkieFrequency") == InTalker:GetNWFloat("TalkieFrequency")
+end
+
 function GM:CreateTeams()
 
 	TEAM_GUARD = 1
-	team.SetUp(TEAM_GUARD, "Охранники", Color(0, 0, 255))
+	team.SetUp(TEAM_GUARD, "Охранники", Color(0, 150, 255))
 	team.SetSpawnPoint(TEAM_GUARD, {"info_guard_start"})
 	team.SetClass(TEAM_GUARD, {"player_guard"})
 
 	TEAM_ROBBER = 2
-	team.SetUp(TEAM_ROBBER, "Заключенные", Color(255, 255, 0))
+	team.SetUp(TEAM_ROBBER, "Заключенные", Color(255, 150, 0))
 	team.SetSpawnPoint(TEAM_ROBBER, {"info_robber_start"})
 	team.SetClass(TEAM_ROBBER, {"player_robber"})
 

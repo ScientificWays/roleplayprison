@@ -87,7 +87,7 @@ local function SetupCycleStartGuardRoutine()
 
 		local SampleGuard = table.Random(AllGuards)
 
-		local SampleGuardName = SampleGuard:GetName()
+		local SampleGuardName = SampleGuard:GetNWString("RPName")
 
 		GuardRoutineTimeLeftTable[SampleGuardName] = {DelayLeft = AdjustedRoutineDelay, TimeLeft = UtilGetRoutineTimeout()}
 
@@ -100,7 +100,7 @@ end
 
 local function GuardRoutineTick(InGuardPlayer)
 
-	local GuardName = InGuardPlayer:GetName()
+	local GuardName = InGuardPlayer:GetNWString("RPName")
 
 	--MsgN(Format("GuardRoutineTick() for %s", GuardName))
 

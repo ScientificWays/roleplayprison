@@ -111,7 +111,7 @@ function FinishOfficerVote()
 
 		OfficerPlayerVoteCount[VotedPlayer] = (OfficerPlayerVoteCount[VotedPlayer] or 0) + 1
 
-		--MsgN(VoterPlayer:GetName().." for "..VotedPlayer:GetName())
+		--MsgN(VoterPlayer:GetNWString("RPName").." for "..VotedPlayer:GetNWString("RPName"))
 
 		if OfficerPlayerVoteCount[VotedPlayer] > MostVotedVoteCount then
 

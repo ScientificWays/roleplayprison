@@ -146,9 +146,15 @@ function ShowAnimations()
 
 		AnimationButton.DoClick = function()
 
-			SendDoAnimationToServer(AnimationData.Gesture)
+			if UtilPlayerCanDoAnimation(LocalPlayer()) then
 
-			HideAnimations(AnimationsFrame)
+				SendDoAnimationToServer(AnimationData.Gesture)
+
+				HideAnimations(AnimationsFrame)
+			else
+
+				surface.PlaySound("Buttons.snd10")
+			end
 		end
 
 	end

@@ -108,11 +108,19 @@ function ShowWorkbenchFrame()
 				
 				local Client = LocalPlayer()
 
+				local CraftColor = COLOR_RED
+
+				--Can craft
+				if Client:GetNWInt("DetailWoodNum") >= ItemData.Wood and Client:GetNWInt("DetailMetalNum") >= ItemData.Metal then
+
+					CraftColor = COLOR_GREEN
+				end
+
 				draw.SimpleText(Format("Деревянные детали: %i/%i", Client:GetNWInt("DetailWoodNum"), ItemData.Wood),
-					"HUDTextSmall", 20, h / 2 - 20, ColorAlpha(COLOR_WHITE, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+					"HUDTextSmall", 20, h / 2 - 20, ColorAlpha(CraftColor, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
 				draw.SimpleText(Format("Металлически детали: %i/%i", Client:GetNWInt("DetailMetalNum"), ItemData.Metal),
-					"HUDTextSmall", 20, h / 2 + 20, ColorAlpha(COLOR_WHITE, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+					"HUDTextSmall", 20, h / 2 + 20, ColorAlpha(CraftColor, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 			end
 
 			RecipePanel.DoClick = function()
@@ -126,7 +134,7 @@ function ShowWorkbenchFrame()
 
 					LastSelectedItem:SizeTo(130, 130, 0.3, 0, 0.2)
 
-					surface.PlaySound("items/ammo_pickup.wav")
+					surface.PlaySound("Buttons.snd6")
 				end
 
 				MsgN("Клик")

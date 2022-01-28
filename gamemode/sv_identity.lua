@@ -337,29 +337,46 @@ local function RefreshEmptyLists()
 	end
 end
 
-function GetNewPlayerIdentity(bGuard, bMale)
+local RejoinIdentityList = {}
 
-	RefreshEmptyLists()
+function GetNewPlayerIdentity(InPlayer, bGuard, bMale)
 
-	if bMale then
+	local ID = InPlayer:AccountID()
 
-		if bGuard then
+	local OutModel, OutName, OutSurname = "", "", ""
 
-			return GetRandomAndDeleteFromLists(MaleGuardModels, MaleNames, MaleSurnames)
-		else
+	if RejoinIdentityList[ID] ~= nil and RejoinIdentityList[ID].bGuard == bGuard and RejoinIdentityList[ID].bMale == bMale then
 
-			return GetRandomAndDeleteFromLists(MaleRobberModels, MaleNames, MaleSurnames)
-		end
+		OutModel, OutName, OutSurname = RejoinIdentityList[ID].Model, RejoinIdentityList[ID].Name, RejoinIdentityList[ID].Surname
+
+		PrintMessage(HUD_PRINTTALK, Format("%s использует свою прежнюю личность.", InPlayer:Nick()))
 	else
+		RefreshEmptyLists()
 
-		if bGuard then
+		if bMale then
 
-			return GetRandomAndDeleteFromLists(FemaleGuardModels, FemaleNames, FemaleSurnames)
+			if bGuard then
+
+				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(MaleGuardModels, MaleNames, MaleSurnames)
+			else
+
+				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(MaleRobberModels, MaleNames, MaleSurnames)
+			end
 		else
 
-			--return GetRandomAndDeleteFromLists(FemaleRobberModels, FemaleNames, FemaleSurnames)
+			if bGuard then
+
+				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(FemaleGuardModels, FemaleNames, FemaleSurnames)
+			else
+
+				--OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(FemaleRobberModels, FemaleNames, FemaleSurnames)
+			end
 		end
+
+		RejoinIdentityList[ID] = {Model = OutModel, Name = OutName, Surname = OutSurname, bGuard = bGuard, bMale = bMale}
 	end
+
+	return OutModel, OutName, OutSurname
 end
 
 function SetupRPModel(InPlayer)

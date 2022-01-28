@@ -34,7 +34,7 @@ SWEP.Secondary.Ammo			= "none"
 SWEP.AllowDelete			= true
 SWEP.AllowDrop				= true
 
-SWEP.HitDistance = 64.0
+SWEP.HitDistance = 96.0
 
 local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Wood_Plank.ImpactHard")
