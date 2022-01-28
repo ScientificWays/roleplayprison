@@ -53,7 +53,7 @@ hook.Add("SetupMove", "StunMove", function(InPlayer, InMoveData, InCommandData)
 
 	if InPlayer.StunNum ~= nil and InPlayer.StunNum > 0 then
 
-		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.3)
+		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
 	end
 end)
 
@@ -162,9 +162,9 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	SeparatedStrings = string.Explode(" ", InText, false)
 
-	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= "" then
+	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= nil then
 
-		AddOfficerVote(InSender, SeparatedStrings)
+		AddOfficerVote(InSender, SeparatedStrings[2])
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
 
@@ -390,7 +390,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			if InTargetEntity:GetNWBool("bGuardTask") then
 
 				if InTargetEntity:GetNWString("NowImplemetingBy") == ""
-					and InActivator:GetName() == InTargetEntity:GetNWString("TaskImplementer") then
+					and InActivator:GetNWString("RPName") == InTargetEntity:GetNWString("TaskImplementer") then
 
 					OnImplementTaskStart(
 						InActivator,
@@ -622,8 +622,6 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		InPlayer:SetNWFloat("EnergyValue", 1.0)
 	
-		InPlayer:SetNWFloat("InjuryValue", 0.0)
-
 		hook.Run("PlayerLoadout", InPlayer)
 
 		hook.Run("PlayerSetModel", InPlayer)
@@ -766,7 +764,19 @@ function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
 	end
 end
 
+function UpdatePlayerInjuryValues()
+
+	local AllPlayers = player.GetAll()
+
+	for Index, SamplePlayer in ipairs(AllPlayers) do
+
+		SamplePlayer:SetNWFloat("InjuryValue", 1.0 - SamplePlayer:Health() / 100.0)
+	end
+end
+
 function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDamageTaken)
 
-	InVictimPlayer:SetNWFloat("InjuryValue", 1.0 - InHealthRemaining / 100.0)
+	UpdatePlayerInjuryValues()
 end
+
+timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayerInjuryValues)

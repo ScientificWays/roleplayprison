@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName = "#GMOD_Fists"
+SWEP.PrintName = "Кулаки"
 
 SWEP.Slot = 0
 SWEP.SlotPos = 4

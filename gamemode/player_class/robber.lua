@@ -57,7 +57,7 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_rpp_unarmed")
 	self.Player:Give("weapon_rpp_fists")
 
-	--self.Player:Give("weapon_rpp_club")
+	self.Player:Give("weapon_rpp_club")
 end
  
 player_manager.RegisterClass("player_robber", PLAYER, "player_default")

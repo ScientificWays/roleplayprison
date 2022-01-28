@@ -9,6 +9,14 @@ function GetOfficerPunishmentTimeLeft()
 	return OfficerPunishmentTimeLeft
 end
 
+function HandleOfficerOnIntercycleStart()
+
+	if UtilIsOfficerPunished() then
+
+		OfficerPunishmentTimeLeft = math.Clamp(OfficerPunishmentTimeLeft, 0, UtilGetCycleDurationMinutes(true) * 30)
+	end
+end
+
 function DecreaseOfficerPunishmentTimeLeft()
 
 	OfficerPunishmentTimeLeft = OfficerPunishmentTimeLeft - 1
@@ -73,7 +81,7 @@ function AddOfficerVote(InVoter, InVotedName)
 
 	local VotedPlayer = UtilGetPlayerByRPName(InVotedName)
 
-	local VoterName = InVoter:GetName()
+	local VoterName = InVoter:GetNWString("RPName")
 
 	if IsValid(VotedPlayer) and VotedPlayer:Team() == TEAM_GUARD then
 

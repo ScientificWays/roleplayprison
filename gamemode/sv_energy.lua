@@ -1,80 +1,78 @@
 ---- Roleplay: Prison
 
-timer.Create("EnergyTick", 1.0, 0, function(InPlayer)
+timer.Create("EnergyTick", 1.0, 0, function()
 
 	local AllPlayers = player.GetAll()
 
 	for Index, Player in ipairs(AllPlayers) do
 
-		if Player:Team() ~= TEAM_ROBBER and Player:Team() ~= TEAM_GUARD then
+		--MsgN(team.GetName(Player:Team()))
 
-			return
-		end
+		if Player:Team() == TEAM_ROBBER or Player:Team() == TEAM_GUARD then
 
-		local OldEnergy = Player.Energy
+			local OldEnergy = Player.Energy
 
-		if Player:IsSprinting() then
+			if Player:IsSprinting() then
 
-			if Player.Energy >= 1.0 then
+				if Player.Energy >= 1.0 then
 
-				Player.Energy = Player.Energy - 1.0
+					Player.Energy = Player.Energy - 1.0
 
-				Player.Food = Player.Food - 0.02
+					Player.Food = Player.Food - 0.02
 
-				Player.Water = Player.Water - 0.04
+					Player.Water = Player.Water - 0.04
 
-				MsgN(Format("Hunger sprint tick for %s", Player:Nick()))
+					--MsgN(Format("Hunger sprint tick for %s", Player:Nick()))
 
-				UpdatePlayerHungerValue(Player)
+					UpdatePlayerHungerValue(Player)
+				else
+
+					Player.Energy = 0.0
+				end
 			else
 
-				Player.Energy = 0.0
-			end
-		else
+				if Player.Energy < UtilGetSprintDuration() then
 
-			if Player.Energy < UtilGetSprintDuration() then
+					Player.Energy = Player.Energy + 1.0
+				else
 
-				Player.Energy = Player.Energy + 2.0
-			else
-
-				Player.Energy = UtilGetSprintDuration()
-			end
-		end
-
-		if OldEnergy == Player.Energy then
-
-			return
-		end
-
-		MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
-
-		if Player.Energy < UtilGetSprintDuration() * 0.25 then
-
-			if Player.BreatheSound == nil then
-
-				Player.BreatheSound = CreateSound(Player, "player/breathe1.wav", RecipientFilter():AddAllPlayers())
-
-				Player.BreatheSound:Play()
-
-				--MsgN("Play sound")
+					Player.Energy = UtilGetSprintDuration()
+				end
 			end
 
-			Player.BreatheSound:ChangeVolume(1.0 - Player.Energy / (UtilGetSprintDuration() * 0.25))
-		else
+			if OldEnergy ~= Player.Energy then
 
-			--MsgN(Player.BreatheSound)
+				MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
 
-			if Player.BreatheSound ~= nil then
+				if Player.Energy < UtilGetSprintDuration() * 0.25 then
 
-				Player.BreatheSound:Stop()
+					if Player.BreatheSound == nil then
 
-				Player.BreatheSound = nil
+						Player.BreatheSound = CreateSound(Player, "player/breathe1.wav", RecipientFilter():AddAllPlayers())
 
-				--MsgN("Stop sound")
+						Player.BreatheSound:Play()
+
+						--MsgN("Play sound")
+					end
+
+					Player.BreatheSound:ChangeVolume(1.0 - Player.Energy / (UtilGetSprintDuration() * 0.25))
+				else
+
+					--MsgN(Player.BreatheSound)
+
+					if Player.BreatheSound ~= nil then
+
+						Player.BreatheSound:Stop()
+
+						Player.BreatheSound = nil
+
+						--MsgN("Stop sound")
+					end
+				end
+
+				UpdatePlayerEnergyValue(Player)
 			end
 		end
-
-		UpdatePlayerEnergyValue(Player)
 	end
 end)
 

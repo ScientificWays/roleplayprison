@@ -123,7 +123,7 @@ function EnableGuardAccountingTask(InGuardPlayer)
 
 		SampleSpot:Fire("FireUser1")
 
-		SampleSpot:SetNWString("TaskImplementer", GuardName)
+		SampleSpot:SetNWString("TaskImplementer", InGuardPlayer:GetNWString("RPName"))
 
 		SampleSpot:SetNWFloat("TaskTimeLeft", UtilGetGuardRoutineDuration())
 
@@ -143,7 +143,7 @@ function DisableGuardAccountingTask(InGuardPlayer)
 
 	for Index, SampleSpot in ipairs(PotentialSpots) do
 
-		if SampleSpot:GetNWString("TaskImplementer") == GuardName then
+		if SampleSpot:GetNWString("TaskImplementer") == InGuardPlayer:GetNWString("RPName") then
 
 			SampleSpot:Fire("FireUser2")
 

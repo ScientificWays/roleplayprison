@@ -6,7 +6,7 @@ local MaxBrignessValue = -0.3
 
 local MaxColorValue = 0.0
 
-local MaxAddAlphaValue = 0.06
+local MaxAddAlphaValue = 0.1
 
 function UpdatePostProcessData(InPlayer)
 
@@ -20,7 +20,7 @@ function UpdatePostProcessData(InPlayer)
 
 		if InPlayer:GetNWBool("bStunned") then
 
-			TotalValue = TotalValue + 0.5
+			TotalValue = TotalValue + 1.0
 		end
 
 		TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) / 5, 0.0, 1.0)

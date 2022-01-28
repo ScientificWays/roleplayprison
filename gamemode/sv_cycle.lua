@@ -229,6 +229,8 @@ function OnCycleEnd()
 		end
 
 		TryDisableOfficerPhone()
+
+		HandleOfficerOnIntercycleStart()
 	end
 end
 

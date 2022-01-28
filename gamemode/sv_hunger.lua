@@ -43,8 +43,6 @@ timer.Create("HungerTick", 24.0, 0, function()
 		end
 
 		UpdatePlayerHungerValue(Player)
-
-		Player:SetNWFloat("InjuryValue", 1.0 - Player:Health() / 100.0)
 	end
 end)
 

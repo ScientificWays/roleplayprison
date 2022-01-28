@@ -158,7 +158,7 @@ function SWEP:DealDamage()
 				UtilChangePlayerStun(AttackTraceEntity, false)
 			else
 
-				timer.Create(TimerName, 3.0, 1, function()
+				timer.Create(TimerName, 5.0, 1, function()
 
 					UtilChangePlayerStun(AttackTraceEntity, false)
 				end)
