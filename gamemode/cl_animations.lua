@@ -153,7 +153,7 @@ function ShowAnimations()
 				HideAnimations(AnimationsFrame)
 			else
 
-				surface.PlaySound("Buttons.snd10")
+				surface.PlaySound("buttons/button10.wav")
 			end
 		end
 

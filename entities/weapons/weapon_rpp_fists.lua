@@ -25,6 +25,9 @@ SWEP.Secondary.Ammo = "none"
 
 SWEP.DrawAmmo = false
 
+SWEP.AllowDelete			= false
+SWEP.AllowDrop				= false
+
 SWEP.HitDistance = 48
 
 local SwingSound = Sound("WeaponFrag.Throw")

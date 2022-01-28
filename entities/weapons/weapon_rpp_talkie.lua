@@ -76,6 +76,8 @@ function SWEP:Equip()
 	local PlayerOwner = self:GetOwner()
 
 	PlayerOwner:SetNWFloat("TalkieFrequency", 0.0)
+
+	self.AllowDrop = PlayerOwner:Team() ~= TEAM_GUARD
 end
 
 function SWEP:OnDrop()

@@ -155,6 +155,16 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	end
 end)
 
+function GM:PlayerCanPickupWeapon(InPlayer, InWeapon)
+
+	if InPlayer:Team() ~= TEAM_GUARD and InPlayer:HasWeapon(InWeapon:GetClass()) then
+
+		return false
+	end
+
+	return true
+end
+
 function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if InText[1] ~= "/" then

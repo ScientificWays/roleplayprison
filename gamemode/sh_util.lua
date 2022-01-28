@@ -117,6 +117,11 @@ function UtilCanHearByTalkie(InListener, InTalker)
 	and InListener:GetNWFloat("TalkieFrequency") == InTalker:GetNWFloat("TalkieFrequency")
 end
 
+function UtilPlayerCanDoAnimation(InPlayer)
+
+	return not InPlayer:GetNWBool("bHandcuffed") and InPlayer:GetNWFloat("TaskTimeLeft") <= 0.0
+end
+
 function GM:CreateTeams()
 
 	TEAM_GUARD = 1

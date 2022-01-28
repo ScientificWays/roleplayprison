@@ -105,6 +105,11 @@ function GM:Initialize()
 
 	net.Receive("SendDoAnimationToServer", function(InMessageLength, InPlayer)
 
+		if not UtilPlayerCanDoAnimation(InPlayer) then
+
+			return
+		end
+
 		local Gesture = net.ReadInt(32)
 
 		net.Start("MulticastDoAnimation")
@@ -158,13 +163,26 @@ hook.Add("PlayerButtonDown", "ShowAnimationsBind", function(InPlayer, InButton)
 	end
 end)
 
+hook.Add("PlayerButtonDown", "DropWeaponBind", function(InPlayer, InButton)
+
+	if InButton == KEY_Q then
+
+		local ActiveWeapon = InPlayer:GetActiveWeapon()
+
+		if IsValid(ActiveWeapon) and ActiveWeapon.AllowDrop then
+
+			InPlayer:DropWeapon(ActiveWeapon)
+		end
+	end
+end)
+
 --[[function GM:Tick()
 
 
 end]]
 
---CSS контент
---Предмет швабра, выбрасывание предметов и подбор только на E
+--Предмет швабра
+--Выбрасывание предметов и подбор только на E
 --Интерфейс расписания
 --Иконки войс чата
 --Восстановление энергии фикс

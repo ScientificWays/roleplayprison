@@ -36,9 +36,9 @@ SWEP.AllowDrop				= false
 
 local function CanTryInteract(InPlayer, InInteractEntity)
 
-	return IsValid(InInteractEntity)
+	return not InPlayer:GetNWBool("bHandcuffed")
+	and IsValid(InInteractEntity)
 	and InInteractEntity:GetNWString("NowImplemetingBy") == ""
-	and not InPlayer:GetNWBool("bHandcuffed")
 end
 
 local function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
