@@ -37,10 +37,15 @@ include("sv_hunger.lua")
 include("sv_energy.lua")
 include("sv_escape.lua")
 include("sv_officer.lua")
+include("sv_weapons.lua")
+include("sv_interact.lua")
+include("sv_commands.lua")
 include("sv_identity.lua")
 include("sv_glitches.lua")
 include("sv_skylight.lua")
 include("sv_sabotage.lua")
+include("sv_handcuffs.lua")
+include("sv_animations.lua")
 include("sv_inspection.lua")
 
 --Sit anywhere
@@ -103,25 +108,7 @@ function GM:Initialize()
 
 	net.Receive("SendScheduleListToServer", ServerReceiveScheduleList)
 
-	net.Receive("SendDoAnimationToServer", function(InMessageLength, InPlayer)
-
-		if not UtilPlayerCanDoAnimation(InPlayer) then
-
-			return
-		end
-
-		local Gesture = net.ReadInt(32)
-
-		net.Start("MulticastDoAnimation")
-
-		net.WriteInt(Gesture, 32)
-
-		net.WriteInt(InPlayer:EntIndex(), 32)
-
-		MsgN(Format("%s %i", InPlayer, Gesture))
-
-		net.Broadcast()
-	end)
+	net.Receive("SendDoAnimationToServer", ServerReceiveDoAnimation)
 
 	self.BaseClass:Initialize()
 
@@ -153,41 +140,13 @@ function GM:InitPostEntity()
 	self.BaseClass:InitPostEntity()
 end
 
-hook.Add("PlayerButtonDown", "ShowAnimationsBind", function(InPlayer, InButton)
-
-	if InButton == KEY_F1 and CurTime() - (InPlayer.ShowAnimationsBindLastSend or 0.0) > 0.0 then
-
-		InPlayer:SendLua("ShowAnimations()")
-
-		InPlayer.ShowAnimationsBindLastSend = CurTime()
-	end
-end)
-
-hook.Add("PlayerButtonDown", "DropWeaponBind", function(InPlayer, InButton)
-
-	if InButton == KEY_Q then
-
-		local ActiveWeapon = InPlayer:GetActiveWeapon()
-
-		if IsValid(ActiveWeapon) and ActiveWeapon.AllowDrop then
-
-			InPlayer:DropWeapon(ActiveWeapon)
-		end
-	end
-end)
-
 --[[function GM:Tick()
 
 
 end]]
 
---Предмет швабра
---Выбрасывание предметов и подбор только на E
 --Интерфейс расписания
---Иконки войс чата
---Восстановление энергии фикс
 
---Плечо дубинки и положение в руке
 --В карцере ускоренный голод
 --Сковородка
 --Арсенал копов

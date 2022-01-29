@@ -2,7 +2,7 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName				= "Broom"
+SWEP.PrintName				= "Швабра"
 --SWEP.Author				= "zana"
 SWEP.Purpose				= "Roleplay broom."
 
@@ -35,9 +35,11 @@ SWEP.AllowDelete			= true
 SWEP.AllowDrop				= true
 
 SWEP.HitDistance = 96.0
+SWEP.SecondaryHitDistance = 96.0
 
 local SwingSound = Sound("WeaponFrag.Throw")
-local HitSound = Sound("Wood_Plank.ImpactHard")
+local HitSound = Sound("Carpet.BulletImpact")
+local SecondaryHitSound = Sound("Wood_Box.ImpactHard")
 
 local phys_pushscale = GetConVar("phys_pushscale")
 
@@ -111,9 +113,13 @@ function SWEP:DealDamage(bSecondary)
 
 	local FinalHitDistance = self.HitDistance
 
+	local FinalHitSound = HitSound
+
 	if bSecondary then
 
-		FinalHitDistance = 64.0
+		FinalHitDistance = self.SecondaryHitDistance
+
+		FinalHitSound = SecondaryHitSound
 	end
 
 	local AttackTrace = util.TraceLine({
@@ -124,11 +130,11 @@ function SWEP:DealDamage(bSecondary)
 
 	local AttackTraceEntity = AttackTrace.Entity
 
-	if CLIENT then
+	if SERVER then
 
-		if AttackTrace.Hit and not game.SinglePlayer() then
+		if AttackTrace.Hit then
 
-			PlayerOwner:EmitSound(HitSound)
+			PlayerOwner:EmitSound(FinalHitSound)
 		end
 	end
 

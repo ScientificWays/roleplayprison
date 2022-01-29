@@ -71,7 +71,8 @@ end
 
 function GM:OnPlayerChat(InPlayer, InText, bTeamChat, bIsDead)
 
-	chat.AddText(team.GetColor(InPlayer:Team()), Format("%s %s: ", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")),
+	chat.AddText(COLOR_WHITE, (bTeamChat and "(КОМАНДЕ) ") or "",
+		team.GetColor(InPlayer:Team()), Format("%s %s: ", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")),
 		COLOR_WHITE, InText)
 
 	return true
