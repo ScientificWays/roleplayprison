@@ -13,6 +13,8 @@ SWEP.Base                   = "weapon_base"
 
 SWEP.Spawnable				= true
 
+--SWEP.ViewModel				= Model("models/weapons/v_frying_pan.mdl")
+--SWEP.WorldModel				= Model("models/weapons/w_frying_pan.mdl")
 SWEP.ViewModel				= Model("models/weapons/c_rpp_broom.mdl")
 SWEP.WorldModel				= Model("models/weapons/w_rpp_broom.mdl")
 SWEP.ViewModelFOV			= 54
@@ -38,8 +40,12 @@ SWEP.HitDistance = 96.0
 SWEP.SecondaryHitDistance = 96.0
 
 local SwingSound = Sound("WeaponFrag.Throw")
+
 local HitSound = Sound("Carpet.BulletImpact")
 local SecondaryHitSound = Sound("Wood_Box.ImpactHard")
+
+local HitParticle = Particle("water_splash_01_refract")
+local SecondaryHitParticle = Particle("")
 
 local phys_pushscale = GetConVar("phys_pushscale")
 
@@ -115,11 +121,15 @@ function SWEP:DealDamage(bSecondary)
 
 	local FinalHitSound = HitSound
 
+	local FinalHitParticle = HitParticle
+
 	if bSecondary then
 
 		FinalHitDistance = self.SecondaryHitDistance
 
 		FinalHitSound = SecondaryHitSound
+
+		FinalHitParticle = SecondaryHitParticle
 	end
 
 	local AttackTrace = util.TraceLine({
@@ -135,6 +145,13 @@ function SWEP:DealDamage(bSecondary)
 		if AttackTrace.Hit then
 
 			PlayerOwner:EmitSound(FinalHitSound)
+
+			if FinalHitParticle ~= "" then
+
+				ParticleEffect(FinalHitParticle, AttackTrace.HitPos, AttackTrace.HitNormal:Angle())
+
+				MsgN(Format("Create particle at %s %s", AttackTrace.HitPos, AttackTrace.HitNormal:Angle()))
+			end
 		end
 	end
 
