@@ -145,6 +145,8 @@ end
 
 local function HandleOfficerPunished(InOfficerPlayer)
 
+	MsgN(Format("HandleOfficerPunished() %s", GetOfficerPunishmentTimeLeft()))
+
 	DecreaseOfficerPunishmentTimeLeft()
 
 	if GetOfficerPunishmentTimeLeft() <= 0 then

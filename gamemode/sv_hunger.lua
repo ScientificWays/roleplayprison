@@ -50,7 +50,7 @@ timer.Create("HungerTick", 24.0, 0, function()
 
 				if Player:Health() < 100 then
 
-					Player:SetHealth(Player:Health() + 5)
+					Player:SetHealth(math.Clamp(Player:Health() + 5, 0, Player:GetMaxHealth()))
 				end
 			end
 

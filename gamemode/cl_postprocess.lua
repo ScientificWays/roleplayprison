@@ -31,7 +31,7 @@ function UpdatePostProcessData(InPlayer)
 		return
 	end
 
-	MsgN(Format("Post process new total value: %s", TotalValue))
+	--MsgN(Format("Post process new total value: %s", TotalValue))
 
 	InPlayer:ConCommand(Format("pp_colormod_brightness %f", Lerp(TotalValue, 0.0, MaxBrignessValue)))
 

@@ -148,9 +148,11 @@ function SWEP:DealDamage(bSecondary)
 
 			if FinalHitParticle ~= "" then
 
+				local ParticleSpawnPos = AttackTrace.HitPos + AttackTrace.HitNormal * 32
+
 				ParticleEffect(FinalHitParticle, AttackTrace.HitPos, AttackTrace.HitNormal:Angle())
 
-				MsgN(Format("Create particle at %s %s", AttackTrace.HitPos, AttackTrace.HitNormal:Angle()))
+				--MsgN(Format("Create particle at %s %s", AttackTrace.HitPos, AttackTrace.HitNormal:Angle()))
 			end
 		end
 	end

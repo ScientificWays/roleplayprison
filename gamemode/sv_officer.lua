@@ -9,6 +9,11 @@ function GetOfficerPunishmentTimeLeft()
 	return OfficerPunishmentTimeLeft
 end
 
+function SetOfficerPunishmentTimeLeft(InValue)
+
+	OfficerPunishmentTimeLeft = InValue
+end
+
 function HandleOfficerOnIntercycleStart()
 
 	if UtilIsOfficerPunished() then
@@ -53,6 +58,8 @@ function PunishOfficerPlayer(InSeconds)
 end
 
 function ReleaseOfficerPlayer()
+
+	MsgN("ReleaseOfficerPlayer()")
 
 	local OfficerPlayer = UtilGetOfficerPlayer()
 

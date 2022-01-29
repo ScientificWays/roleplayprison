@@ -16,18 +16,25 @@ end
 
 function OnTaskTimeout(InTaskType)
 
-	TimeoutTaskNum = TimeoutTaskNum + 1
+	if UtilIsOfficerPunished() then
 
-	if TimeoutTaskNum > 3 then
+		SetOfficerPunishmentTimeLeft(GetOfficerPunishmentTimeLeft() + UtilGetOfficerPunishmentDuration() / 4)
 
-		OnOfficerAnswerPhone()
+		MsgN(Format("OnTaskTimeout() %s, punishment time left %i", InTaskType, GetOfficerPunishmentTimeLeft()))
+	else
+		TimeoutTaskNum = TimeoutTaskNum + 1
+
+		if TimeoutTaskNum > 3 then
+
+			OnOfficerAnswerPhone()
+		end
+
+		OfficerPunishmentDuration = OfficerPunishmentDuration + UtilGetOfficerPunishmentDuration() / TimeoutTaskNum
+
+		TryEnableOfficerPhone()
+
+		MsgN(Format("OnTaskTimeout() %s, punishment duration now %i", InTaskType, OfficerPunishmentDuration))
 	end
-
-	OfficerPunishmentDuration = OfficerPunishmentDuration + UtilGetOfficerPunishmentDuration() / TimeoutTaskNum
-
-	MsgN(Format("OnTaskTimeout() %s, punishment duration now %i", InTaskType, OfficerPunishmentDuration))
-
-	TryEnableOfficerPhone()
 end
 
 function ResetTaskTimeouts()
