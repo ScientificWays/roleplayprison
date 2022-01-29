@@ -6,43 +6,56 @@ timer.Create("HungerTick", 24.0, 0, function()
 
 	for Index, Player in ipairs(AllPlayers) do
 
-		if Player:Team() ~= TEAM_ROBBER and Player:Team() ~= TEAM_GUARD then
+		if Player:Team() == TEAM_ROBBER or Player:Team() == TEAM_GUARD then
 
-			return
-		end
+			local HungerMultiplier = 1.0
 
-		if Player.Food >= 1 then
+			if Player:Team() == TEAM_GUARD and UtilCheckPlayerInArea(Player, GuardRestArea) then
 
-			Player.Food = Player.Food - 1
-		else
+				MsgN(Format("Hunger tick for %s in rest area", Player))
 
-			Player.Food = 0
-		end
+				Player:SetArmor(math.Clamp(Player:Armor() + 15, 0, Player:GetMaxArmor()))
 
-		if Player.Water >= 1 then
+				HungerMultiplier = 0.0
 
-			Player.Water = Player.Water - 2
-		else
+			elseif UtilCheckPlayerInArea(Player, PunishmentArea) then
 
-			Player.Water = 0
-		end
-
-		if Player.Food < 20 or Player.Water < 20 then
-
-			if Player:Health() > 15 then
-
-				Player:SetHealth(Player:Health() - 1)
+				HungerMultiplier = 3.0
 			end
 
-		elseif Player.Food > 50 and Player.Water > 50 then
+			if Player.Food >= 1 * HungerMultiplier then
 
-			if Player:Health() < 100 then
+				Player.Food = Player.Food - 1 * HungerMultiplier
+			else
 
-				Player:SetHealth(Player:Health() + 1)
+				Player.Food = 0
 			end
-		end
 
-		UpdatePlayerHungerValue(Player)
+			if Player.Water >= 2 * HungerMultiplier then
+
+				Player.Water = Player.Water - 2 * HungerMultiplier
+			else
+
+				Player.Water = 0
+			end
+
+			if Player.Food < 20 or Player.Water < 20 then
+
+				if Player:Health() > 15 then
+
+					Player:SetHealth(Player:Health() - 1)
+				end
+
+			elseif Player.Food > 50 and Player.Water > 50 then
+
+				if Player:Health() < 100 then
+
+					Player:SetHealth(Player:Health() + 5)
+				end
+			end
+
+			UpdatePlayerHungerValue(Player)
+		end
 	end
 end)
 

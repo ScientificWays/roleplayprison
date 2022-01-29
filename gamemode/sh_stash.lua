@@ -17,6 +17,11 @@ end
 
 function CanAddStackableToStash(InPlayer, InStashEntity, InStackableName)
 
+	if InPlayer:Team() == TEAM_GUARD then
+
+		return false
+	end
+
 	local StashItemName = InStashEntity:GetNWString("StashItemName")
 
 	return (StashItemName == "" or StashItemName == InStackableName)
@@ -24,6 +29,11 @@ function CanAddStackableToStash(InPlayer, InStashEntity, InStackableName)
 end
 
 function CanAddWeaponToStash(InPlayer, InStashEntity)
+
+	if InPlayer:Team() == TEAM_GUARD then
+
+		return false
+	end
 
 	local ActiveWeaponClassName = InPlayer:GetActiveWeapon():GetClass()
 

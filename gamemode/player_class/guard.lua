@@ -28,7 +28,7 @@ PLAYER.UseVMHands           = true      -- Uses viewmodel hands
 
 function PLAYER:Init()
 	
-	
+
 
 end
 

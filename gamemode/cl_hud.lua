@@ -62,7 +62,7 @@ end)
 
 local function SetHUDHintDataFood()
 
-	MsgN("SetHUDHintDataFood()")
+	--MsgN("SetHUDHintDataFood()")
 
 	HUDHintData.Icon = IconFood
 
@@ -314,7 +314,7 @@ end
 
 local function SetHUDHintDataTradeWood()
 
-	MsgN("SetHUDHintDataTradeWood()")
+	--MsgN("SetHUDHintDataTradeWood()")
 
 	HUDHintData.Icon = IconWood
 
@@ -327,7 +327,7 @@ end
 
 local function SetHUDHintData2TradeMetal()
 
-	MsgN("SetHUDHintData2TradeMetal()")
+	--MsgN("SetHUDHintData2TradeMetal()")
 
 	HUDHintData.Icon2 = IconMetal
 
@@ -340,7 +340,7 @@ end
 
 local function SetHUDHintData3TradePicklock()
 
-	MsgN("SetHUDHintData3TradePicklock()")
+	--MsgN("SetHUDHintData3TradePicklock()")
 
 	HUDHintData.Icon3 = IconPicklock
 
@@ -692,7 +692,7 @@ function GM:HUDDrawTargetID()
 
 	local EyeTrace = Client:GetEyeTrace()
 
-	MsgN(EyeTrace.Entity)
+	--MsgN(EyeTrace.Entity)
 
 	if not EyeTrace.Hit or not EyeTrace.HitNonWorld then
 

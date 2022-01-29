@@ -9,8 +9,9 @@ ControlSpeakerArea = {}
 WorkWoodArea = {}
 WorkMetalArea = {}
 
-LocalPunishmentArea = {}
-LocalOutside1Area = {}
+PunishmentArea = {}
+Outside1Area = {}
+GuardRestArea = {}
 
 local bDayMapState = nil
 
@@ -259,11 +260,15 @@ function SetupMapAreas()
 
 		elseif string.EndsWith(SampleAreaName, "_Punishment_Area") then
 
-			LocalPunishmentArea = SampleArea
+			PunishmentArea = SampleArea
 
 		elseif string.EndsWith(SampleAreaName, "_Outside1_Area") then
 
-			LocalOutside1Area = SampleArea
+			Outside1Area = SampleArea
+
+		elseif string.EndsWith(SampleAreaName, "_Rest_Area") then
+
+			GuardRestArea = SampleArea
 		end
 	end
 end
