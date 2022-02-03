@@ -84,9 +84,9 @@ local function TryUpdateLightStyle(InNewLightStyle)
 
 		timer.Simple(0.1, function()
 
-		net.Start("UpdateClientLightmaps")
+			net.Start("UpdateClientLightmaps")
 
-		net.Broadcast()
+			net.Broadcast()
 
 		end)
 

@@ -9,7 +9,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 		return InText
 	end
 
-	SeparatedStrings = string.Explode(" ", InText, false)
+	local SeparatedStrings = string.Explode(" ", InText, false)
 
 	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= nil then
 

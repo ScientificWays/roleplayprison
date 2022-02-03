@@ -8,7 +8,7 @@ timer.Create("HungerTick", 24.0, 0, function()
 
 		if Player:Team() == TEAM_ROBBER or Player:Team() == TEAM_GUARD then
 
-			local HungerMultiplier = 1.0
+			local HungerMultiplier = 0.5
 
 			if Player:Team() == TEAM_GUARD and UtilCheckPlayerInArea(Player, GuardRestArea) then
 
@@ -169,13 +169,13 @@ function OnNutritionConsume(InPlayer, InNutritionInstance)
 
 	if InNutritionInstance:GetNWBool("bFoodInstance") then
 
-		AddNutrition(InPlayer, 40, true)
+		AddNutrition(InPlayer, 60, true)
 
 		InPlayer:EmitSound("Watermelon.BulletImpact")
 
 	elseif InNutritionInstance:GetNWBool("bWaterInstance") then
 
-		AddNutrition(InPlayer, 40, false)
+		AddNutrition(InPlayer, 60, false)
 
 		InPlayer:EmitSound("Water.BulletImpact")
 	end

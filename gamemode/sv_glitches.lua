@@ -1,6 +1,6 @@
 ---- Roleplay: Prison
 
---[[timer.Create("GlitchesTimer", 48.0, 0, function()
+timer.Create("GlitchesTimer", 48.0, 0, function()
 
 	MsgN("Glitches!")
 
@@ -10,14 +10,18 @@
 
 	for Index, PotentialGlitchEntity in ipairs(PotentialGlitchEntityList) do
 
-		if math.random() < 0.3 and PotentialGlitchEntity:GetRenderFX() == kRenderFxNone then
+		if math.random() < 0.1 and PotentialGlitchEntity:GetRenderFX() == kRenderFxNone then
 
 			PotentialGlitchEntity:SetRenderFX(kRenderFxHologram)
 
 			timer.Simple(5.0, function()
 
-				PotentialGlitchEntity:SetRenderFX(kRenderFxNone)
+				--In case entity was removed during gameplay
+				if IsValid(PotentialGlitchEntity) then
+
+					PotentialGlitchEntity:SetRenderFX(kRenderFxNone)
+				end
 			end)
 		end
 	end
-end)--]]
+end)

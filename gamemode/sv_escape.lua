@@ -48,7 +48,7 @@ function OnRobberEscape(InRobberPlayer)
 
 		InRobberPlayer:SetViewEntity(SampleEscapeView)
 
-		PrintMessage(HUD_PRINTTALK, Format("%s сбежал!", InRobberPlayer:Nick()))
+		PrintMessage(HUD_PRINTTALK, Format("%s сбежал!", UtilGetPlayerFullRPName(InRobberPlayer)))
 	end)
 
 	timer.Simple(12.0, function()

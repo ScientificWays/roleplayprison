@@ -14,13 +14,15 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 			if Player:IsSprinting() then
 
+				local EnergyDrainMultiplier = 1.0 + Player:GetNWFloat("HungerValue") * 2
+
 				if Player.Energy >= 1.0 then
 
-					Player.Energy = Player.Energy - 1.0
+					Player.Energy = Player.Energy - 1.0 * EnergyDrainMultiplier
 
-					Player.Food = Player.Food - 0.02
+					Player.Water = Player.Food - 0.02
 
-					Player.Water = Player.Water - 0.04
+					Player.Water = Player.Water - 0.1
 
 					--MsgN(Format("Hunger sprint tick for %s", Player:Nick()))
 

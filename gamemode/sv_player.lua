@@ -265,7 +265,6 @@ function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 		 else
 			-- if attributing to pusher, show more generic crush msg for now
 			DamageInfo:SetDamageType(DMG_CRUSH)
-
 		 end
 
 		 DamageInfo:SetAttacker(att)
@@ -332,6 +331,35 @@ end
 function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDamageTaken)
 
 	UpdatePlayerInjuryValues()
+
+	if InAttackerEntity:IsPlayer() then
+
+		InVictimPlayer:SetNWFloat("DamageSlowTime", 2.0)
+	end
 end
+
+timer.Create("DamageSlowUpdate", 0.5, 0, function()
+
+	local AllPlayers = player.GetAll()
+
+	for Index, SamplePlayer in ipairs(AllPlayers) do
+
+		if SamplePlayer:GetNWFloat("DamageSlowTime") > 0.5 then
+
+			SamplePlayer:SetNWFloat("DamageSlowTime", SamplePlayer:GetNWFloat("DamageSlowTime") - 0.5)
+
+		else
+			SamplePlayer:SetNWFloat("DamageSlowTime", 0.0)
+		end
+	end
+end)
+
+hook.Add("SetupMove", "DamageMove", function(InPlayer, InMoveData, InCommandData)
+
+	if SamplePlayer:GetNWFloat("DamageSlowTime") > 0.0 then
+
+		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
+	end
+end)
 
 timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayerInjuryValues)
