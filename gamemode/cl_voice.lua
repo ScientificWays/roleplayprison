@@ -32,7 +32,9 @@ function VoiceNotifyPanel:Setup(InPlayer)
 
 	self.Player = InPlayer
 
-	self.LabelName:SetText(UtilGetPlayerFullRPName(self.Player))
+	local RPName, RPSurname = UtilGetRPNameSurname(self.Player)
+
+	self.LabelName:SetText(Format("%s %s", UtilLocalizable(RPName), UtilLocalizable(RPSurname)))
 
 	local Client = LocalPlayer()
 
@@ -62,7 +64,7 @@ function VoiceNotifyPanel:Think()
 
 	if IsValid(self.Player) then
 
-		self.LabelName:SetText(UtilGetPlayerFullRPName(self.Player))
+		self.LabelName:SetText(UtilGetRPNameSurname(self.Player))
 	end
 
 	if self.fadeAnim then

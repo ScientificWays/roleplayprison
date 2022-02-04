@@ -7,6 +7,18 @@
 	return table.Random(AccountingTaskList)
 end]]
 
+function UtilSendEventMessageToPlayers(InMessageStrings)
+
+	net.Start("SendEventMessageToClients")
+
+	for Index, SampleString in ipairs(InMessageStrings) do
+
+		net.WriteString(SampleString)
+	end
+
+	net.Broadcast()
+end
+
 function UtilGetRoutineDelay()
 
 	return math.random(GetConVar("sk_routine_delay_min"):GetInt(), GetConVar("sk_routine_delay_max"):GetInt())

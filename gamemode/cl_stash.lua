@@ -186,7 +186,7 @@ function ShowStash(InStashEntity)
 			self.lerp = Lerp(FrameTime() * 15, self.lerp, 200)
 		end
 		
-		draw.SimpleText("Положить оружие", "HUDTextSmall",
+		draw.SimpleText(UtilLocalizable("RPP_UI.StashWeapon"), "HUDTextSmall",
 			w / 2, h / 2, ColorAlpha(COLOR_YELLOW, self.lerp), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 

@@ -68,7 +68,7 @@ local function SetHUDHintDataFood()
 
 	HUDHintData.IconColor = COLOR_WHITE
 
-	HUDHintData.Text = "R"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Reload")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -81,7 +81,7 @@ local function SetHUDHintDataFoodSpawn()
 
 	HUDHintData.IconColor = COLOR_WHITE
 
-	HUDHintData.Text = "Питание"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Nutrition")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -94,7 +94,7 @@ local function SetHUDHintDataWater()
 
 	HUDHintData.IconColor = COLOR_WHITE
 
-	HUDHintData.Text = "R"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Reload")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -107,7 +107,7 @@ local function SetHUDHintDataWaterSpawn()
 
 	HUDHintData.IconColor = COLOR_WHITE
 
-	HUDHintData.Text = "Питание"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Nutrition")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -120,7 +120,7 @@ local function SetHUDHintDataCraft()
 
 	HUDHintData.IconColor = COLOR_WHITE
 
-	HUDHintData.Text = "Верстак"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Workbench")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -129,7 +129,7 @@ local function SetHUDHintDataScheduleSetup()
 
 	HUDHintData.Icon = IconScheduleSetup
 
-	HUDHintData.Text = "Редактирование расписания"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Schedule")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -138,7 +138,7 @@ local function SetHUDHintDataCellsButton()
 
 	HUDHintData.Icon = IconCellsButton
 
-	HUDHintData.Text = "Управление камерами"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Cells")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -147,7 +147,7 @@ local function SetHUDHintDataAlarmButton()
 
 	HUDHintData.Icon = IconAlarmButton
 
-	HUDHintData.Text = "Кнопка тревоги"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Alarm")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -156,7 +156,7 @@ local function SetHUDHintDataGlobalSpeakerButton()
 
 	HUDHintData.Icon = IconGlobalSpeakerButton
 
-	HUDHintData.Text = "Громкоговоритель"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.Speaker")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -175,7 +175,7 @@ local function SetHUDHintDataLockable(bWasLocked)
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	HUDHintData.Text = "ПКМ"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -186,7 +186,7 @@ local function SetHUDHintDataPicklock()
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	HUDHintData.Text = "ПКМ"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -197,7 +197,7 @@ local function SetHUDHintDataUsable()
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	HUDHintData.Text = "ПКМ"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -208,10 +208,10 @@ local function SetHUDHintDataGuardTask(InImplementerName, InNowImplemetingBy)
 
 	if InNowImplemetingBy == "" then
 
-		HUDHintData.Text = Format("Задание для %s", InImplementerName)
+		HUDHintData.Text = Format(UtilLocalizable("RPP_HUD.TaskFor"), InImplementerName)
 	else
 
-		HUDHintData.Text = Format("Выполняет %s", InNowImplemetingBy)
+		HUDHintData.Text = Format(UtilLocalizable("RPP_HUD.ImplementingBy"), InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -225,14 +225,14 @@ local function SetHUDHintDataRobberTask(InNowImplemetingBy, bRobberTeam)
 
 		if bRobberTeam then
 
-			HUDHintData.Text = "Начать работу"
+			HUDHintData.Text = UtilLocalizable("RPP_HUD.StartWork")
 		else
 
-			HUDHintData.Text = "Работа для заключённого"
+			HUDHintData.Text = UtilLocalizable("RPP_HUD.RobberWork")
 		end
 	else
 
-		HUDHintData.Text = Format("Выполняет %s", InNowImplemetingBy)
+		HUDHintData.Text = Format(UtilLocalizable("RPP_HUD.ImplementingBy"), InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -244,10 +244,10 @@ local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
 
 	if InNowImplemetingBy == "" then
 
-		HUDHintData.Text = "Произведённые детали"
+		HUDHintData.Text = UtilLocalizable("RPP_HUD.Details")
 	else
 
-		HUDHintData.Text = Format("Подбирает %s", InNowImplemetingBy)
+		HUDHintData.Text = Format(UtilLocalizable("RPP_HUD.BeingTakenBy"), InNowImplemetingBy)
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -259,10 +259,10 @@ local function SetHUDHintDataServerSabotage(bRobberTeam)
 
 	if bRobberTeam then
 
-		HUDHintData.Text = "Саботаж"
+		HUDHintData.Text = UtilLocalizable("RPP_HUD.Sabotage")
 	else
 
-		HUDHintData.Text = "Починить"
+		HUDHintData.Text = UtilLocalizable("RPP_HUD.Repair")
 	end
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
@@ -274,7 +274,7 @@ local function SetHUDHintData2Knock()
 
 	HUDHintData.IconColor2 = COLOR_YELLOW
 
-	HUDHintData.Text2 = "ЛКМ"
+	HUDHintData.Text2 = UtilLocalizable("RPP_HUD.LMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -285,7 +285,7 @@ local function SetHUDHintDataHandcuffs()
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	HUDHintData.Text = "ПКМ"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -296,7 +296,7 @@ local function SetHUDHintData2Inspect()
 
 	HUDHintData.IconColor2 = COLOR_YELLOW
 
-	HUDHintData.Text2 = "R"
+	HUDHintData.Text2 = UtilLocalizable("RPP_HUD.Reload")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -307,7 +307,7 @@ local function SetHUDHintData3Kidnap()
 
 	HUDHintData.IconColor3 = COLOR_YELLOW
 
-	HUDHintData.Text3 = "ЛКМ"
+	HUDHintData.Text3 = UtilLocalizable("RPP_HUD.LMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -320,7 +320,7 @@ local function SetHUDHintDataTradeWood()
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	HUDHintData.Text = "ЛКМ"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.LMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -333,7 +333,7 @@ local function SetHUDHintData2TradeMetal()
 
 	HUDHintData.IconColor2 = COLOR_YELLOW
 
-	HUDHintData.Text2 = "ПКМ"
+	HUDHintData.Text2 = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -346,7 +346,7 @@ local function SetHUDHintData3TradePicklock()
 
 	HUDHintData.IconColor3 = COLOR_YELLOW
 
-	HUDHintData.Text3 = "R"
+	HUDHintData.Text3 = UtilLocalizable("RPP_HUD.Reload")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -397,7 +397,9 @@ end
 
 local function TryDrawPlayerInfo(InClient)
 
-	draw.SimpleText(Format("%s %s", InClient:GetNWString("RPName"), InClient:GetNWString("RPSurname")),
+	local RPName, RPSurname = UtilGetRPNameSurname(InClient)
+
+	draw.SimpleText(Format("%s %s", UtilLocalizable(RPName), UtilLocalizable(RPSurname)),
 		"HUDText", ScrW() - 50, ScrH() - 150, COLOR_YELLOW, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 end
 
@@ -701,11 +703,9 @@ function GM:HUDDrawTargetID()
 
 	if EyeTrace.Entity:IsPlayer() then
 
-		PlayerRPName = EyeTrace.Entity:GetNWString("RPName")
+		local RPName, RPSurname = UtilGetRPNameSurname(EyeTrace.Entity)
 
-		PlayerRPSurname = EyeTrace.Entity:GetNWString("RPSurname")
-
-		draw.SimpleText(Format("%s %s", PlayerRPName, PlayerRPSurname),
+		draw.SimpleText(Format("%s %s", UtilLocalizable(RPName), UtilLocalizable(RPSurname)),
 			"HUDText", ScrW() / 2, ScrH() / 2 + 50, self:GetTeamColor(EyeTrace.Entity), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 end

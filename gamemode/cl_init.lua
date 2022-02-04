@@ -46,6 +46,7 @@ function GM:Initialize()
 	--concommand.Add("schedulesetup", ToggleScheduleSetup)
 
 	net.Receive("SendScheduleListToClients", ClientReceiveScheduleList)
+	net.Receive("SendEventMessageToClients", ClientReceiveEventMessage)
 
 	net.Receive("SendInspectDataToClient", ClientReceiveInspectData)
 
@@ -71,8 +72,10 @@ end
 
 function GM:OnPlayerChat(InPlayer, InText, bTeamChat, bIsDead)
 
-	chat.AddText(COLOR_WHITE, (bTeamChat and "(КОМАНДЕ) ") or "",
-		team.GetColor(InPlayer:Team()), Format("%s %s: ", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")),
+	local RPName, RPSurname = UtilGetRPNameSurname(InPlayer)
+
+	chat.AddText(COLOR_WHITE, (bTeamChat and UtilLocalizable("RPP_Chat.Team")) or "",
+		team.GetColor(InPlayer:Team()), Format("%s %s: ", UtilLocalizable(RPName), UtilLocalizable(RPSurname)),
 		COLOR_WHITE, InText)
 
 	return true

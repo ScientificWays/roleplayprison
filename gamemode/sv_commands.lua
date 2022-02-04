@@ -1,5 +1,88 @@
 ---- Roleplay: Prison
 
+local RPNameConvertTable = {
+	Bazar = "Базар",
+	Karp = "Карп",
+	Sever = "Север",
+	Agafon = "Агафон",
+	Anton = "Антон",
+	Arkadiy = "Аркадий",
+	Arseniy = "Арсений",
+	Artemiy = "Артемий",
+	Arhipp = "Архипп",
+	Afanasiy = "Афанасий",
+	Boris = "Борис",
+	Valentin = "Валентин",
+	Varlam = "Варлам",
+	Varfolomey = "Варфоломей",
+	Vasiliy = "Василий",
+	Venedikt = "Венедикт",
+	Vikentiy = "Викентий",
+	Viktor = "Виктор",
+	Vissarion = "Виссарион",
+	Vsevolod = "Всеволод",
+	Gavriil = "Гавриил",
+	Gennadiy = "Геннадий",
+	Georgiy = "Георгий",
+	Gerasim = "Герасим",
+	German = "Герман",
+	Gleb = "Глеб",
+	Grigoriy = "Григорий",
+	Demyan = "Демьян",
+	Efrem = "Ефрем",
+	Zhdan = "Ждан",
+	Ivan = "Иван",
+	Innokentiy = "Иннокентий",
+	Kondrat = "Кондрат",
+	Lavrentiy = "Лаврентий",
+	Leonid = "Леонид",
+	Makar = "Макар",
+	Matvey = "Матвей",
+	Nikifor = "Никифор",
+	Nikolay = "Николай",
+	Oleg = "Олег",
+	Panteleimon = "Пантелеймон",
+	Pahomiy = "Пахомий",
+	Pyotr = "Пётр",
+	Platon = "Платон",
+	Roman = "Роман",
+	Saveliy = "Савелий",
+	Semen = "Семён",
+	Sergey = "Сергей",
+	Stepan = "Степан",
+	Taras = "Тарас",
+	Tihon = "Тихон",
+	Fedor = "Фёдор",
+	Fedot = "Федот",
+	Foma = "Фома",
+
+	Avrora = "Аврора",
+	Agafya = "Агафья",
+	Alevtina = "Алевтина",
+	Anna = "Анна",
+	Vasilisa = "Василиса",
+	Veronika = "Вероника",
+	Glafira = "Глафира",
+	Darya = "Дарья",
+	Evgenia = "Евгения",
+	Evdokia = "Евдокия",
+	Klementina = "Клементина",
+	Ksenia = "Ксения",
+	Larisa = "Лариса",
+	Marianna = "Марианна",
+	Marina = "Марина",
+	Maria = "Мария",
+	Marta = "Марта",
+	Nadezhda = "Надежда",
+	Natalia = "Наталья",
+	Nikoletta = "Николетта"
+}
+
+local function TryConvertPlayerName(InName)
+
+	return RPNameConvertTable[InName] or InName
+end
+
 function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if InText[1] ~= "/" then
@@ -13,7 +96,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= nil then
 
-		AddOfficerVote(InSender, SeparatedStrings[2])
+		AddOfficerVote(InSender, TryConvertPlayerName(SeparatedStrings[2]))
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
 
@@ -51,9 +134,9 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 			StartNewCycle()
 
-		elseif SeparatedStrings[2] == "delay" and SeparatedStrings[3] == "" then
+		elseif SeparatedStrings[2] == "delay" and SeparatedStrings[3] ~= nil then
 
-			TrySkipTaskDelayFor(table.concat(SeparatedStrings, " ", 3))
+			TrySkipTaskDelayFor(TryConvertPlayerName(SeparatedStrings[3]))
 		end
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/Лёха" then
@@ -78,7 +161,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/give" and SeparatedStrings[2] ~= nil then
 
-		local GivePlayer = UtilGetPlayerByRPName(SeparatedStrings[2])
+		local GivePlayer = UtilGetPlayerByRPName(TryConvertPlayerName(SeparatedStrings[2]))
 
 		if IsValid(GivePlayer) then
 
@@ -92,7 +175,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		if SeparatedStrings[2] ~= nil and SeparatedStrings[3] ~= nil then
 
-			local TargetPlayer = UtilGetPlayerByRPName(SeparatedStrings[2])
+			local TargetPlayer = UtilGetPlayerByRPName(TryConvertPlayerName(SeparatedStrings[2]))
 
 			AddNutrition(TargetPlayer, math.Round(tonumber(SeparatedStrings[3]) or 0), SeparatedStrings[1] == "/foodadd")
 		end

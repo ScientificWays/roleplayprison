@@ -81,7 +81,7 @@ function AddOfficerVote(InVoter, InVotedName)
 
 	if InVoter:Team() ~= TEAM_GUARD then
 
-		PrintMessage(HUD_PRINTTALK, "Только охранники могут голосовать!")
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteOnlyGuards"})
 
 		return
 	end
@@ -94,12 +94,12 @@ function AddOfficerVote(InVoter, InVotedName)
 
 		OfficerVoterAndVotedList[InVoter] = VotedPlayer
 
-		PrintMessage(HUD_PRINTTALK, Format("%s хочет, чтобы %s был офицером.", VoterName, InVotedName))
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteInfo", VoterName, InVotedName})
 
 		return
 	end
 
-	PrintMessage(HUD_PRINTTALK, Format("%s не является охранником!", InVotedName))
+	UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteDeny", InVotedName})
 
 	return
 end
@@ -134,7 +134,7 @@ function FinishOfficerVote()
 
 	else
 
-		PrintMessage(HUD_PRINTTALK, "Никто не проголосовал! Выбор случайного игрока...")
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.NoVotes"})
 
 		SetOfficerPlayer(table.Random(team.GetPlayers(TEAM_GUARD)))
 	end
@@ -146,7 +146,7 @@ function SetOfficerPlayer(InPlayer)
 
 	if InPlayer:Team() ~= TEAM_GUARD then
 
-		PrintMessage(HUD_PRINTTALK, "Попытка сделать офицером не охранника! Отмена...")
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteError"})
 
 		return
 	end
@@ -158,5 +158,5 @@ function SetOfficerPlayer(InPlayer)
 
 	InPlayer:SetNWBool("bOfficer", true)
 
-	PrintMessage(HUD_PRINTTALK, Format("Теперь %s %s офицер!", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")))
+	UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteSuccess", UtilGetRPNameSurname(InPlayer)})
 end

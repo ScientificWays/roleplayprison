@@ -71,7 +71,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
 		InPlayer:Spawn()
 
-		PrintMessage(HUD_PRINTTALK, Format("%s теперь наблюдает за игрой", InPlayer:Nick()))
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.Spectate", InPlayer:Nick()})
 
 		return
 	end
@@ -88,8 +88,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
 	InPlayer:Spawn()
 
-	PrintMessage(HUD_PRINTTALK, Format("%s теперь за роль '%s' как %s %s", InPlayer:Nick(), team.GetName(InNewTeam),
-		NewRPName, NewRPSurname))
+	UtilSendEventMessageToPlayers({"RPP_RPEvent.JoinRole", InPlayer:Nick(), team.GetName(InNewTeam), UtilGetRPNameSurname(InPlayer)})
 end
 
 function GM:PlayerRequestTeam(InPlayer, InTeamID)
@@ -356,7 +355,7 @@ end)
 
 hook.Add("SetupMove", "DamageMove", function(InPlayer, InMoveData, InCommandData)
 
-	if SamplePlayer:GetNWFloat("DamageSlowTime") > 0.0 then
+	if InPlayer:GetNWFloat("DamageSlowTime") > 0.0 then
 
 		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
 	end

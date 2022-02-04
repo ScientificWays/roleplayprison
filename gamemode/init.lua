@@ -66,6 +66,7 @@ util.AddNetworkString("SendTryInteractStashToServer")
 
 util.AddNetworkString("SendScheduleListToServer")
 util.AddNetworkString("SendScheduleListToClients")
+util.AddNetworkString("SendEventMessageToClients")
 
 util.AddNetworkString("SendInspectDataToClient")
 
@@ -145,16 +146,19 @@ end
 
 end]]
 
---Интерфейс расписания
-
 --Global переменные
 --Разделение этажей по дальности слышимости
+--Локализация
 --Обыском забирать оружие себе
+--map thumb
+--Затемнение экрана при побеге на уровне кода
+
+--Индикаторы состояния дверей тюрьмы
+--Задания по поддержке состояния тюрьмы
+--Интерфейс расписания
 --Книги и прокачка знаний
 --Спортзал и прокачка физической силы
---map thumb
 --Сковородка
 --Арсенал копов
---Затемнение экрана при побеге на уровне кода
 --Система тревоги с освещением
---Задержка включения камеры
+--Переделать систему камер под SetViewEntity

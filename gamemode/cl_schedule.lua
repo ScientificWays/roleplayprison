@@ -79,7 +79,7 @@ local function UpdateScheduleList()
 
 		InfoLabel:SetSize(150, 25)
 
-		InfoLabel:SetText("Здесь будет расписание")
+		InfoLabel:SetText(UtilLocalizable("RPP_UI.ScheduleHint"))
 
 		table.insert(PanelScheduleElementList, InfoLabel)
 	else
@@ -169,7 +169,7 @@ local function UpdateScheduleList()
 
 		bCanAccept = ElementsDurationMinutes == RequiredDurationMinutes
 
-		TimeLabel:SetText(Format("Заполнение (мин): %i из %i", ElementsDurationMinutes, RequiredDurationMinutes))
+		TimeLabel:SetText(Format(UtilLocalizable("RPP_UI.ScheduleCompletion"), ElementsDurationMinutes, RequiredDurationMinutes))
 
 		table.insert(PanelScheduleElementList, TimeLabel)
 	end
@@ -180,7 +180,7 @@ local function UpdateScheduleList()
 
 	ConfirmElementButton:SetSize(120, 25)
 
-	ConfirmElementButton:SetText("Утвердить")
+	ConfirmElementButton:SetText(UtilLocalizable("RPP_UI.ScheduleAccept"))
 
 	function ConfirmElementButton.DoClick()
 
@@ -208,7 +208,7 @@ function ShowScheduleSetup()
 	
 	ScheduleFrame = vgui.Create("DFrame")
 
-	ScheduleFrame:SetTitle("Составление расписания")
+	ScheduleFrame:SetTitle(UtilLocalizable("RPP_UI.ScheduleSetup"))
 	
 	local ScheduleNameEntry = vgui.Create("DTextEntry", ScheduleFrame)
 	
@@ -243,7 +243,7 @@ function ShowScheduleSetup()
 
 		RecommendedElement:SetSize(190, 20)
 
-		RecommendedElement:SetText(Format("%s (%i мин)", RecommendedElementName, RecommendedElementDuration))
+		RecommendedElement:SetText(Format(UtilLocalizable("RPP_UI.ScheduleRecommended"), RecommendedElementName, RecommendedElementDuration))
 			
 		y = y + 30
 	end
@@ -254,7 +254,7 @@ function ShowScheduleSetup()
 
 	AddElementButton:SetSize(120, 25)
 
-	AddElementButton:SetText("Добавить")
+	AddElementButton:SetText(UtilLocalizable("RPP_UI.ScheduleAdd"))
 
 	function AddElementButton.DoClick()
 

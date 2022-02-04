@@ -10,7 +10,8 @@ local TEAM_GUARD, TEAM_ROBBER = 1, 2
 
 local MainRoleList = {[TEAM_GUARD] = true, [TEAM_ROBBER] = true}
 
-local SubRoleList = {[TEAM_GUARD] = {"Мужчина", "Женщина"}, [TEAM_ROBBER] = {"Мужчина"--[[, "Женщина"--]]}}
+local SubRoleList = {[TEAM_GUARD] = {"RPP_SubRole.Male", "RPP_SubRole.Female"},
+					[TEAM_ROBBER] = {"RPP_SubRole.Male"--[[, "RPP_SubRole.Female"--]]}}
 
 function TeamCanBePicked(TeamID)
 
@@ -60,7 +61,7 @@ function GM:ShowTeam()
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, false, true, false)
 
-		draw.SimpleText("Выбрать роль", "HUDTextSmall",
+		draw.SimpleText(UtilLocalizable("RPP_UI.PickRole"), "HUDTextSmall",
 			MainFrameWidth / 2, 12, Color(255, 255, 255, 255),
 			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
@@ -123,7 +124,7 @@ function GM:ShowTeam()
 					draw.RoundedBoxEx(10, 0, 0, self.lerp, h, Color(116, 0, 255, 255), true, false, true, false)
 				end
 
-				draw.SimpleText(team.GetName(ID), "HUDTextSmall", MainFrameWidth/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				draw.SimpleText(UtilLocalizable(team.GetName(ID)), "HUDTextSmall", MainFrameWidth/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 			end
 
 			MainRoleButton.DoClick = function()
@@ -212,7 +213,7 @@ function GM:ShowTeam()
 								draw.RoundedBoxEx(10, 0, 0, self.LerpValue, h, Color(116, 0, 255, 255), true, false, true, false)
 							end
 
-							draw.SimpleText(SampleSubRole, "HUDTextSmall", SubFrameWidth / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+							draw.SimpleText(UtilLocalizable(SampleSubRole), "HUDTextSmall", SubFrameWidth / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 						end
 
 						SubRoleButton.DoClick = function()

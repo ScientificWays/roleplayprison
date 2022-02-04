@@ -29,11 +29,13 @@ local RightHandBoneName = "ValveBiped.Bip01_R_Hand"
 
 hook.Add("PostDrawOpaqueRenderables", "HandcuffsDragRope", function()
 
+	local Client = LocalPlayer()
+
 	local AllPlayers = player.GetAll()
 
 	for Index, SamplePlayer in ipairs(AllPlayers) do
 
-		if SamplePlayer:GetNWBool("bHandcuffed") then
+		if SamplePlayer:GetNWBool("bHandcuffed") and Client:EntIndex() ~= SamplePlayer:EntIndex() then
 		
 			local Kidnapper = Entity(SamplePlayer:GetNWInt("KidnapperIndex", -1))
 

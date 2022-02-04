@@ -116,10 +116,10 @@ function ShowWorkbenchFrame()
 					CraftColor = COLOR_GREEN
 				end
 
-				draw.SimpleText(Format("Деревянные детали: %i/%i", Client:GetNWInt("DetailWoodNum"), ItemData.Wood),
+				draw.SimpleText(Format(UtilLocalizable("RPP_UI.CraftWood"), Client:GetNWInt("DetailWoodNum"), ItemData.Wood),
 					"HUDTextSmall", 20, h / 2 - 20, ColorAlpha(CraftColor, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
-				draw.SimpleText(Format("Металлически детали: %i/%i", Client:GetNWInt("DetailMetalNum"), ItemData.Metal),
+				draw.SimpleText(Format(UtilLocalizable("RPP_UI.CraftMetal"), Client:GetNWInt("DetailMetalNum"), ItemData.Metal),
 					"HUDTextSmall", 20, h / 2 + 20, ColorAlpha(CraftColor, self.lerp), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 			end
 

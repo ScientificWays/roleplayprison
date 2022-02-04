@@ -18,6 +18,11 @@ COLOR_BLUE   		= Color(0, 0, 255, 255)
 include("player_class/guard.lua")
 include("player_class/robber.lua")
 
+function UtilLocalizable(InString)
+
+	return language.GetPhrase(InString)
+end
+
 function UtilGetOfficerPlayer()
 
 	for Index, SamplePlayer in ipairs(player.GetAll()) do
@@ -105,9 +110,9 @@ function UtilGetCycleDurationMinutes(bInterCycle)
 	end
 end
 
-function UtilGetPlayerFullRPName(InPlayer)
+function UtilGetRPNameSurname(InPlayer)
 
-	return Format("%s %s", InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname"))
+	return InPlayer:GetNWString("RPName"), InPlayer:GetNWString("RPSurname")
 end
 
 function UtilCanHearByTalkie(InListener, InTalker)
@@ -125,21 +130,21 @@ end
 function GM:CreateTeams()
 
 	TEAM_GUARD = 1
-	team.SetUp(TEAM_GUARD, "Охранники", Color(0, 150, 255))
+	team.SetUp(TEAM_GUARD, "RPP_Role.Guards", Color(0, 150, 255))
 	team.SetSpawnPoint(TEAM_GUARD, {"info_guard_start"})
 	team.SetClass(TEAM_GUARD, {"player_guard"})
 
 	TEAM_ROBBER = 2
-	team.SetUp(TEAM_ROBBER, "Заключенные", Color(255, 150, 0))
+	team.SetUp(TEAM_ROBBER, "RPP_Role.Robbers", Color(255, 150, 0))
 	team.SetSpawnPoint(TEAM_ROBBER, {"info_robber_start"})
 	team.SetClass(TEAM_ROBBER, {"player_robber"})
 
 	TEAM_STAFF = 3
-	team.SetUp(TEAM_STAFF, "Обслуживающий персонал", Color(0, 255, 255))
+	team.SetUp(TEAM_STAFF, "RPP_Role.Staff", Color(0, 255, 255))
 	team.SetSpawnPoint(TEAM_STAFF, {"info_staff_start"})
 	team.SetClass(TEAM_STAFF, {"player_default"})
 
-	team.SetUp(TEAM_SPECTATOR, "Наблюдатели", Color(255, 255, 255))
+	team.SetUp(TEAM_SPECTATOR, "RPP_Role.Spectators", Color(255, 255, 255))
 	team.SetSpawnPoint(TEAM_SPECTATOR, {"worldspawn"})
 end
 

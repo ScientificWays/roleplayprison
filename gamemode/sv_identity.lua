@@ -92,9 +92,6 @@ local MaleNames = {
 } local MaleNamesCopy = table.Copy(MaleNames)
 
 local MaleSurnames = {
-	"Григорьев",
-	"Васильев",
-	"Симонов",
 	"Барсов",
 	"Бабочкин",
 	"Окуневский",
@@ -135,6 +132,7 @@ local MaleSurnames = {
 	"Городецкий",
 	"Градов",
 	"Граф",
+	"Григорьев",
 	"Даль",
 	"Дёмин",
 	"Донской",
@@ -178,6 +176,7 @@ local MaleSurnames = {
 	"Сербский",
 	"Солнцев",
 	"Сталь",
+	"Симонов",
 	"Субботин",
 	"Троянский",
 	"Федоров",
@@ -349,7 +348,7 @@ function GetNewPlayerIdentity(InPlayer, bGuard, bMale)
 
 		OutModel, OutName, OutSurname = RejoinIdentityList[ID].Model, RejoinIdentityList[ID].Name, RejoinIdentityList[ID].Surname
 
-		PrintMessage(HUD_PRINTTALK, Format("%s использует свою прежнюю личность.", InPlayer:Nick()))
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.Reconnect", InPlayer:Nick()})
 	else
 		RefreshEmptyLists()
 

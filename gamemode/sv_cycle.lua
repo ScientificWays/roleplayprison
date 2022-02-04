@@ -162,12 +162,12 @@ function ToggleCycle(bPause)
 
 		timer.Pause("CycleUpdateTimer")
 
-		PrintMessage(HUD_PRINTTALK, "Цикл приоставновлен...")
+		UtilSendEventMessageToPlayers({"RPP_Cycle.Paused"})
 	else
 
 		timer.UnPause("CycleUpdateTimer")
 
-		PrintMessage(HUD_PRINTTALK, "Цикл продолжается...")
+		UtilSendEventMessageToPlayers({"RPP_Cycle.Continue"})
 	end
 end
 
@@ -276,7 +276,7 @@ function CycleUpdate()
 
 	if table.IsEmpty(AllGuards) then
 
-		PrintMessage(HUD_PRINTTALK, "Охранники не найдены!")
+		UtilSendEventMessageToPlayers({"RPP_Cycle.NoGuards"})
 
 		ToggleCycle(true)
 
@@ -287,7 +287,7 @@ function CycleUpdate()
 
 	if not IsValid(OfficerPlayer) then
 
-		PrintMessage(HUD_PRINTTALK, "Офицер не найден!")
+		UtilSendEventMessageToPlayers({"RPP_Cycle.NoOfficer"})
 
 		ToggleCycle(true)
 
