@@ -2,9 +2,14 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName				= "Швабра"
---SWEP.Author				= "zana"
-SWEP.Purpose				= "Roleplay broom."
+if CLIENT then
+
+	SWEP.PrintName			= UtilLocalizable("RPP_Weapon.Broom")
+	
+	SWEP.Purpose			= UtilLocalizable("RPP_Weapon.Broom.Purpose")
+
+	SWEP.Author				= "zana"
+end
 
 SWEP.Slot					= 2
 SWEP.SlotPos				= 1

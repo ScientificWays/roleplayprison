@@ -2,13 +2,13 @@
 
 local ScheduleFrame = {}
 
-local RecommendedScheduleElements = {["Обход камер"] = 4,
-									["Перекличка"] = 5,
-									["Столовая"] = 6,
-									["Отдых"] = 5,
-									["Работа"] = 10,
-									["Душ"] = 6,
-									["Мини-игры"] = 15}
+local RecommendedScheduleElements = {["RPP_ScheduleElement1"--[["Осмотр камер"--]]] = 4,
+									["RPP_ScheduleElement2"--[["Перекличка"--]]] = 5,
+									["RPP_ScheduleElement3"--[["Столовая"--]]] = 6,
+									["RPP_ScheduleElement4"--[["Отдых"--]]] = 5,
+									["RPP_ScheduleElement5"--[["Работа"--]]] = 10,
+									["RPP_ScheduleElement6"--[["Душ"--]]] = 6,
+									["RPP_ScheduleElement7"--[["Мини-игры"--]]] = 15}
 
 local PanelScheduleElementList = {}
 
@@ -93,7 +93,7 @@ local function UpdateScheduleList()
 
 			ScheduleElement:SetSize(150, 20)
 
-			ScheduleElement:SetText(Format("%s (%i мин)", ScheduleElementInfo.Name, ScheduleElementInfo.DurationMinutes))
+			ScheduleElement:SetText(Format(UtilLocalizable("RPP_UI.ScheduleElementData"), ScheduleElementInfo.Name, ScheduleElementInfo.DurationMinutes))
 
 			table.insert(PanelScheduleElementList, ScheduleElement)
 			
@@ -230,11 +230,13 @@ function ShowScheduleSetup()
 	
 		local RecommendedElement = vgui.Create("DButton", ScheduleFrame)
 
-		--print(RecommendedElementName, RecommendedElementDuration)
+		local LocalizedElementName = UtilLocalizable(RecommendedElementName)
+
+		--print(LocalizedElementName, RecommendedElementDuration)
 
 		function RecommendedElement.DoClick()
 
-			ScheduleNameEntry:SetValue(RecommendedElementName)
+			ScheduleNameEntry:SetValue(LocalizedElementName)
 
 			ScheduleDurationEntry:SetValue(RecommendedElementDuration)
 		end
@@ -243,7 +245,7 @@ function ShowScheduleSetup()
 
 		RecommendedElement:SetSize(190, 20)
 
-		RecommendedElement:SetText(Format(UtilLocalizable("RPP_UI.ScheduleRecommended"), RecommendedElementName, RecommendedElementDuration))
+		RecommendedElement:SetText(Format(UtilLocalizable("RPP_UI.ScheduleElementData"), LocalizedElementName, RecommendedElementDuration))
 			
 		y = y + 30
 	end

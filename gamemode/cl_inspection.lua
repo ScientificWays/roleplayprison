@@ -38,7 +38,7 @@ function ShowInspection(InInspectDataTable)
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, true, true, true)
 
-		draw.SimpleText("Досмотр", "HUDTextSmall",
+		draw.SimpleText(UtilLocalizable("RPP_UI.Inspection"), "HUDTextSmall",
 			InspectionFrameWidth / 2, 12, Color(255, 255, 255, 255),
 			TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
@@ -53,7 +53,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailWoodInfo:SetFont("HUDTextSmall")
 
-	DetailWoodInfo:SetText(Format("Деревянные детали: %i", InInspectDataTable.DetailWoodNum))
+	DetailWoodInfo:SetText(Format(UtilLocalizable("RPP_UI.InspectionWood"), InInspectDataTable.DetailWoodNum))
 
 	local DetailMetalInfo = vgui.Create("DLabel", InspectionFrame)
 
@@ -63,7 +63,7 @@ function ShowInspection(InInspectDataTable)
 
 	DetailMetalInfo:SetFont("HUDTextSmall")
 
-	DetailMetalInfo:SetText(Format("Металлические детали: %i", InInspectDataTable.DetailMetalNum))
+	DetailMetalInfo:SetText(Format(UtilLocalizable("RPP_UI.InspectionMetal"), InInspectDataTable.DetailMetalNum))
 
 	local PicklockInfo = vgui.Create("DLabel", InspectionFrame)
 
@@ -73,7 +73,7 @@ function ShowInspection(InInspectDataTable)
 
 	PicklockInfo:SetFont("HUDTextSmall")
 
-	PicklockInfo:SetText(Format("Отмычки: %i", InInspectDataTable.PicklockNum))
+	PicklockInfo:SetText(Format(UtilLocalizable("RPP_UI.InspectionPicklocks"), InInspectDataTable.PicklockNum))
 
 	for Index, PrintName in ipairs(InInspectDataTable.IllegalWeaponNameList) do
 
@@ -85,7 +85,7 @@ function ShowInspection(InInspectDataTable)
 
 		IllegalWeaponInfo:SetFont("HUDTextSmall")
 
-		IllegalWeaponInfo:SetText(Format("Нелегальное оружие: %s", language.GetPhrase(PrintName)))
+		IllegalWeaponInfo:SetText(Format(UtilLocalizable("RPP_UI.InspectionWeapons"), language.GetPhrase(PrintName)))
 	end
 end
 

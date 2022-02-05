@@ -49,7 +49,7 @@ function OfficerMonitorDraw()
 
 	if UtilIsInterCycle() then
 
-		draw.SimpleText("Перерыв", "MonitorText",
+		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
 			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
@@ -59,7 +59,7 @@ function OfficerMonitorDraw()
 
 		if table.IsEmpty(ScheduleList) then
 
-			draw.SimpleText("Расписание не обнаружено", "MonitorTextSmall",
+			draw.SimpleText(UtilLocalizable("RPP_UI.MonitorNoSchedule"), "MonitorTextSmall",
 				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
 			local ActiveElementIndex, ActiveElementTimeLeft = UtilGetActiveScheduleElementIndexAndTimeLeft(ScheduleList)
@@ -105,7 +105,7 @@ function ControlMonitorDraw()
 
 	if UtilIsInterCycle() then
 
-		draw.SimpleText("Перерыв", "MonitorText",
+		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
 			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
@@ -115,7 +115,7 @@ function ControlMonitorDraw()
 
 		if table.IsEmpty(ScheduleList) then
 
-			draw.SimpleText("Расписание не обнаружено", "MonitorTextSmall",
+			draw.SimpleText(UtilLocalizable("RPP_UI.MonitorNoSchedule"), "MonitorTextSmall",
 				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
 
@@ -134,7 +134,7 @@ function LibraryMonitorDraw()
 
 	if UtilIsInterCycle() then
 
-		draw.SimpleText("Перерыв", "MonitorText",
+		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
 			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	else
 

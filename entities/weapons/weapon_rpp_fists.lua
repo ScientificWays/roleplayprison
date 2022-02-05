@@ -2,11 +2,16 @@
 
 AddCSLuaFile()
 
-SWEP.PrintName = "Кулаки"
+if CLIENT then
 
-SWEP.Slot = 0
-SWEP.SlotPos = 4
+	SWEP.PrintName			= UtilLocalizable("RPP_Weapon.Fists")
+	
+	SWEP.Purpose			= UtilLocalizable("RPP_Weapon.Fists.Purpose")
+end
 
-SWEP.Spawnable = true
+SWEP.Slot					= 0
+SWEP.SlotPos				= 4
 
-SWEP.Base = "weapon_fists"
+SWEP.Spawnable				= true
+
+SWEP.Base					= "weapon_fists"
