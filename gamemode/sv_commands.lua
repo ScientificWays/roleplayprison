@@ -94,7 +94,11 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	local SeparatedStrings = string.Explode(" ", InText, false)
 
-	if SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= nil then
+	if SeparatedStrings[1] == "/help" then
+
+		UtilSendEventMessageToPlayers({"RPP_Chat.Help"})
+
+	elseif SeparatedStrings[1] == "/vote" and SeparatedStrings[2] ~= nil then
 
 		AddOfficerVote(InSender, TryConvertPlayerName(SeparatedStrings[2]))
 

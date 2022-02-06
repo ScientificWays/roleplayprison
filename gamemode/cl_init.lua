@@ -68,6 +68,8 @@ function GM:InitPostEntity()
 	render.RedownloadAllLightmaps()
 
 	self.BaseClass:InitPostEntity()
+
+	chat.AddText(COLOR_CYAN, UtilLocalizable("RPP_Chat.OnLoad"))
 end
 
 function GM:OnPlayerChat(InPlayer, InText, bTeamChat, bIsDead)
