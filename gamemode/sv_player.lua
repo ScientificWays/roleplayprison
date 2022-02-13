@@ -133,6 +133,8 @@ end
 
 function GM:PlayerSpawn(InPlayer, InTransiton)
 
+	OnPlayerHandcuffsOff(InPlayer)
+
 	if (InPlayer:Team() == TEAM_SPECTATOR || InPlayer:Team() == TEAM_UNASSIGNED) then
 
 		self:PlayerSpawnAsSpectator(InPlayer)
@@ -317,19 +319,19 @@ function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
 	end
 end
 
-function UpdatePlayerInjuryValues()
+function UpdatePlayersHealthValue()
 
 	local AllPlayers = player.GetAll()
 
 	for Index, SamplePlayer in ipairs(AllPlayers) do
 
-		SamplePlayer:SetNWFloat("InjuryValue", 1.0 - SamplePlayer:Health() / 100.0)
+		SamplePlayer:SetNWFloat("HealthValue", SamplePlayer:Health() / 100.0)
 	end
 end
 
 function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDamageTaken)
 
-	UpdatePlayerInjuryValues()
+	UpdatePlayersHealthValue()
 
 	if InAttackerEntity:IsPlayer() then
 
@@ -361,4 +363,4 @@ hook.Add("SetupMove", "DamageMove", function(InPlayer, InMoveData, InCommandData
 	end
 end)
 
-timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayerInjuryValues)
+timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayersHealthValue)

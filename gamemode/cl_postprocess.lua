@@ -16,14 +16,14 @@ function UpdatePostProcessData(InPlayer)
 
 		--MsgN(Format(InPlayer:GetNWFloat("HungerValue"), InPlayer:GetNWFloat("InjuryValue"), InPlayer:GetNWFloat("EnergyValue")))
 
-		TotalValue = InPlayer:GetNWFloat("InjuryValue") * 1.0 + InPlayer:GetNWFloat("HungerValue") / 5
+		TotalValue = 1.0 - math.Clamp(InPlayer:GetNWFloat("HealthValue") * 3.0, 0.0, 1.0) + InPlayer:GetNWFloat("HungerValue") * 0.3
 
 		if InPlayer:GetNWBool("bStunned") then
 
 			TotalValue = TotalValue + 1.0
 		end
 
-		TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) / 5, 0.0, 1.0)
+		TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) * 0.2, 0.0, 1.0)
 	end
 
 	if TotalValue == OldTotalValue then

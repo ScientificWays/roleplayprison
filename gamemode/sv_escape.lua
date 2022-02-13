@@ -44,14 +44,25 @@ function OnRobberEscape(InRobberPlayer)
 
 	SampleEscapeView:Fire("FireUser1", nil, 3.0, InRobberPlayer, InRobberPlayer)
 
+	InRobberPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
+
 	timer.Simple(3.0, function()
 
 		InRobberPlayer:SetViewEntity(SampleEscapeView)
 
+		InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
+
 		UtilSendEventMessageToPlayers({"RPP_RPEvent.Escaped", UtilGetRPNameSurname(InRobberPlayer)})
 	end)
 
+	timer.Simple(9.0, function()
+
+		InRobberPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
+	end)
+
 	timer.Simple(12.0, function()
+
+		InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
 
 		InRobberPlayer:SetViewEntity(nil)
 

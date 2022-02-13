@@ -33,9 +33,7 @@ end
 
 function ServerResetScheduleList()
 
-	local WorldEntity = game.GetWorld()
-
-	WorldEntity:SetNWBool("bScheduleSet", false)
+	SetGlobalBool("bScheduleSet", false)
 
 	table.Empty(ServerScheduleList)
 
@@ -173,15 +171,13 @@ end
 
 function StartNewCycle()
 
-	local WorldEntity = game.GetWorld()
-
-	WorldEntity:SetNWInt("CurrentCycleTimeSeconds", 0)
+	SetGlobalInt("CurrentCycleTimeSeconds", 0)
 
 	timer.Create("CycleUpdateTimer", 1, 0, CycleUpdate)
 
 	if UtilIsInterCycle() then
 
-		WorldEntity:SetNWBool("bInterCycle", false)
+		SetGlobalBool("bInterCycle", false)
 
 		--PrintMessage(HUD_PRINTTALK, "Начался новый цикл!")
 
@@ -199,7 +195,7 @@ function StartNewCycle()
 		TrySetMapDayState(0.0)
 	else
 
-		WorldEntity:SetNWBool("bInterCycle", true)
+		SetGlobalBool("bInterCycle", true)
 
 		--PrintMessage(HUD_PRINTTALK, "Начался перерыв!")
 
@@ -238,13 +234,11 @@ end
 
 function CycleUpdate()
 
-	local WorldEntity = game.GetWorld()
+	SetGlobalInt("CurrentCycleTimeSeconds", GetGlobalInt("CurrentCycleTimeSeconds") + 1)
 
-	WorldEntity:SetNWInt("CurrentCycleTimeSeconds", WorldEntity:GetNWInt("CurrentCycleTimeSeconds") + 1)
+	local CurrentCycleTimeSeconds = GetGlobalInt("CurrentCycleTimeSeconds")
 
-	local CurrentCycleTimeSeconds = WorldEntity:GetNWInt("CurrentCycleTimeSeconds")
-
-	--MsgN(WorldEntity:GetNWInt("CurrentCycleTimeSeconds"))
+	--MsgN(GetGlobalInt("CurrentCycleTimeSeconds"))
 
 	local CurrentCycleDurationSeconds = UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60
 

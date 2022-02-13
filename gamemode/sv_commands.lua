@@ -108,9 +108,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/start" then
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bInterCycle", false)
+		SetGlobalBool("bInterCycle", false)
 
 		StartNewCycle()
 
@@ -118,9 +116,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		FinishOfficerVote()
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bInterCycle", false)
+		SetGlobalBool("bInterCycle", false)
 		
 		StartNewCycle()
 

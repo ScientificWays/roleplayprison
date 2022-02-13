@@ -49,9 +49,7 @@ function PunishOfficerPlayer(InSeconds)
 
 		OfficerPlayer:SetPos(TeleportTarget:GetPos())
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bOfficerPunished", true)
+		SetGlobalBool("bOfficerPunished", true)
 
 		OfficerPunishmentTimeLeft = InSeconds
 	end
@@ -69,9 +67,7 @@ function ReleaseOfficerPlayer()
 
 		OfficerPlayer:SetPos(TeleportTarget:GetPos())
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bOfficerPunished", false)
+		SetGlobalBool("bOfficerPunished", false)
 
 		OfficerPunishmentTimeLeft = 0
 	end

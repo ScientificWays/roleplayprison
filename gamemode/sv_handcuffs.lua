@@ -6,9 +6,14 @@ function OnPlayerHandcuffsOn(InPlayer)
 
 	InPlayer:SetNWBool("bHandcuffed", true)
 
-	InPlayer:SetActiveWeapon(InPlayer:GetWeapon("weapon_rpp_unarmed"))
+	local WeaponUnarmed = InPlayer:GetWeapon("weapon_rpp_unarmed")
 
-	InPlayer:GetWeapon("weapon_rpp_unarmed"):SetHoldType("fist")
+	if IsValid(WeaponUnarmed) then
+
+		InPlayer:SetActiveWeapon(WeaponUnarmed)
+
+		WeaponUnarmed:SetHoldType("fist")
+	end
 end
 
 function OnPlayerHandcuffsOff(InPlayer)
@@ -17,7 +22,12 @@ function OnPlayerHandcuffsOff(InPlayer)
 
 	InPlayer:SetNWBool("bHandcuffed", false)
 
-	InPlayer:GetWeapon("weapon_rpp_unarmed"):SetHoldType("normal")
+	local WeaponUnarmed = InPlayer:GetWeapon("weapon_rpp_unarmed")
+
+	if IsValid(WeaponUnarmed) then
+
+		WeaponUnarmed:SetHoldType("normal")
+	end
 end
 
 hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandData)

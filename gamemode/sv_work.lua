@@ -54,9 +54,9 @@ function UpdateWorkAreasState()
 		end
 	end
 
-	WorldEntity:SetNWBool("bWorkWoodBuffed", bGuardInWoodArea)
+	SetGlobalBool("bWorkWoodBuffed", bGuardInWoodArea)
 
-	WorldEntity:SetNWBool("bWorkMetalBuffed", bGuardInMetalArea)
+	SetGlobalBool("bWorkMetalBuffed", bGuardInMetalArea)
 end
 
 function GetDetailNumInStack(InPickupEntity)

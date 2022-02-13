@@ -59,7 +59,7 @@ function OnInspect(InPlayer, InTargetPlayer)
 
 	for Index, Weapon in pairs(IllegalWeaponList) do
 
-		InTargetPlayer:StripWeapon(Weapon:GetClass())
+		InTargetPlayer:DropWeapon(Weapon:GetClass(), InPlayer:GetPos())
 
 		table.insert(InspectDataTable.IllegalWeaponNameList, Weapon:GetPrintName())
 	end

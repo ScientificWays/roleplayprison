@@ -13,9 +13,7 @@ function TrySabotageServer(InPlayer, InServerEntity)
 
 		InServerEntity:SetNWBool("bSabotaged", true)
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bServerSabotaged", true)
+		SetGlobalBool("bServerSabotaged", true)
 	end
 end
 
@@ -32,8 +30,6 @@ function TryRepairServer(InPlayer, InServerEntity)
 
 		InServerEntity:SetNWBool("bSabotaged", false)
 
-		local WorldEntity = game.GetWorld()
-
-		WorldEntity:SetNWBool("bServerSabotaged", false)
+		SetGlobalBool("bServerSabotaged", false)
 	end
 end

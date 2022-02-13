@@ -87,7 +87,7 @@ function OnPlayerAreaUpdate()
 
 		UpdatePlayerSpeakerState(SamplePlayer)
 
-		UpdatePlayerVoiceArea(SamplePlayer)
+		--UpdatePlayerVoiceArea(SamplePlayer)
 	end
 
 	UpdateWorkAreasState()
@@ -130,9 +130,7 @@ function GM:InitPostEntity()
 
 	SetupSkyPaint()
 
-	local WorldEntity = game.GetWorld()
-
-	WorldEntity:SetNWBool("bInterCycle", true)
+	SetGlobalBool("bInterCycle", true)
 
 	--WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
 
@@ -146,17 +144,11 @@ end
 
 end]]
 
---Global переменные
---Разделение этажей по дальности слышимости
---Локализация
---Обыском забирать оружие себе
---map thumb
---Затемнение экрана при побеге на уровне кода
-
---Отображение HUDHint'ов пофиксить
---Индикаторы состояния дверей тюрьмы
---Задания по поддержке состояния тюрьмы
+--Интерфейс наблюдателя
 --Интерфейс расписания
+--Half-Life 2: Melee Pack
+
+--Задания по поддержке состояния тюрьмы
 --Книги и прокачка знаний
 --Спортзал и прокачка физической силы
 --Сковородка

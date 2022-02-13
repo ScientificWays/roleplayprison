@@ -2,16 +2,14 @@
 
 function ToggleGlobalSpeaker(InSpeakerEntity)
 
-	local WorldEntity = game.GetWorld()
+	if GetGlobalBool("bGlobalSpeakerEnabled") then
 
-	if WorldEntity:GetNWBool("bGlobalSpeakerEnabled") then
-
-		WorldEntity:SetNWBool("bGlobalSpeakerEnabled", false)
+		SetGlobalBool("bGlobalSpeakerEnabled", false)
 
 		InSpeakerEntity:Input("FireUser2")
 	else
 
-		WorldEntity:SetNWBool("bGlobalSpeakerEnabled", true)
+		SetGlobalBool("bGlobalSpeakerEnabled", true)
 
 		InSpeakerEntity:Input("FireUser1")
 	end
@@ -45,6 +43,20 @@ function UpdatePlayerVoiceArea(InPlayer)
 	--MsgN(InPlayer:GetNWString("VoiceLocalArea"))
 end
 
+timer.Create("PlayerVoiceFilterUpdate", 0.5, 0, function()
+
+	local AllPlayers = player.GetAll()
+
+	for Index, SamplePlayer in ipairs(AllPlayers) do
+
+		local VoiceFilter = RecipientFilter()
+		
+		VoiceFilter:AddPVS(SamplePlayer:EyePos())
+
+		SamplePlayer.VoiceFilteredPlayers = VoiceFilter:GetPlayers()
+	end
+end)
+
 function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 
 	if UtilIsGlobalSpeakerEnabled() and InTalker:GetNWBool("bGlobalSpeaker") then
@@ -67,8 +79,27 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 			return bWithinDistance, true
 		end
 	else
-		local bWithinDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()) < 250000
+		if InListener.VoiceFilteredPlayers and InListener.VoiceFilteredPlayers[InTalker] then
 
-		return bWithinDistance, true
+			local TraceResult = util.TraceLine({
+				["start"] = InListener:EyePos(),
+				["end"] = InTalker:EyePos(),
+				["collisiongroup"] = COLLISION_GROUP_WORLD
+			})
+
+			local CurrentDistance, MaxDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()), 250000
+
+			if TraceResult.Hit then
+
+				MaxDistance = 22500
+			end
+
+			local bWithinDistance = CurrentDistance < MaxDistance
+
+			return bWithinDistance, true
+		else
+
+			return false, false
+		end
 	end
 end

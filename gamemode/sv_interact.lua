@@ -7,11 +7,11 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 		return false
 	end
 
-	--MsgN(InInput)
+	MsgN(InInput)
 
 	if InInput == "Use" and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
 
-		if InActivator:GetNWBool("bHandcuffed") then
+		if InActivator:GetNWBool("bHandcuffed") or InPlayer:Team() == TEAM_SPECTATOR then
 
 			return true
 		end

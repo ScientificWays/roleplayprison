@@ -1,6 +1,6 @@
 GM.Name = "Roleplay: Prison"
-GM.Author = "Albert Bagautdinov"
-GM.Email = "albert.bagautdinov03@mail.ru"
+GM.Author = "zana"
+GM.Email = "N/A"
 GM.Website = "N/A"
 GM.TeamBased = true
 GM.SecondsBetweenTeamSwitches = 0
@@ -38,65 +38,47 @@ end
 
 function UtilIsOfficerPunished()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bOfficerPunished")
+	return GetGlobalBool("bOfficerPunished")
 end
 
 function UtilIsScheduleSet()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bScheduleSet")
+	return GetGlobalBool("bScheduleSet")
 end
 
 function UtilIsInterCycle()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bInterCycle")
+	return GetGlobalBool("bInterCycle")
 end
 
 function UtilIsGlobalSpeakerEnabled()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bGlobalSpeakerEnabled") and not UtilIsServerSabotaged()
+	return GetGlobalBool("bGlobalSpeakerEnabled") and not UtilIsServerSabotaged()
 end
 
 function UtilIsServerSabotaged()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bServerSabotaged")
+	return GetGlobalBool("bServerSabotaged")
 end
 
 function UtilIsWorkWoodBuffed()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bWorkWoodBuffed")
+	return GetGlobalBool("bWorkWoodBuffed")
 end
 
 function UtilIsWorkMetalBuffed()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWBool("bWorkMetalBuffed")
+	return GetGlobalBool("bWorkMetalBuffed")
 end
 
 function UtilGetCurrentCycleTimeSeconds()
 
-	local WorldEntity = game.GetWorld()
-
-	return WorldEntity:GetNWInt("CurrentCycleTimeSeconds")
+	return GetGlobalInt("CurrentCycleTimeSeconds")
 end
 
 function UtilGetLeftCycleTimeSeconds()
 
-	local WorldEntity = game.GetWorld()
-
-	return UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60 - WorldEntity:GetNWInt("CurrentCycleTimeSeconds")
+	return UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60 - GetGlobalInt("CurrentCycleTimeSeconds")
 end
 
 function UtilGetCycleDurationMinutes(bInterCycle)
