@@ -536,7 +536,7 @@ end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
 
-	MsgN(InTargetEntity)
+	--MsgN(InTargetEntity)
 
 	if not InTargetEntity:GetNWBool("bShowHint") and not InTargetEntity:IsPlayer() then
 

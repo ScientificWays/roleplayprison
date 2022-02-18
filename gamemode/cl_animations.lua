@@ -148,7 +148,7 @@ function ShowAnimations()
 
 		AnimationButton.DoClick = function()
 
-			if UtilPlayerCanDoAnimation(LocalPlayer()) then
+			if UtilPlayerCanInteract(LocalPlayer()) then
 
 				SendDoAnimationToServer(AnimationData.Gesture)
 

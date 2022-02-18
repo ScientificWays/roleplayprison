@@ -135,6 +135,8 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 	OnPlayerHandcuffsOff(InPlayer)
 
+	InPlayer:SetNWBool("bIncapped", false)
+
 	if (InPlayer:Team() == TEAM_SPECTATOR || InPlayer:Team() == TEAM_UNASSIGNED) then
 
 		self:PlayerSpawnAsSpectator(InPlayer)
@@ -216,12 +218,12 @@ end
 
 function GM:PlayerSwitchWeapon(InPlayer, InOldWeapon, InNewWeapon)
 
-	if InPlayer:GetNWBool("bHandcuffed") or InPlayer:GetNWFloat("TaskTimeLeft") > 0.0 then
+	if UtilPlayerCanInteract(InPlayer) then
 
-		return true
+		return false
 	end
 
-	return false
+	return true
 end
 
 local PlayerFallSounds = {
