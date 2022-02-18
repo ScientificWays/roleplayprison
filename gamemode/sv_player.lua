@@ -76,7 +76,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 		return
 	end
 
-	local NewModel, NewRPName, NewRPSurname = GetNewPlayerIdentity(InPlayer, InNewTeam == TEAM_GUARD, InPlayer:GetNWBool("bMale"))
+	local NewModel, NewRPName, NewRPSurname = GetNewPlayerIdentity(InPlayer, InNewTeam, InPlayer:GetNWBool("bMale"))
 
 	InPlayer.RPModel = NewModel
 
@@ -176,8 +176,12 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		InPlayer.Energy = UtilGetSprintDuration()
 
 		InPlayer:SetNWFloat("EnergyValue", 1.0)
+
+		InPlayer.bLoadout = true
 	
 		hook.Run("PlayerLoadout", InPlayer)
+
+		InPlayer.bLoadout = false
 
 		hook.Run("PlayerSetModel", InPlayer)
 	end
@@ -302,20 +306,6 @@ function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 
 			sound.Play(table.Random(PlayerFallSounds), InPlayer:GetShootPos(), 55 + math.Clamp(CalculatedDamage, 0, 50), 100)
 		end
-	end
-end
-
-function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
-
-	if string.EndsWith(InEntity:GetName(), "_Throwable") and bThrown then
-
-		local ThrowDirection = (InEntity:GetPos() - InPlayer:EyePos())
-
-		ThrowDirection:Normalize()
-
-		--MsgN(ThrowDirection)
-
-		InEntity:GetPhysicsObject():ApplyForceCenter(ThrowDirection * 10000.0)
 	end
 end
 

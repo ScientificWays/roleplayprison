@@ -28,6 +28,7 @@ include("sv_util.lua")
 include("sv_map.lua")
 include("sv_task.lua")
 include("sv_work.lua")
+include("sv_incap.lua")
 include("sv_voice.lua")
 include("sv_cycle.lua")
 include("sv_stash.lua")
@@ -111,13 +112,13 @@ function GM:Initialize()
 
 	net.Receive("SendDoAnimationToServer", ServerReceiveDoAnimation)
 
-	self.BaseClass:Initialize()
-
 	RunConsoleCommand("sv_skyname", "painted")
 
 	RunConsoleCommand("mp_show_voice_icons", "0")
 
 	RunConsoleCommand("sv_defaultdeployspeed", "1")
+
+	self.BaseClass:Initialize()
 end
 
 function GM:InitPostEntity()
@@ -144,6 +145,7 @@ end
 
 end]]
 
+--Роль медика
 --Интерфейс наблюдателя
 --Интерфейс расписания
 --Half-Life 2: Melee Pack
@@ -155,3 +157,7 @@ end]]
 --Арсенал копов
 --Система тревоги с освещением
 --Переделать систему камер под SetViewEntity
+
+
+--саботажи призраков (закрытие дверей и т.д.)
+--голосовое взаимодействие с призраками

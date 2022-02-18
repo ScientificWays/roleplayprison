@@ -49,11 +49,18 @@ timer.Create("PlayerVoiceFilterUpdate", 0.5, 0, function()
 
 	for Index, SamplePlayer in ipairs(AllPlayers) do
 
+		SamplePlayer.VoiceFilteredPlayers = {}
+
 		local VoiceFilter = RecipientFilter()
 		
 		VoiceFilter:AddPVS(SamplePlayer:EyePos())
 
-		SamplePlayer.VoiceFilteredPlayers = VoiceFilter:GetPlayers()
+		for Index, VisiblePlayer in ipairs(VoiceFilter:GetPlayers()) do
+
+			SamplePlayer.VoiceFilteredPlayers[VisiblePlayer:UserID()] = true
+		end
+
+		--MsgN(SamplePlayer, table.ToString(SamplePlayer.VoiceFilteredPlayers))
 	end
 end)
 
@@ -79,15 +86,19 @@ function GM:PlayerCanHearPlayersVoice(InListener, InTalker)
 			return bWithinDistance, true
 		end
 	else
-		if InListener.VoiceFilteredPlayers and InListener.VoiceFilteredPlayers[InTalker] then
+		--MsgN(InListener, table.ToString(InListener.VoiceFilteredPlayers))
+
+		if InListener.VoiceFilteredPlayers and InListener.VoiceFilteredPlayers[InTalker:UserID()] then
+
+			--MsgN("Test")
 
 			local TraceResult = util.TraceLine({
-				["start"] = InListener:EyePos(),
-				["end"] = InTalker:EyePos(),
-				["collisiongroup"] = COLLISION_GROUP_WORLD
+				start = InListener:EyePos(),
+				endpos = InTalker:EyePos(),
+				mask = CONTENTS_SOLID
 			})
 
-			local CurrentDistance, MaxDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()), 250000
+			local CurrentDistance, MaxDistance = InListener:GetPos():DistToSqr(InTalker:GetPos()), 4200000
 
 			if TraceResult.Hit then
 

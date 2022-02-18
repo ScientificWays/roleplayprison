@@ -7,11 +7,11 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 		return false
 	end
 
-	MsgN(InInput)
+	--MsgN(InInput)
 
 	if InInput == "Use" and InActivator:GetNWFloat("TaskTimeLeft") <= 0 then
 
-		if InActivator:GetNWBool("bHandcuffed") or InPlayer:Team() == TEAM_SPECTATOR then
+		if not UtilPlayerCanInteract(InActivator) or InActivator:Team() == TEAM_SPECTATOR then
 
 			return true
 		end
@@ -237,4 +237,18 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 	end
 
 	return false
+end
+
+function GM:OnPlayerPhysicsDrop(InPlayer, InEntity, bThrown)
+
+	if bThrown and string.EndsWith(InEntity:GetName(), "_Throwable") then
+
+		local ThrowDirection = (InEntity:GetPos() - InPlayer:EyePos())
+
+		ThrowDirection:Normalize()
+
+		--MsgN(ThrowDirection)
+
+		InEntity:GetPhysicsObject():ApplyForceCenter(ThrowDirection * 10000.0)
+	end
 end

@@ -29,11 +29,13 @@ net.Receive("MulticastDoAnimation", function(InMessageLength, InPlayer)
 
 	local PlayerEntityIndex = net.ReadInt(32)
 
+	local bAutoKill = net.ReadBool()
+
 	local Player = Entity(PlayerEntityIndex)
 
 	MsgN(Format("%s %i", Player, Gesture))
 
-	Player:AnimRestartGesture(GESTURE_SLOT_CUSTOM, Gesture, true)
+	Player:AnimRestartGesture(GESTURE_SLOT_CUSTOM, Gesture, bAutoKill)
 end)
 
 function SendDoAnimationToServer(InGesture)

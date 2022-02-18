@@ -6,12 +6,13 @@ local SubRoleFrame = nil
 local MainFrameWidth, MainFrameHeight = 250, 300
 local SubFrameWidth, SubFrameHeight = 200, 200
 
-local TEAM_GUARD, TEAM_ROBBER = 1, 2
+local TEAM_GUARD, TEAM_ROBBER, TEAM_MEDIC = 1, 2, 3
 
-local MainRoleList = {[TEAM_GUARD] = true, [TEAM_ROBBER] = true}
+local MainRoleList = {[TEAM_GUARD] = true, [TEAM_ROBBER] = true, [TEAM_MEDIC] = true}
 
 local SubRoleList = {[TEAM_GUARD] = {"RPP_SubRole.Male", "RPP_SubRole.Female"},
-					[TEAM_ROBBER] = {"RPP_SubRole.Male"--[[, "RPP_SubRole.Female"--]]}}
+					[TEAM_ROBBER] = {"RPP_SubRole.Male"--[[, "RPP_SubRole.Female"--]]},
+					[TEAM_MEDIC] = {"RPP_SubRole.Male", "RPP_SubRole.Female"}}
 
 function TeamCanBePicked(TeamID)
 
@@ -23,9 +24,9 @@ function TeamCanBePicked(TeamID)
 
 		return team.NumPlayers(TEAM_ROBBER) < GetConVar("sk_maxrobbers"):GetInt()
 
-	elseif TeamID == TEAM_STAFF then
+	elseif TeamID == TEAM_MEDIC then
 
-		return false
+		return team.NumPlayers(TEAM_MEDIC) < GetConVar("sk_maxmedics"):GetInt()
 	end
 end
 

@@ -17,6 +17,7 @@ COLOR_BLUE   		= Color(0, 0, 255, 255)
 
 include("player_class/guard.lua")
 include("player_class/robber.lua")
+include("player_class/medic.lua")
 
 function UtilLocalizable(InString)
 
@@ -104,9 +105,9 @@ function UtilCanHearByTalkie(InListener, InTalker)
 	and InListener:GetNWFloat("TalkieFrequency") == InTalker:GetNWFloat("TalkieFrequency")
 end
 
-function UtilPlayerCanDoAnimation(InPlayer)
+function UtilPlayerCanInteract(InPlayer)
 
-	return not InPlayer:GetNWBool("bHandcuffed") and InPlayer:GetNWFloat("TaskTimeLeft") <= 0.0
+	return not InPlayer:GetNWBool("bHandcuffed") and not InPlayer:GetNWBool("bIncapped") and InPlayer:GetNWFloat("TaskTimeLeft") <= 0.0
 end
 
 function GM:CreateTeams()
@@ -121,10 +122,10 @@ function GM:CreateTeams()
 	team.SetSpawnPoint(TEAM_ROBBER, {"info_robber_start"})
 	team.SetClass(TEAM_ROBBER, {"player_robber"})
 
-	TEAM_STAFF = 3
-	team.SetUp(TEAM_STAFF, "RPP_Role.Staff", Color(0, 255, 255))
-	team.SetSpawnPoint(TEAM_STAFF, {"info_staff_start"})
-	team.SetClass(TEAM_STAFF, {"player_default"})
+	TEAM_MEDIC = 3
+	team.SetUp(TEAM_MEDIC, "RPP_Role.Medic", Color(255, 150, 200))
+	team.SetSpawnPoint(TEAM_MEDIC, {"info_staff_start"})
+	team.SetClass(TEAM_MEDIC, {"player_medic"})
 
 	team.SetUp(TEAM_SPECTATOR, "RPP_Role.Spectators", Color(255, 255, 255))
 	team.SetSpawnPoint(TEAM_SPECTATOR, {"worldspawn"})

@@ -114,6 +114,11 @@ function UtilGetTradeDuration()
 	return GetConVar("sk_trade_duration"):GetFloat()
 end
 
+function UtilGetReviveDuration()
+
+	return GetConVar("sk_revive_duration"):GetFloat()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

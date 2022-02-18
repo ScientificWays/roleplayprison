@@ -27,13 +27,21 @@
 		}
 		3
 		{
+			"name"		"sk_maxmedics"
+			"text"		"Max medics"
+			"help"		"The limit of medics"
+			"type"		"Numeric"
+			"default"	"1"
+		}
+		4
+		{
 			"name"		"sk_cycle_duration"
 			"text"		"Cycle duration (min)"
 			"help"		"Cycle duration in minutes"
 			"type"		"Numeric"
 			"default"	"30"
 		}
-		4
+		5
 		{
 			"name"		"sk_intercycle_duration"
 			"text"		"Time between cycles (min)"
@@ -41,7 +49,7 @@
 			"type"		"Numeric"
 			"default"	"5"
 		}
-		5
+		6
 		{
 			"name"		"sk_routine_delay_min"
 			"text"		"Routine delay min"
@@ -49,7 +57,7 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
-		6
+		7
 		{
 			"name"		"sk_routine_delay_max"
 			"text"		"Routine delay max"
@@ -57,7 +65,7 @@
 			"type"		"Numeric"
 			"default"	"600"
 		}
-		7
+		8
 		{
 			"name"		"sk_routine_timeout"
 			"text"		"Routine timeout"
@@ -65,7 +73,7 @@
 			"type"		"Numeric"
 			"default"	"90"
 		}
-		8
+		9
 		{
 			"name"		"sk_guard_routine_duration"
 			"text"		"Guard routine duration"
@@ -73,7 +81,7 @@
 			"type"		"Numeric"
 			"default"	"60"
 		}
-		9
+		10
 		{
 			"name"		"sk_officer_routine_duration"
 			"text"		"Officer routine duration"
@@ -81,7 +89,7 @@
 			"type"		"Numeric"
 			"default"	"20"
 		}
-		10
+		11
 		{
 			"name"		"sk_officer_punishment_duration"
 			"text"		"Officer punishment duration"
@@ -89,7 +97,7 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
-		11
+		12
 		{
 			"name"		"sk_robber_work_duration"
 			"text"		"Robber work duration"
@@ -97,7 +105,7 @@
 			"type"		"Numeric"
 			"default"	"60"
 		}
-		12
+		13
 		{
 			"name"		"sk_robber_work_buff_multiplier"
 			"text"		"Robber work buff multiplier"
@@ -105,7 +113,7 @@
 			"type"		"Numeric"
 			"default"	"1.2"
 		}
-		13
+		14
 		{
 			"name"		"sk_detail_pickup_duration"
 			"text"		"Detail pickup duration"
@@ -113,7 +121,7 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		14
+		15
 		{
 			"name"		"sk_server_sabotage_duration"
 			"text"		"Server sabotage duration"
@@ -121,7 +129,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		15
+		16
 		{
 			"name"		"sk_server_repair_duration"
 			"text"		"Server repair duration"
@@ -129,7 +137,7 @@
 			"type"		"Numeric"
 			"default"	"30"
 		}
-		16
+		17
 		{
 			"name"		"sk_toggle_lock_duration"
 			"text"		"Guard toggle lock duration"
@@ -137,7 +145,7 @@
 			"type"		"Numeric"
 			"default"	"1"
 		}
-		17
+		18
 		{
 			"name"		"sk_picklock_use_duration"
 			"text"		"Picklock use duration"
@@ -145,7 +153,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		18
+		19
 		{
 			"name"		"sk_picklock_open_chance"
 			"text"		"Picklock open chance"
@@ -153,7 +161,7 @@
 			"type"		"Numeric"
 			"default"	"0.9"
 		}
-		19
+		20
 		{
 			"name"		"sk_picklock_break_chance"
 			"text"		"Picklock break chance"
@@ -161,7 +169,7 @@
 			"type"		"Numeric"
 			"default"	"0.9"
 		}
-		20
+		21
 		{
 			"name"		"sk_handcuffs_on_duration"
 			"text"		"Handcuffs on duration"
@@ -169,7 +177,7 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		21
+		22
 		{
 			"name"		"sk_handcuffs_off_duration"
 			"text"		"Handcuffs off duration"
@@ -177,7 +185,7 @@
 			"type"		"Numeric"
 			"default"	"5"
 		}
-		22
+		23
 		{
 			"name"		"sk_inspection_duration"
 			"text"		"Inspection duration"
@@ -185,7 +193,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		23
+		24
 		{
 			"name"		"sk_sprint_duration"
 			"text"		"Sprint duration"
@@ -193,13 +201,21 @@
 			"type"		"Numeric"
 			"default"	"20.0"
 		}
-		24
+		25
 		{
 			"name"		"sk_trade_duration"
 			"text"		"Trade duration"
 			"help"		"Trade duration in seconds"
 			"type"		"Numeric"
 			"default"	"2.5"
+		}
+		26
+		{
+			"name"		"sk_revive_duration"
+			"text"		"Revive duration"
+			"help"		"Revive duration in seconds"
+			"type"		"Numeric"
+			"default"	"20.0"
 		}
 	}
 }

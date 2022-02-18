@@ -12,6 +12,7 @@ local IconHand					= Material("vgui/rpp/icon_hand")
 local IconPicklock				= Material("vgui/rpp/icon_picklock")
 local IconKnock					= Material("vgui/rpp/icon_knock")
 local IconInspect				= Material("vgui/rpp/icon_inspect")
+local IconCross					= Material("vgui/rpp/icon_cross")
 
 local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")
@@ -45,7 +46,9 @@ timer.Create("HUDHintDataTick", 0.2, 0, function()
 
 	UpdatePostProcessData(ClientPlayer)
 
-	if not IsValid(ClientPlayer:GetActiveWeapon()) or ClientPlayer:GetActiveWeapon():GetClass() ~= "weapon_rpp_unarmed" then
+	local ClientWeapon = ClientPlayer:GetActiveWeapon()
+
+	if not IsValid(ClientWeapon) or ClientWeapon:GetClass() ~= "weapon_rpp_unarmed" or not UtilPlayerCanInteract(ClientPlayer) then
 
 		return
 	end
@@ -56,6 +59,8 @@ timer.Create("HUDHintDataTick", 0.2, 0, function()
 
 		return
 	end
+
+	--MsgN(EyeTrace.Entity:GetCollisionGroup())
 
 	UpdateHUDHintData(ClientPlayer, EyeTrace.Entity)
 end)
@@ -362,6 +367,19 @@ local function SetHUDHintDataStash()
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
+local function SetHUDHintDataRevive()
+
+	--MsgN("SetHUDHintDataRevive()")
+
+	HUDHintData.Icon = IconCross
+
+	HUDHintData.IconColor = COLOR_YELLOW
+
+	--HUDHintData.Text = "Вылечить"
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
 local function TryDrawInventory(InClient)
 
 	surface.SetDrawColor(COLOR_YELLOW)
@@ -518,7 +536,7 @@ end
 
 function UpdateHUDHintData(InPlayer, InTargetEntity)
 
-	--MsgN(InTargetEntity:GetNWBool("bFoodSpawn"))
+	MsgN(InTargetEntity)
 
 	if not InTargetEntity:GetNWBool("bShowHint") and not InTargetEntity:IsPlayer() then
 
@@ -684,6 +702,21 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 					SetHUDHintData3TradePicklock()
 				end
 			end
+		end
+
+	elseif InPlayer:Team() == TEAM_MEDIC then
+
+		if InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable") then
+
+			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
+		
+		elseif InTargetEntity:GetNWBool("bGuardUser1") or InTargetEntity:GetNWBool("bAllUser1") then
+
+			SetHUDHintDataUsable()
+
+		elseif InTargetEntity:GetNWBool("bIncapped") then
+
+			SetHUDHintDataRevive()
 		end
 	end
 end

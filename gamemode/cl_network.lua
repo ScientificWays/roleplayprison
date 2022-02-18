@@ -69,9 +69,9 @@ function ClientReceiveEventMessage(InMessageLength, InPlayer)
 		end
 	end
 
-	MsgN(PrintTable(PrintArgumets))
+	--MsgN(PrintTable(PrintArgumets))
 
-	MsgN(unpack(PrintArgumets))
+	--MsgN(unpack(PrintArgumets))
 
 	chat.AddText(COLOR_CYAN, Format(unpack(PrintArgumets)))
 end

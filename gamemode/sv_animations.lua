@@ -14,16 +14,23 @@ function ServerReceiveDoAnimation(InMessageLength, InPlayer)
 
 	if UtilPlayerCanDoAnimation(InPlayer) then
 
-		local Gesture = net.ReadInt(32)
+		local SampleAnimation = net.ReadInt(32)
 
-		net.Start("MulticastDoAnimation")
-
-		net.WriteInt(Gesture, 32)
-
-		net.WriteInt(InPlayer:EntIndex(), 32)
-
-		MsgN(Format("%s %i", InPlayer, Gesture))
-
-		net.Broadcast()
+		ServerSendMulticastDoAnimation(InPlayer, SampleAnimation, true)
 	end
+end
+
+function ServerSendMulticastDoAnimation(InPlayer, InAnimation, bAutoKill)
+
+	net.Start("MulticastDoAnimation")
+
+	net.WriteInt(InAnimation, 32)
+
+	net.WriteInt(InPlayer:EntIndex(), 32)
+
+	net.WriteBool(bAutoKill)
+
+	MsgN(Format("%s %i", InPlayer, InAnimation))
+
+	net.Broadcast()
 end

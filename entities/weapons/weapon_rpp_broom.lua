@@ -49,8 +49,7 @@ local SwingSound = Sound("WeaponFrag.Throw")
 local HitSound = Sound("Carpet.BulletImpact")
 local SecondaryHitSound = Sound("Wood_Box.ImpactHard")
 
-local HitParticle = Particle("water_splash_01_refract")
-local SecondaryHitParticle = Particle("")
+local WashParticle = Particle("water_splash_01_refract")
 
 local phys_pushscale = GetConVar("phys_pushscale")
 
@@ -126,15 +125,11 @@ function SWEP:DealDamage(bSecondary)
 
 	local FinalHitSound = HitSound
 
-	local FinalHitParticle = HitParticle
-
 	if bSecondary then
 
 		FinalHitDistance = self.SecondaryHitDistance
 
 		FinalHitSound = SecondaryHitSound
-
-		FinalHitParticle = SecondaryHitParticle
 	end
 
 	local AttackTrace = util.TraceLine({
@@ -151,11 +146,11 @@ function SWEP:DealDamage(bSecondary)
 
 			PlayerOwner:EmitSound(FinalHitSound)
 
-			if FinalHitParticle ~= "" then
+			if not bSecondary then
 
 				local ParticleSpawnPos = AttackTrace.HitPos + AttackTrace.HitNormal * 32
 
-				ParticleEffect(FinalHitParticle, AttackTrace.HitPos, AttackTrace.HitNormal:Angle())
+				ParticleEffect(WashParticle, AttackTrace.HitPos, AttackTrace.HitNormal:Angle())
 
 				--MsgN(Format("Create particle at %s %s", AttackTrace.HitPos, AttackTrace.HitNormal:Angle()))
 			end

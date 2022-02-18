@@ -41,7 +41,7 @@ SWEP.AllowDrop				= false
 
 local function CanTryInteract(InPlayer, InInteractEntity)
 
-	return not InPlayer:GetNWBool("bHandcuffed")
+	return UtilPlayerCanInteract(InPlayer)
 	and IsValid(InInteractEntity)
 	and InInteractEntity:GetNWString("NowImplemetingBy") == ""
 end
@@ -220,6 +220,20 @@ local function TryKnockDoor(InPlayer, InInteractEntity)
 	return false
 end
 
+local function TryHitThrowable(InPlayer, InInteractEntity)
+
+	MsgN("TryHitThrowable()")
+
+	if string.EndsWith(InInteractEntity:GetName(), "_Throwable") then
+
+		InInteractEntity:GetPhysicsObject():ApplyForceCenter(InPlayer:EyeAngles():Forward() * 10000.0)
+
+		return true
+	end
+
+	return false
+end
+
 local function CanHandcuffsOn(InPlayer, InInteractEntity)
 
 	return InInteractEntity:IsPlayer() 
@@ -361,6 +375,23 @@ local function TryTradeStackableItem(InPlayer, InInteractEntity, InItemNameStr)
 	InInteractEntity:EmitSound("HL2Player.PickupWeapon")
 end
 
+local function CanRevive(InPlayer, InInteractEntity)
+
+	return InInteractEntity:GetNWBool("bIncapped")
+end
+
+local function TryRevive(InPlayer, InInteractEntity)
+
+	MsgN("TryRevive()")
+
+	if not CanRevive(InPlayer, InInteractEntity) then
+
+		return
+	end
+
+	OnPlayerRevived(InInteractEntity)
+end
+
 function SWEP:Initialize()
 
 	self:SetHoldType("normal")
@@ -390,11 +421,6 @@ function SWEP:PrimaryAttack()
 
 	local PlayerOwner = self:GetOwner()
 
-	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
-
-		return
-	end
-
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
@@ -409,6 +435,11 @@ function SWEP:PrimaryAttack()
 	if CanTryInteract(PlayerOwner, InteractEntity) then
 
 		if TryKnockDoor(PlayerOwner, InteractEntity) then
+
+			return
+		end
+
+		if TryHitThrowable(PlayerOwner, InteractEntity) then
 
 			return
 		end
@@ -450,11 +481,6 @@ function SWEP:SecondaryAttack()
 
 	local PlayerOwner = self:GetOwner()
 
-	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
-
-		return
-	end
-
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 
 	if EyeTrace.Fraction * 32768 > 128 then
@@ -468,12 +494,7 @@ function SWEP:SecondaryAttack()
 
 	if CanTryInteract(PlayerOwner, InteractEntity) then
 
-		if PlayerOwner:Team() == TEAM_GUARD then
-
-			if TryToggleUser1(PlayerOwner, InteractEntity) then
-
-				return
-			end
+		if PlayerOwner:Team() == TEAM_GUARD or PlayerOwner:Team() == TEAM_MEDIC then
 
 			local bToggleLock, FinalInteractEntity = CanToggleLock(PlayerOwner, InteractEntity)
 
@@ -488,6 +509,14 @@ function SWEP:SecondaryAttack()
 				)
 				return
 			end
+		end
+
+		if PlayerOwner:Team() == TEAM_GUARD then
+
+			if TryToggleUser1(PlayerOwner, InteractEntity) then
+
+				return
+			end
 
 			if CanHandcuffsOn(PlayerOwner, InteractEntity) then
 
@@ -499,20 +528,6 @@ function SWEP:SecondaryAttack()
 					UtilGetHandcuffsOnDuration(),
 					function() UtilChangePlayerFreeze(InteractEntity, false) end,
 					TryHandcuffsOn
-				)
-				return
-			end
-
-			if CanHandcuffsOff(PlayerOwner, InteractEntity) then
-
-				--UtilChangePlayerFreeze(InteractEntity, true)
-
-				OnImplementTaskStart(
-					PlayerOwner,
-					InteractEntity,
-					UtilGetHandcuffsOffDuration(),
-					--[[function() UtilChangePlayerFreeze(InteractEntity, false) end--]]nil,
-					TryHandcuffsOff
 				)
 				return
 			end
@@ -545,20 +560,42 @@ function SWEP:SecondaryAttack()
 				return
 			end
 
+		elseif PlayerOwner:Team() == TEAM_MEDIC then
 
-			if CanHandcuffsOff(PlayerOwner, InteractEntity) then
+			MsgN(InteractEntity)
 
-				--UtilChangePlayerFreeze(InteractEntity, true)
+			if CanRevive(PlayerOwner, InteractEntity) then
 
 				OnImplementTaskStart(
 					PlayerOwner,
 					InteractEntity,
-					UtilGetHandcuffsOffDuration() * 2.0,
-					--[[function() UtilChangePlayerFreeze(InteractEntity, false) end--]]nil,
-					TryHandcuffsOff
+					UtilGetReviveDuration(),
+					nil,
+					TryRevive
 				)
 				return
+			end			
+		end
+
+		if CanHandcuffsOff(PlayerOwner, InteractEntity) then
+
+			--UtilChangePlayerFreeze(InteractEntity, true)
+
+			local HandcuffsOffDuration = UtilGetHandcuffsOffDuration()
+
+			if PlayerOwner:Team() ~= TEAM_GUARD then
+
+				HandcuffsOffDuration = HandcuffsOffDuration * 2.0
 			end
+
+			OnImplementTaskStart(
+				PlayerOwner,
+				InteractEntity,
+				HandcuffsOffDuration,
+				--[[function() UtilChangePlayerFreeze(InteractEntity, false) end--]]nil,
+				TryHandcuffsOff
+			)
+			return
 		end
 	end
 end
@@ -573,11 +610,6 @@ function SWEP:Reload()
 	--MsgN("Unarmed secondary attack")
 
 	local PlayerOwner = self:GetOwner()
-
-	if PlayerOwner:GetNWFloat("TaskTimeLeft") > 0.0 then
-
-		return
-	end
 
 	local EyeTrace = PlayerOwner:GetEyeTrace()
 

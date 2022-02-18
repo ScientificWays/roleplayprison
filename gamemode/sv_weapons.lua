@@ -17,21 +17,22 @@ function GM:PlayerCanPickupWeapon(InPlayer, InWeapon)
 
 	MsgN("PlayerCanPickupWeapon()")
 
-	if not IsValid(InPlayer) or not IsValid(InWeapon) or InPlayer:Team() == TEAM_SPECTATOR then
+	if InPlayer.bLoadout then
 
-		return false
+		return true
 	end
 
 	local WeaponClass = InWeapon:GetClass()
 
-	if InPlayer:Team() == TEAM_GUARD then
+	if InPlayer:Team() == TEAM_SPECTATOR or not IsValid(InPlayer) or not IsValid(InWeapon) or InPlayer:HasWeapon(WeaponClass) then
 
-		return not InPlayer:HasWeapon(WeaponClass) or WeaponClass == "weapon_rpp_talkie" or WeaponClass == "weapon_rpp_club"
-
-	elseif InPlayer:Team() == TEAM_ROBBER then
-
-		return not InPlayer:HasWeapon(WeaponClass)
+		return false
 	end
 
-	return false
+	return UtilPlayerCanInteract(InPlayer) and InPlayer:KeyPressed(IN_USE)
+end
+
+function GM:PlayerCanPickupItem(InPlayer, InEntity)
+
+	return UtilPlayerCanInteract(InPlayer) and InPlayer:KeyPressed(IN_USE)
 end

@@ -12,18 +12,20 @@ function UpdatePostProcessData(InPlayer)
 
 	local TotalValue = 0.0
 
-	if InPlayer:Team() == TEAM_GUARD or InPlayer:Team() == TEAM_ROBBER then
+	if InPlayer:Team() ~= TEAM_SPECTATOR and InPlayer:Team() ~= TEAM_UNASSIGNED then
 
-		--MsgN(Format(InPlayer:GetNWFloat("HungerValue"), InPlayer:GetNWFloat("InjuryValue"), InPlayer:GetNWFloat("EnergyValue")))
+		if InPlayer:GetNWBool("bStunned") or InPlayer:GetNWBool("bIncapped") then
 
-		TotalValue = 1.0 - math.Clamp(InPlayer:GetNWFloat("HealthValue") * 3.0, 0.0, 1.0) + InPlayer:GetNWFloat("HungerValue") * 0.3
+			TotalValue = 1.0
 
-		if InPlayer:GetNWBool("bStunned") then
+		else
 
-			TotalValue = TotalValue + 1.0
+			--MsgN(Format(InPlayer:GetNWFloat("HungerValue"), InPlayer:GetNWFloat("InjuryValue"), InPlayer:GetNWFloat("EnergyValue")))
+
+			TotalValue = 1.0 - math.Clamp(InPlayer:GetNWFloat("HealthValue") * 3.0, 0.0, 1.0) + InPlayer:GetNWFloat("HungerValue") * 0.3
+
+			TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) * 0.2, 0.0, 1.0)
 		end
-
-		TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) * 0.2, 0.0, 1.0)
 	end
 
 	if TotalValue == OldTotalValue then

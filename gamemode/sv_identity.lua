@@ -278,6 +278,39 @@ local FemaleSurnames = {
 	"Исаева"
 } local FemaleSurnamesCopy = table.Copy(FemaleSurnames)
 
+local MaleMedicModels = {
+	{Name = "male_01_medic", HandsBodygroup = 1},
+	{Name = "male_02_medic", HandsBodygroup = 0},
+	{Name = "male_03_medic", HandsBodygroup = 1},
+	{Name = "male_04_medic", HandsBodygroup = 0},
+	{Name = "male_05_medic", HandsBodygroup = 0},
+	{Name = "male_06_medic", HandsBodygroup = 0},
+	{Name = "male_07_medic", HandsBodygroup = 0},
+	{Name = "male_08_medic", HandsBodygroup = 0},
+	{Name = "male_09_medic", HandsBodygroup = 0}
+} local MaleMedicModelsCopy = table.Copy(MaleMedicModels)
+
+for Index, SampleModelData in ipairs(MaleMedicModels) do
+
+	player_manager.AddValidModel(SampleModelData.Name, Format("models/toju/hgg/doctors/male_0%i.mdl", Index))
+	player_manager.AddValidHands(SampleModelData.Name, "models/weapons/c_arms_citizen.mdl", SampleModelData.HandsBodygroup, "0000000")
+end
+
+local FemaleMedicModels = {
+	{Name = "female_01_medic", HandsBodygroup = 0},
+	{Name = "female_02_medic", HandsBodygroup = 0},
+	{Name = "female_03_medic", HandsBodygroup = 1},
+	{Name = "female_04_medic", HandsBodygroup = 0},
+	{Name = "female_05_medic", HandsBodygroup = 0},
+	{Name = "female_06_medic", HandsBodygroup = 1}
+} local FemaleMedicModelsCopy = table.Copy(FemaleMedicModels)
+
+for Index, SampleModelData in ipairs(FemaleMedicModels) do
+
+	player_manager.AddValidModel(SampleModelData.Name, Format("models/toju/hgg/doctors/female_0%i.mdl", Index))
+	player_manager.AddValidHands(SampleModelData.Name, "models/weapons/c_arms_refugee.mdl", SampleModelData.HandsBodygroup, "0000000")
+end
+
 local function GetRandomAndDeleteFromLists(InModelList, InNameList, InSurnameList)
 
 	local ModelIndex, NameIndex, SurnameIndex = math.random(#InModelList), math.random(#InNameList), math.random(#InSurnameList)
@@ -305,6 +338,11 @@ local function RefreshEmptyLists()
 		MaleRobberModels = table.Copy(MaleRobberModelsCopy)
 	end
 
+	if table.IsEmpty(MaleMedicModels) then
+
+		MaleMedicModels = table.Copy(MaleRobberMedicCopy)
+	end
+
 	if table.IsEmpty(MaleNames) then
 
 		MaleNames = table.Copy(MaleNamesCopy)
@@ -325,6 +363,11 @@ local function RefreshEmptyLists()
 		FemaleRobberModels = table.Copy(FemaleRobberModelsCopy)
 	end--]]
 
+	if table.IsEmpty(FemaleMedicModels) then
+
+		FemaleMedicModels = table.Copy(FemaleRobberMedicCopy)
+	end
+
 	if table.IsEmpty(FemaleNames) then
 
 		FemaleNames = table.Copy(FemaleNamesCopy)
@@ -338,13 +381,13 @@ end
 
 local RejoinIdentityList = {}
 
-function GetNewPlayerIdentity(InPlayer, bGuard, bMale)
+function GetNewPlayerIdentity(InPlayer, InTeam, bMale)
 
 	local ID = InPlayer:AccountID()
 
 	local OutModel, OutName, OutSurname = "", "", ""
 
-	if RejoinIdentityList[ID] ~= nil and RejoinIdentityList[ID].bGuard == bGuard and RejoinIdentityList[ID].bMale == bMale then
+	if RejoinIdentityList[ID] ~= nil and RejoinIdentityList[ID].Team == InTeam and RejoinIdentityList[ID].bMale == bMale then
 
 		OutModel, OutName, OutSurname = RejoinIdentityList[ID].Model, RejoinIdentityList[ID].Name, RejoinIdentityList[ID].Surname
 
@@ -352,27 +395,44 @@ function GetNewPlayerIdentity(InPlayer, bGuard, bMale)
 	else
 		RefreshEmptyLists()
 
+		local SampleModels, SampleNames, SampleSurnames = {}, "", ""
+
 		if bMale then
 
-			if bGuard then
+			SampleNames, SampleSurnames = MaleNames, MaleSurnames
 
-				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(MaleGuardModels, MaleNames, MaleSurnames)
-			else
+			if InTeam == TEAM_GUARD then
 
-				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(MaleRobberModels, MaleNames, MaleSurnames)
+				SampleModels = MaleGuardModels
+
+			elseif InTeam == TEAM_ROBBER then
+
+				SampleModels = MaleRobberModels
+
+			elseif InTeam == TEAM_MEDIC then
+
+				SampleModels = MaleMedicModels
 			end
 		else
+			SampleNames, SampleSurnames = FemaleNames, FemaleSurnames
 
-			if bGuard then
+			if InTeam == TEAM_GUARD then
 
-				OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(FemaleGuardModels, FemaleNames, FemaleSurnames)
-			else
+				SampleModels = FemaleGuardModels
 
-				--OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(FemaleRobberModels, FemaleNames, FemaleSurnames)
+			elseif InTeam == TEAM_ROBBER then
+
+				--SampleModels = FemaleRobberModels
+
+			elseif InTeam == TEAM_MEDIC then
+
+				SampleModels = FemaleMedicModels
 			end
 		end
 
-		RejoinIdentityList[ID] = {Model = OutModel, Name = OutName, Surname = OutSurname, bGuard = bGuard, bMale = bMale}
+		OutModel, OutName, OutSurname = GetRandomAndDeleteFromLists(SampleModels, SampleNames, SampleSurnames)
+
+		RejoinIdentityList[ID] = {Model = OutModel, Name = OutName, Surname = OutSurname, Team = InTeam, bMale = bMale}
 	end
 
 	return OutModel, OutName, OutSurname
