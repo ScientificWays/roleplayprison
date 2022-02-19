@@ -21,11 +21,6 @@ include("player_class/guard.lua")
 include("player_class/robber.lua")
 include("player_class/medic.lua")
 
-function UtilLocalizable(InString)
-
-	return language.GetPhrase(InString)
-end
-
 function UtilGetOfficerPlayer()
 
 	for Index, SamplePlayer in ipairs(player.GetAll()) do

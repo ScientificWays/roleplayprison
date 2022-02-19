@@ -8,7 +8,7 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 		--MsgN(team.GetName(Player:Team()))
 
-		if Player:Team() == TEAM_ROBBER or Player:Team() == TEAM_GUARD then
+		if Player:Team() ~= TEAM_SPECTATOR and Player:Team() ~= TEAM_UNASSIGNED then
 
 			local OldEnergy = Player.Energy
 
@@ -16,7 +16,7 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 				local EnergyDrainMultiplier = 1.0 + Player:GetNWFloat("HungerValue") * 2
 
-				if Player.Energy >= 1.0 then
+				if Player.Energy >= 1.0 * EnergyDrainMultiplier then
 
 					Player.Energy = Player.Energy - 1.0 * EnergyDrainMultiplier
 
@@ -44,7 +44,7 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 			if OldEnergy ~= Player.Energy then
 
-				--MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
+				MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
 
 				if Player.Energy < UtilGetSprintDuration() * 0.25 then
 
@@ -93,9 +93,12 @@ end
 
 hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData)
 
-	local FinalMaxSpeed = Lerp(InPlayer:GetNWFloat("EnergyValue"), 100, InMoveData:GetMaxClientSpeed())
+	if not InPlayer:GetNWBool("bIncapped") then
 
-	InMoveData:SetMaxClientSpeed(FinalMaxSpeed)
+		local FinalMaxSpeed = Lerp(InPlayer:GetNWFloat("EnergyValue"), 100, InMoveData:GetMaxClientSpeed())
+
+		InMoveData:SetMaxClientSpeed(FinalMaxSpeed)
+	end
 end)
 
 local LastJumpEnergyDrain = 0.0

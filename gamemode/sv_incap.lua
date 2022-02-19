@@ -8,13 +8,22 @@ timer.Create("IncappedBleed", 2.5, 0, function()
 
 		if SamplePlayer:GetNWBool("bIncapped") then
 
-			SamplePlayer:SetHealth(math.max(1, SamplePlayer:Health() - 5))
+			if team.NumPlayers(TEAM_MEDIC) > 0 then
 
-			MsgN(0.01 * SamplePlayer:GetVelocity():Length())
+				SamplePlayer:SetHealth(math.max(1, SamplePlayer:Health() - 5))
 
-			if math.random() < 0.01 * SamplePlayer:GetVelocity():Length() then
+				--MsgN(0.01 * SamplePlayer:GetVelocity():Length())
 
+				if math.random() < 0.01 * SamplePlayer:GetVelocity():Length() then
+
+					util.Decal("Blood", SamplePlayer:GetPos() + Vector(0, 0, 10), SamplePlayer:GetPos() - Vector(0, 0, 10), SamplePlayer)
+				end
+			else
 				util.Decal("Blood", SamplePlayer:GetPos() + Vector(0, 0, 10), SamplePlayer:GetPos() - Vector(0, 0, 10), SamplePlayer)
+
+				SamplePlayer:Kill()
+
+				SamplePlayer:SetNWBool("bIncapped", false)
 			end
 		end
 	end
@@ -24,12 +33,7 @@ hook.Add("SetupMove", "IncappedMove", function(InPlayer, InMoveData, InCommandDa
 
 	if InPlayer:GetNWBool("bIncapped") then
 
-		local MaxSpeed = 100.0
-
-		if InPlayer:Crouching() then
-
-			MaxSpeed = 50.0
-		end
+		local MaxSpeed = 50.0
 
 		InMoveData:SetMaxClientSpeed(math.min(InMoveData:GetMaxClientSpeed() * 0.25, MaxSpeed))
 	end
@@ -49,7 +53,10 @@ function GM:EntityTakeDamage(InEntity, InDamageInfo)
 
 				InDamageInfo:SetDamage(0.0)
 
-				OnPlayerIncapped(InEntity)
+				if InEntity:Team() ~= TEAM_MEDIC then
+
+					OnPlayerIncapped(InEntity)
+				end
 			end
 		end
 	end
@@ -69,7 +76,7 @@ function OnPlayerIncapped(InPlayer)
 
 	for Index, Weapon in pairs(PlayerWeapons) do
 
-		if Weapon:GetClass() ~= "weapon_rpp_fists" and Weapon:GetClass() ~= "weapon_rpp_unarmed" then
+		if Weapon:GetClass() ~= "weapon_rpp_fists" and Weapon:GetClass() ~= "weapon_rpp_unarmed" and Weapon:GetClass() ~= "weapon_medkit" then
 
 			InPlayer:DropWeapon(Weapon, InPlayer:GetVelocity())
 		end

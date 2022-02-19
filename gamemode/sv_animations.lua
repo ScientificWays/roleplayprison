@@ -12,7 +12,7 @@ end)
 
 function ServerReceiveDoAnimation(InMessageLength, InPlayer)
 
-	if UtilPlayerCanDoAnimation(InPlayer) then
+	if UtilPlayerCanInteract(InPlayer) then
 
 		local SampleAnimation = net.ReadInt(32)
 

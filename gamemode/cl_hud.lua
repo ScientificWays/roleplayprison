@@ -375,7 +375,7 @@ local function SetHUDHintDataRevive()
 
 	HUDHintData.IconColor = COLOR_YELLOW
 
-	--HUDHintData.Text = "Вылечить"
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.RMB")
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end

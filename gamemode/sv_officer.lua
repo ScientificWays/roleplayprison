@@ -38,9 +38,16 @@ function PunishOfficerPlayer(InSeconds)
 
 	local TeleportTarget = table.Random(ents.FindByName("OfficerPunishment_Teleport"))
 
+	OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
+
 	if IsValid(TeleportTarget) then
 
-		OfficerPlayer:SetPos(TeleportTarget:GetPos())
+		timer.Simple(2.0, function()
+		
+			OfficerPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
+
+			OfficerPlayer:SetPos(TeleportTarget:GetPos())
+		end)
 
 		SetGlobalInt("OfficerPunishmentTimeLeft", InSeconds)
 	end
@@ -56,9 +63,21 @@ function ReleaseOfficerPlayer()
 
 	if IsValid(TeleportTarget) then
 
-		OfficerPlayer:SetPos(TeleportTarget:GetPos())
+		MsgN("ReleaseOfficerPlayer() success")
+
+		OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
+
+		timer.Simple(2.0, function()
+		
+			OfficerPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
+
+			OfficerPlayer:SetPos(TeleportTarget:GetPos())
+		end)
 
 		SetGlobalInt("OfficerPunishmentTimeLeft", 0)
+	else
+
+		MsgN("ReleaseOfficerPlayer() TeleportTarget is invalid!")
 	end
 end
 
@@ -89,7 +108,14 @@ function AddOfficerVote(InVoter, InVotedName)
 	return
 end
 
-function FinishOfficerVote()
+function FinishOfficerVote(InSender)
+
+	if IsValid(InSender) and InSender:Team() ~= TEAM_GUARD then
+
+		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteOnlyGuards"})
+
+		return
+	end
 
 	local OfficerPlayerVoteCount = {}
 

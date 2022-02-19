@@ -76,7 +76,7 @@ end
 
 function TryCraftItem(InPlayer, InItemName)
 
-	--MsgN(Format("TryCraftItem(), %s", InItemName))
+	MsgN(Format("TryCraftItem(), %s", InItemName))
 
 	local ItemData = {}
 
@@ -96,14 +96,14 @@ function TryCraftItem(InPlayer, InItemName)
 
 	if table.IsEmpty(ItemData) then
 
-		--MsgN("TryCraftItem() ItemData is empty!")
+		MsgN("TryCraftItem() ItemData is empty!")
 
 		return
 	end
 
 	if not CanCraftRoleplayItem(InPlayer, ItemData) then
 
-		--MsgN("TryCraftItem() CanCraftRoleplayItem() false")
+		MsgN("TryCraftItem() CanCraftRoleplayItem() false")
 
 		return
 	end

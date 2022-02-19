@@ -78,11 +78,11 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	
 	local TargetVel = (FinalMoveToPos - MoveFromPos):GetNormal() * 10
 
-	TargetVel.x = TargetVel.x*speedMult
+	TargetVel.x = TargetVel.x * speedMult
 
-	TargetVel.y = TargetVel.y*speedMult
+	TargetVel.y = TargetVel.y * speedMult
 
-	TargetVel.z = TargetVel.z*vertMult
+	TargetVel.z = TargetVel.z * vertMult
 
 	local MoveVelocity = InMoveData:GetVelocity()
 	
@@ -107,19 +107,4 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	--MsgN(MoveVelocity)
 	
 	InMoveData:SetVelocity(MoveVelocity)
-	
-	if SERVER
-	and InMoveData:GetVelocity():Length() >= (InMoveData:GetMaxClientSpeed() * 10)
-	and InPlayer:IsOnGround()
-	and CurTime() > (InPlayer.Cuff_NextDragDamage or 0) then
-
-		InPlayer:SetHealth(InPlayer:Health() - 1)
-
-		if InPlayer:Health() <= 0 then
-
-			InPlayer:Kill()
-		end
-		
-		InPlayer.Cuff_NextDragDamage = CurTime() + 0.1
-	end
 end)

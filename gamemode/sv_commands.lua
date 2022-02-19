@@ -102,9 +102,9 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 		AddOfficerVote(InSender, TryConvertPlayerName(SeparatedStrings[2]))
 
-	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/votefinish" then
+	elseif SeparatedStrings[1] == "/votefinish" then
 
-		FinishOfficerVote()
+		FinishOfficerVote(InSender)
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/start" then
 

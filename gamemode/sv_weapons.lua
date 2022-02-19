@@ -17,7 +17,7 @@ function GM:PlayerCanPickupWeapon(InPlayer, InWeapon)
 
 	MsgN("PlayerCanPickupWeapon()")
 
-	if InPlayer.bLoadout then
+	if CurTime() - InWeapon:GetCreationTime() < 0.5 then
 
 		return true
 	end
