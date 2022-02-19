@@ -1,3 +1,5 @@
+---- Roleplay: Prison
+
 GM.Name = "Roleplay: Prison"
 GM.Author = "zana"
 GM.Email = "N/A"
@@ -37,9 +39,14 @@ function UtilGetOfficerPlayer()
 	return nil
 end
 
+function UtilGetOfficerPunishmentTimeLeft()
+
+	return GetGlobalInt("OfficerPunishmentTimeLeft")
+end
+
 function UtilIsOfficerPunished()
 
-	return GetGlobalBool("bOfficerPunished")
+	return UtilGetOfficerPunishmentTimeLeft() > 0
 end
 
 function UtilIsScheduleSet()

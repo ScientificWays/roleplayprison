@@ -504,6 +504,21 @@ local function TryDrawTaskTime(InClient)
 	return false
 end
 
+local function TryDrawOfficerPunishmentTimeLeft(InClient)
+
+	local PunishmentTimeLeft = UtilGetOfficerPunishmentTimeLeft()
+
+	if PunishmentTimeLeft > 0 then
+
+		draw.SimpleText(Format(UtilLocalizable("RPP_HUD.PunishmentTimeLeft"), PunishmentTimeLeft),
+			"HUDText", ScrW() / 2, ScrH() / 2 + 150, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+
+		return true
+	end
+
+	return false
+end
+
 function DrawBlur(InPanel, InValue)
 
 	local ScreenX, ScreenY = InPanel:LocalToScreen(0, 0)
@@ -768,6 +783,11 @@ function GM:HUDPaint()
 		end
 
 		hook.Run("HUDDrawTargetID")
+	end
+
+	if Client:GetNWBool("bOfficer") then
+
+		TryDrawOfficerPunishmentTimeLeft()
 	end
 
 	if IsValid(Client:GetActiveWeapon()) and Client:GetActiveWeapon():GetClass() == "weapon_rpp_talkie" then

@@ -98,10 +98,6 @@ function GM:Initialize()
 
 	MsgN("Roleplay: Prison gamemode initializing...")
 
-	--GAMEMODE.round_state = ROUND_WAIT
-
-	--concommand.Add("schedulesetup", ToggleScheduleSetup)
-
 	net.Receive("SendRequestJoinTeamToServer", ServerReceiveRequestJoinTeam)
 
 	net.Receive("SendTryCraftItemToServer", ServerReceiveTryCraftItem)
@@ -132,8 +128,6 @@ function GM:InitPostEntity()
 	SetupSkyPaint()
 
 	SetGlobalBool("bInterCycle", true)
-
-	--WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
 
 	timer.Create("PlayerAreaUpdate", 1.0, 0, OnPlayerAreaUpdate)
 

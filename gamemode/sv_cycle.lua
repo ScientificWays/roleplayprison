@@ -143,11 +143,11 @@ end
 
 local function HandleOfficerPunished(InOfficerPlayer)
 
-	MsgN(Format("HandleOfficerPunished() %s", GetOfficerPunishmentTimeLeft()))
+	MsgN(Format("HandleOfficerPunished() %s", UtilGetOfficerPunishmentTimeLeft()))
 
 	DecreaseOfficerPunishmentTimeLeft()
 
-	if GetOfficerPunishmentTimeLeft() <= 0 then
+	if UtilGetOfficerPunishmentTimeLeft() <= 0 then
 
 		--Will reset OfficerPunishmentTimeLeft
 		ReleaseOfficerPlayer()

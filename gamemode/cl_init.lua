@@ -41,10 +41,6 @@ function GM:Initialize()
 
 	MsgN("RPP Client initializing...")
 
-	--GAMEMODE.round_state = ROUND_WAIT
-
-	--concommand.Add("schedulesetup", ToggleScheduleSetup)
-
 	net.Receive("SendScheduleListToClients", ClientReceiveScheduleList)
 	net.Receive("SendEventMessageToClients", ClientReceiveEventMessage)
 
@@ -60,10 +56,6 @@ function GM:Initialize()
 end
 
 function GM:InitPostEntity()
-
-	local WorldEntity = game.GetWorld()
-
-	WorldEntity:SetNWVarProxy("ScheduleList", OnRep_CycleScheduleList)
 
 	render.RedownloadAllLightmaps()
 

@@ -2,29 +2,22 @@
 
 local OfficerVoterAndVotedList = {}
 
-local OfficerPunishmentTimeLeft = 0
-
-function GetOfficerPunishmentTimeLeft()
-
-	return OfficerPunishmentTimeLeft
-end
-
 function SetOfficerPunishmentTimeLeft(InValue)
 
-	OfficerPunishmentTimeLeft = InValue
+	SetGlobalInt("OfficerPunishmentTimeLeft", InValue)
 end
 
 function HandleOfficerOnIntercycleStart()
 
 	if UtilIsOfficerPunished() then
 
-		OfficerPunishmentTimeLeft = math.Clamp(OfficerPunishmentTimeLeft, 0, UtilGetCycleDurationMinutes(true) * 30)
+		SetGlobalInt("OfficerPunishmentTimeLeft", math.Clamp(GetGlobalInt("OfficerPunishmentTimeLeft"), 0, UtilGetCycleDurationMinutes(true) * 20))
 	end
 end
 
 function DecreaseOfficerPunishmentTimeLeft()
 
-	OfficerPunishmentTimeLeft = OfficerPunishmentTimeLeft - 1
+	SetGlobalInt("OfficerPunishmentTimeLeft", GetGlobalInt("OfficerPunishmentTimeLeft") - 1)
 end
 
 function GetOfficerPunishMinDurationSeconds()
@@ -49,9 +42,7 @@ function PunishOfficerPlayer(InSeconds)
 
 		OfficerPlayer:SetPos(TeleportTarget:GetPos())
 
-		SetGlobalBool("bOfficerPunished", true)
-
-		OfficerPunishmentTimeLeft = InSeconds
+		SetGlobalInt("OfficerPunishmentTimeLeft", InSeconds)
 	end
 end
 
@@ -67,9 +58,7 @@ function ReleaseOfficerPlayer()
 
 		OfficerPlayer:SetPos(TeleportTarget:GetPos())
 
-		SetGlobalBool("bOfficerPunished", false)
-
-		OfficerPunishmentTimeLeft = 0
+		SetGlobalInt("OfficerPunishmentTimeLeft", 0)
 	end
 end
 
