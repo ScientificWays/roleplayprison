@@ -34,20 +34,13 @@ function TryGiveWeaponItem(InPlayer, InItemNameStr)
 	return false
 end
 
-function TryGiveStackableItem(InPlayer, InItemNameStr, InItemNumStr)
+function TryGiveStackableItem(InPlayer, InItemNameStr, InItemNum)
 
-	local ItemNum = util.StringToType(InItemNumStr, "int")
-
-	if ItemNum == nil then
-
-		return false
-	end
+	MsgN(Format("TryGiveStackableItem() %s", InItemNum))
 
 	local ItemName = string.lower(InItemNameStr)
 
 	local VariableName = ""
-
-	MsgN(ItemNum)
 
 	if ItemName == "wood" then
 
@@ -64,7 +57,7 @@ function TryGiveStackableItem(InPlayer, InItemNameStr, InItemNumStr)
 
 	if VariableName ~= "" then
 
-		local FinalItemNum = InPlayer:GetNWInt(VariableName) + ItemNum
+		local FinalItemNum = InPlayer:GetNWInt(VariableName) + InItemNum
 
 		InPlayer:SetNWInt(VariableName, math.Clamp(FinalItemNum, 0, 99))
 

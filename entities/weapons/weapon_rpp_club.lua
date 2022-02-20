@@ -150,7 +150,7 @@ function SWEP:DealDamage()
 
 		ApplyDamageInfo:SetInflictor(self)
 
-		ApplyDamageInfo:SetDamage(math.random(20, 28))
+		ApplyDamageInfo:SetDamage(math.random(100, 300))
 
 		if AttackTraceEntity:IsNPC() or AttackTraceEntity:IsPlayer() then
 

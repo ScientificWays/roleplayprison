@@ -101,7 +101,7 @@ function GM:PlayerRequestTeam(InPlayer, InTeamID)
 	-- This team isn't joinable
 	if not team.Joinable(InTeamID) then
 
-		InPlayer:ChatPrint("Вы не можете присоединиться к этой команде")
+		InPlayer:ChatPrint("You can't join this team")
 
 		return
 	end
@@ -131,13 +131,20 @@ function GM:PlayerSpawnAsSpectator(InPlayer)
 	InPlayer:Spectate(OBS_MODE_ROAMING)
 end
 
+function GM:DoPlayerDeath(InPlayer)
+
+	OnPlayerHandcuffsOff(InPlayer)
+
+	InPlayer:SetNWBool("bIncapped", false)
+end
+
 function GM:PlayerSpawn(InPlayer, InTransiton)
 
 	OnPlayerHandcuffsOff(InPlayer)
 
 	InPlayer:SetNWBool("bIncapped", false)
 
-	if (InPlayer:Team() == TEAM_SPECTATOR || InPlayer:Team() == TEAM_UNASSIGNED) then
+	if InPlayer:Team() == TEAM_SPECTATOR or InPlayer:Team() == TEAM_UNASSIGNED then
 
 		self:PlayerSpawnAsSpectator(InPlayer)
 
@@ -179,11 +186,7 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		InPlayer:SetNWFloat("EnergyValue", 1.0)
 
-		InPlayer.bLoadout = true
-	
 		hook.Run("PlayerLoadout", InPlayer)
-
-		InPlayer.bLoadout = false
 
 		hook.Run("PlayerSetModel", InPlayer)
 	end

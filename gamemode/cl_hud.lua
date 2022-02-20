@@ -762,11 +762,16 @@ function GM:HUDPaint()
 
 	local Client = LocalPlayer()
 
+	if Client:Team() == TEAM_UNASSIGNED or not Client:Alive() then
+
+		return
+	end
+
 	local bInteractInterfaceOpen = IsScheduleOpen() or IsWorkbenchOpen() or IsStashOpen()
 
 	bHideHUD = not Client:KeyDown(IN_WALK) and not bInteractInterfaceOpen
 
-	if not Client:Alive() or Client:Team() == TEAM_SPECTATOR or Client:Team() == TEAM_UNASSIGNED then
+	if Client:Team() == TEAM_SPECTATOR then
 
 		--SpecHUDPaint(Client)
 

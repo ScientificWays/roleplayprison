@@ -40,6 +40,10 @@ function PunishOfficerPlayer(InSeconds)
 
 	OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
 
+	OfficerPlayer:SetRenderFX(kRenderFxDistort)
+
+	OfficerPlayer:SetRenderMode(RENDERMODE_TRANSCOLOR)
+
 	if IsValid(TeleportTarget) then
 
 		timer.Simple(2.0, function()
@@ -47,6 +51,10 @@ function PunishOfficerPlayer(InSeconds)
 			OfficerPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
 
 			OfficerPlayer:SetPos(TeleportTarget:GetPos())
+
+			OfficerPlayer:SetRenderMode(RENDERMODE_NORMAL)
+
+			OfficerPlayer:SetRenderFX(kRenderFxNone)
 		end)
 
 		SetGlobalInt("OfficerPunishmentTimeLeft", InSeconds)

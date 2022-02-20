@@ -167,7 +167,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 
 			if not TryGiveWeaponItem(GivePlayer, SeparatedStrings[3]) then
 
-				TryGiveStackableItem(GivePlayer, SeparatedStrings[3], SeparatedStrings[4] or "1")
+				TryGiveStackableItem(GivePlayer, SeparatedStrings[3], tonumber(SeparatedStrings[4]) or 1)
 			end
 		end
 
