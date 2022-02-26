@@ -45,12 +45,12 @@ function OfficerMonitorDraw()
 	--MsgN("OfficerMonitorDraw()")
 
 	draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()),
-		"MonitorText", MonitorFrameWidth / 2, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		"MonitorText", MonitorFrameWidth * 0.5, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	if UtilIsInterCycle() then
 
 		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
-			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
 		surface.SetFont("MonitorText")
@@ -60,7 +60,7 @@ function OfficerMonitorDraw()
 		if table.IsEmpty(ScheduleList) then
 
 			draw.SimpleText(UtilLocalizable("RPP_UI.MonitorNoSchedule"), "MonitorTextSmall",
-				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
 			local ActiveElementIndex, ActiveElementTimeLeft = UtilGetActiveScheduleElementIndexAndTimeLeft(ScheduleList)
 
@@ -101,12 +101,12 @@ end
 function ControlMonitorDraw()
 
 	draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText",
-		MonitorFrameWidth / 2, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		MonitorFrameWidth * 0.5, 10, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	if UtilIsInterCycle() then
 
 		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
-			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	else
 		surface.SetFont("MonitorText")
@@ -116,16 +116,16 @@ function ControlMonitorDraw()
 		if table.IsEmpty(ScheduleList) then
 
 			draw.SimpleText(UtilLocalizable("RPP_UI.MonitorNoSchedule"), "MonitorTextSmall",
-				MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_RED, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		else
 
 			local ActiveElementIndex, ActiveElementTimeLeft = UtilGetActiveScheduleElementIndexAndTimeLeft(ScheduleList)
 
 			draw.SimpleText(ScheduleList[ActiveElementIndex].Name, "MonitorText",
-				MonitorFrameWidth / 2, MonitorFrameHeight / 2 - 10, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5 - 10, COLOR_BLUE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 			draw.SimpleText(Format("[%s]", string.ToMinutesSeconds(ActiveElementTimeLeft)), "MonitorTextSmall",
-				MonitorFrameWidth / 2, MonitorFrameHeight / 2 + 20, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5 + 20, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		end
 	end
 end
@@ -135,11 +135,11 @@ function LibraryMonitorDraw()
 	if UtilIsInterCycle() then
 
 		draw.SimpleText(UtilLocalizable("RPP_UI.MonitorBreak"), "MonitorText",
-			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	else
 
 		draw.SimpleText(string.ToMinutesSeconds(UtilGetLeftCycleTimeSeconds()), "MonitorText",
-			MonitorFrameWidth / 2, MonitorFrameHeight / 2, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			MonitorFrameWidth * 0.5, MonitorFrameHeight * 0.5, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 end
 

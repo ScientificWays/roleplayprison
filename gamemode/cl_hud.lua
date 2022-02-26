@@ -435,7 +435,7 @@ local function TryDrawHandcuffed(InClient)
 
 	surface.SetMaterial(IconHandcuffs)
 
-	surface.DrawTexturedRect(100, ScrH() / 2, 64, 64)
+	surface.DrawTexturedRect(100, ScrH() * 0.5, 64, 64)
 end
 
 local function DrawHUDHintElement(InX, InIcon, InIconColor, InIconSize, InText)
@@ -448,8 +448,8 @@ local function DrawHUDHintElement(InX, InIcon, InIconColor, InIconSize, InText)
 
 		surface.SetDrawColor(InIconColor)
 
-		surface.DrawTexturedRect(InX - InIconSize.x / 2,
-			ScrH() / 2 - InIconSize.y / 2,
+		surface.DrawTexturedRect(InX - InIconSize.x * 0.5,
+			ScrH() * 0.5 - InIconSize.y * 0.5,
 			InIconSize.x, InIconSize.y)
 
 		bSuccess = true
@@ -457,7 +457,7 @@ local function DrawHUDHintElement(InX, InIcon, InIconColor, InIconSize, InText)
 
 	if InText then
 
-		draw.DrawText(InText, "HUDTextSmall", InX, ScrH() / 2 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+		draw.DrawText(InText, "HUDTextSmall", InX, ScrH() * 0.5 + 16, COLOR_YELLOW, TEXT_ALIGN_CENTER)
 
 		bSuccess = true
 	end
@@ -469,7 +469,7 @@ local function TryDrawHUDHintData(InClient)
 
 	local TextBiasY = 0
 
-	local DrawX = ScrW() / 2 - ((HUDHintData.TotalNum or 0) - 1) * 24
+	local DrawX = ScrW() * 0.5 - ((HUDHintData.TotalNum or 0) - 1) * 24
 
 	if DrawHUDHintElement(DrawX, HUDHintData.Icon2, HUDHintData.IconColor2, HUDHintData.IconSize2, HUDHintData.Text2) then
 
@@ -496,7 +496,7 @@ local function TryDrawTaskTime(InClient)
 		local TextColor = ColorAlpha(COLOR_YELLOW, 255 * (1.0 - InClient:GetNWFloat("TaskCancelExtent")))
 
 		draw.SimpleText(Format("%.1f", TaskTimeLeft),
-			"HUDTextSmall", ScrW() / 2, ScrH() / 2 + 64, TextColor, TEXT_ALIGN_CENTER)
+			"HUDTextSmall", ScrW() * 0.5, ScrH() * 0.5 + 64, TextColor, TEXT_ALIGN_CENTER)
 
 		return true
 	end
@@ -511,7 +511,7 @@ local function TryDrawOfficerPunishmentTimeLeft(InClient)
 	if PunishmentTimeLeft > 0 then
 
 		draw.SimpleText(Format(UtilLocalizable("RPP_HUD.PunishmentTimeLeft"), PunishmentTimeLeft),
-			"HUDText", ScrW() / 2, ScrH() / 2 + 150, COLOR_YELLOW, TEXT_ALIGN_CENTER)
+			"HUDText", ScrW() * 0.5, ScrH() * 0.5 + 150, COLOR_YELLOW, TEXT_ALIGN_CENTER)
 
 		return true
 	end
@@ -754,7 +754,7 @@ function GM:HUDDrawTargetID()
 		local RPName, RPSurname = UtilGetRPNameSurname(EyeTrace.Entity)
 
 		draw.SimpleText(Format("%s %s", UtilLocalizable(RPName), UtilLocalizable(RPSurname)),
-			"HUDText", ScrW() / 2, ScrH() / 2 + 50, self:GetTeamColor(EyeTrace.Entity), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			"HUDText", ScrW() * 0.5, ScrH() * 0.5 + 50, self:GetTeamColor(EyeTrace.Entity), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 end
 

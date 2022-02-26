@@ -73,6 +73,13 @@ function ReleaseOfficerPlayer()
 
 		MsgN("ReleaseOfficerPlayer() success")
 
+		local WeaponUnarmed = OfficerPlayer:GetWeapon("weapon_rpp_unarmed")
+
+		if IsValid(WeaponUnarmed) then
+
+			OfficerPlayer:SetActiveWeapon(WeaponUnarmed)
+		end
+
 		OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
 
 		timer.Simple(2.0, function()

@@ -1,7 +1,5 @@
 ---- Roleplay: Prison
 
-local OldInjuryValue = 0.0
-
 local MaxBrignessValue = -0.3
 
 local MaxColorValue = 0.0

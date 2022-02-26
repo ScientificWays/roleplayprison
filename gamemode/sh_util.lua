@@ -109,7 +109,10 @@ end
 
 function UtilPlayerCanInteract(InPlayer)
 
-	return not InPlayer:GetNWBool("bHandcuffed") and not InPlayer:GetNWBool("bIncapped") and InPlayer:GetNWFloat("TaskTimeLeft") <= 0.0
+	return not InPlayer:GetNWBool("bHandcuffed")
+	and not InPlayer:GetNWBool("bIncapped")
+	and InPlayer:GetNWFloat("TaskTimeLeft") <= 0.0
+	and not (InPlayer:GetNWBool("bOfficer") and UtilIsOfficerPunished())
 end
 
 function GM:CreateTeams()

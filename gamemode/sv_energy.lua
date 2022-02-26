@@ -44,7 +44,7 @@ timer.Create("EnergyTick", 1.0, 0, function()
 
 			if OldEnergy ~= Player.Energy then
 
-				MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
+				--MsgN(Format("%s energy changed from %s to %s (before clamp)", Player:Nick(), OldEnergy, Player.Energy))
 
 				if Player.Energy < UtilGetSprintDuration() * 0.25 then
 
@@ -101,11 +101,9 @@ hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData
 	end
 end)
 
-local LastJumpEnergyDrain = 0.0
-
 hook.Add("KeyPress", "EnergyJump", function(InPlayer, InKey)
 
-	if InKey == IN_JUMP and CurTime() - LastJumpEnergyDrain > 1.5 then
+	if InKey == IN_JUMP and (InPlayer.LastJumpEnergyDrain or 0) + 1.5 < CurTime() then
 
 		InPlayer.Food = InPlayer.Food - 0.2
 
@@ -117,6 +115,6 @@ hook.Add("KeyPress", "EnergyJump", function(InPlayer, InKey)
 
 		UpdatePlayerEnergyValue(InPlayer)
 
-		LastJumpEnergyDrain = CurTime()
+		InPlayer.LastJumpEnergyDrain = CurTime()
 	end
 end)

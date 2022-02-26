@@ -63,6 +63,12 @@ function GM:PlayerInitialSpawn(InPlayer, bTransition)
 	InPlayer.MonitorTimeLeft = 0
 
 	InPlayer:SetNWBool("bMale", true)
+	
+	net.Start("SendScheduleListToClients")
+
+	net.WriteTable(GetServerScheduleList())
+
+	net.Send(InPlayer)
 end
 
 function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
@@ -138,7 +144,7 @@ function GM:DoPlayerDeath(InPlayer)
 	InPlayer:SetNWBool("bIncapped", false)
 end
 
-function GM:PlayerSpawn(InPlayer, InTransiton)
+function GM:PlayerSpawn(InPlayer, bTransiton)
 
 	OnPlayerHandcuffsOff(InPlayer)
 
@@ -156,7 +162,7 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 
 		InPlayer:SetupHands()
 
-		player_manager.OnPlayerSpawn(InPlayer, InTransiton)
+		player_manager.OnPlayerSpawn(InPlayer, bTransiton)
 
 		player_manager.RunClass(InPlayer, "Spawn")
 
@@ -189,13 +195,14 @@ function GM:PlayerSpawn(InPlayer, InTransiton)
 		hook.Run("PlayerLoadout", InPlayer)
 
 		hook.Run("PlayerSetModel", InPlayer)
+
+		local WeaponUnarmed = self.Player:GetWeapon("weapon_rpp_unarmed")
+
+		if IsValid(WeaponUnarmed) then
+
+			self.Player:SetActiveWeapon(WeaponUnarmed)
+		end
 	end
-	
-	net.Start("SendScheduleListToClients")
-
-	net.WriteTable(GetServerScheduleList())
-
-	net.Send(InPlayer)
 end
 
 function GM:PlayerDisconnected(InPlayer)
@@ -206,6 +213,16 @@ end
 function GM:PlayerSelectTeamSpawn(TeamID, InPlayer)
 
 	MsgN("PlayerSelectTeamSpawn")
+
+	if InPlayer:GetNWBool("bOfficer") and UtilIsOfficerPunished() then
+
+		local TeleportTarget = table.Random(ents.FindByName("OfficerPunishment_Teleport"))
+
+		if IsValid(TeleportTarget) then
+
+			return TeleportTarget
+		end
+	end
 
 	local SpawnPointList = team.GetSpawnPoints(TeamID) or {}
 
@@ -359,3 +376,8 @@ hook.Add("SetupMove", "DamageMove", function(InPlayer, InMoveData, InCommandData
 end)
 
 timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayersHealthValue)
+
+function GM:PlayerNoClip(InPlayer, bDesiredNoClipState)
+	
+	return InPlayer:Alive()
+end

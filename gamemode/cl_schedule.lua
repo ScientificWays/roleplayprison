@@ -2,13 +2,16 @@
 
 local ScheduleFrame = {}
 
-local RecommendedScheduleElements = {["RPP_ScheduleElement1"--[["Осмотр камер"--]]] = 4,
-									["RPP_ScheduleElement2"--[["Перекличка"--]]] = 5,
-									["RPP_ScheduleElement3"--[["Столовая"--]]] = 6,
-									["RPP_ScheduleElement4"--[["Отдых"--]]] = 5,
-									["RPP_ScheduleElement5"--[["Работа"--]]] = 10,
-									["RPP_ScheduleElement6"--[["Душ"--]]] = 6,
-									["RPP_ScheduleElement7"--[["Мини-игры"--]]] = 15}
+local RecommendedScheduleElements = {
+	["RPP_ScheduleElement1"--[["Осмотр камер"--]]] = 4,
+	["RPP_ScheduleElement2"--[["Перекличка"--]]] = 5,
+	["RPP_ScheduleElement3"--[["Столовая"--]]] = 6,
+	["RPP_ScheduleElement4"--[["Отдых"--]]] = 5,
+	["RPP_ScheduleElement5"--[["Работа"--]]] = 10,
+	["RPP_ScheduleElement6"--[["Душ"--]]] = 6,
+	["RPP_ScheduleElement7"--[["Мини-игры"--]]] = 15,
+	["RPP_ScheduleElement8"--[["Медосмотр"--]]] = 8
+}
 
 local PanelScheduleElementList = {}
 

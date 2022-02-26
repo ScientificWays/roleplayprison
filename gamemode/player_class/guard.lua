@@ -32,6 +32,11 @@ function PLAYER:Init()
 
 end
 
+function PLAYER:Spawn()
+
+
+end
+
 function PLAYER:SetModel()
 
 	SetupRPModel(self.Player)

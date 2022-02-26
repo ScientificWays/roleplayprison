@@ -3,7 +3,8 @@
 local VoiceNotifyPanel = {}
 local PlayerVoicePanels = {}
 
-local TalkieIcon = Material("vgui/rpp/icon_talkie")
+local IconTalkie			= Material("vgui/rpp/icon_talkie")
+local IconGlobalSpeaker		= Material("icon16/sound.png")
 
 function VoiceNotifyPanel:Init()
 
@@ -47,15 +48,39 @@ function VoiceNotifyPanel:Paint(w, h)
 
 	if IsValid(self.Player) then
 
-		draw.RoundedBox(4, 0, 0, w, h, Color(0, self.Player:VoiceVolume() * 255, 0, 240))
+		local bShowPanel = false
 
-		if UtilCanHearByTalkie(LocalPlayer(), self.Player) then
+		local PlayerIcon = nil
 
-			surface.SetDrawColor(COLOR_WHITE)
+		if UtilIsGlobalSpeakerEnabled() and self.Player:GetNWBool("bGlobalSpeaker") then
 
-			surface.SetMaterial(TalkieIcon)
+			bShowPanel = true
 
-			surface.DrawTexturedRect(4, 4, 32, 32)
+			PlayerIcon = IconGlobalSpeaker
+
+		elseif UtilCanHearByTalkie(LocalPlayer(), self.Player) then
+
+			bShowPanel = true
+
+			PlayerIcon = IconTalkie
+
+		elseif Client:EntIndex() == InPlayer:EntIndex() then
+
+			bShowPanel = true
+		end
+
+		if bShowPanel then
+
+			draw.RoundedBox(4, 0, 0, w, h, Color(0, self.Player:VoiceVolume() * 255, 0, 240))
+
+			if IsValid(PlayerIcon) then
+
+				surface.SetDrawColor(COLOR_WHITE)
+
+				surface.SetMaterial(IconTalkie)
+
+				surface.DrawTexturedRect(4, 4, 32, 32)
+			end
 		end
 	end
 end
@@ -97,14 +122,14 @@ derma.DefineControl("VoiceNotify", "", VoiceNotifyPanel, "DPanel")
 
 function GM:PlayerStartVoice(InPlayer)
 
-	MsgN(Format("PlayerStartVoice() %s", InPlayer))
+	--MsgN(Format("PlayerStartVoice() %s", InPlayer))
 
-	local Client = LocalPlayer()
+	--local Client = LocalPlayer()
 
-	if UtilCanHearByTalkie(Client, InPlayer) or Client:EntIndex() == InPlayer:EntIndex() then
+	--if UtilCanHearByTalkie(Client, InPlayer) or Client:EntIndex() == InPlayer:EntIndex() then
 
-		self.BaseClass:PlayerStartVoice(InPlayer)
-	end
+	self.BaseClass:PlayerStartVoice(InPlayer)
+	--end
 end
 
 --[[function GM:PlayerEndVoice(InPlayer)
