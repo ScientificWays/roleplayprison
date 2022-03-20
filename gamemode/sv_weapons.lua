@@ -13,6 +13,18 @@ hook.Add("PlayerButtonDown", "DropWeaponBind", function(InPlayer, InButton)
 	end
 end)
 
+function ResetArmory()
+
+	local ResetEntity = ents.FindByName("Armory_Reset")[1]
+
+	if IsValid(ResetEntity) then
+
+		ResetEntity:Fire("Trigger")
+
+		MsgN("ResetArmory")
+	end
+end
+
 function GM:PlayerCanPickupWeapon(InPlayer, InWeapon)
 
 	MsgN("PlayerCanPickupWeapon()")
@@ -35,4 +47,22 @@ end
 function GM:PlayerCanPickupItem(InPlayer, InEntity)
 
 	return UtilPlayerCanInteract(InPlayer) and InPlayer:KeyPressed(IN_USE)
+end
+
+function GM:PlayerAmmoChanged(InPlayer, InAmmoID, InOldCount, InNewCount)
+
+	local DefaultAmmoClipSize = 9999
+
+	-- 357
+	if InAmmoID == 5 then
+
+		DefaultAmmoClipSize = 6
+	end
+
+	local MaxReserveAmmo = UtilGetMaxReserveClips() * DefaultAmmoClipSize
+
+	if InNewCount > MaxReserveAmmo then
+
+		InPlayer:SetAmmo(MaxReserveAmmo, InAmmoID)
+	end
 end

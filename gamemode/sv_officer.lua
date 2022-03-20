@@ -38,26 +38,22 @@ function PunishOfficerPlayer(InSeconds)
 
 	local TeleportTarget = table.Random(ents.FindByName("OfficerPunishment_Teleport"))
 
-	OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
-
-	OfficerPlayer:SetRenderFX(kRenderFxDistort)
-
-	OfficerPlayer:SetRenderMode(RENDERMODE_TRANSCOLOR)
-
 	if IsValid(TeleportTarget) then
+
+		MakePlayerDistort(OfficerPlayer, 2.0)
+
+		OfficerPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
 
 		timer.Simple(2.0, function()
 		
 			OfficerPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
 
 			OfficerPlayer:SetPos(TeleportTarget:GetPos())
-
-			OfficerPlayer:SetRenderMode(RENDERMODE_NORMAL)
-
-			OfficerPlayer:SetRenderFX(kRenderFxNone)
 		end)
 
 		SetGlobalInt("OfficerPunishmentTimeLeft", InSeconds)
+	else
+		MsgN("Failed to punish an officer! (Invalid TeleportTarget)")
 	end
 end
 

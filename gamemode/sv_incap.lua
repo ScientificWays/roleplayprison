@@ -29,16 +29,6 @@ timer.Create("IncappedBleed", 2.5, 0, function()
 	end
 end)
 
-hook.Add("SetupMove", "IncappedMove", function(InPlayer, InMoveData, InCommandData)
-
-	if InPlayer:GetNWBool("bIncapped") then
-
-		local MaxSpeed = 50.0
-
-		InMoveData:SetMaxClientSpeed(math.min(InMoveData:GetMaxClientSpeed() * 0.25, MaxSpeed))
-	end
-end)
-
 function GM:EntityTakeDamage(InEntity, InDamageInfo)
 
 	--MsgN("EntityTakeDamage()")

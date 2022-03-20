@@ -1,13 +1,5 @@
 ---- Roleplay: Prison
 
-hook.Add("SetupMove", "StunMove", function(InPlayer, InMoveData, InCommandData)
-
-	if InPlayer.StunNum ~= nil and InPlayer.StunNum > 0 then
-
-		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
-	end
-end)
-
 function UpdatePlayerMonitorType(InPlayer)
 
 	if UtilCheckPlayerInArea(InPlayer, OfficerMonitorArea) then
@@ -196,11 +188,11 @@ function GM:PlayerSpawn(InPlayer, bTransiton)
 
 		hook.Run("PlayerSetModel", InPlayer)
 
-		local WeaponUnarmed = self.Player:GetWeapon("weapon_rpp_unarmed")
+		local WeaponUnarmed = InPlayer:GetWeapon("weapon_rpp_unarmed")
 
 		if IsValid(WeaponUnarmed) then
 
-			self.Player:SetActiveWeapon(WeaponUnarmed)
+			InPlayer:SetActiveWeapon(WeaponUnarmed)
 		end
 	end
 end
@@ -367,17 +359,9 @@ timer.Create("DamageSlowUpdate", 0.5, 0, function()
 	end
 end)
 
-hook.Add("SetupMove", "DamageMove", function(InPlayer, InMoveData, InCommandData)
-
-	if InPlayer:GetNWFloat("DamageSlowTime") > 0.0 then
-
-		InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.2)
-	end
-end)
-
 timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayersHealthValue)
 
 function GM:PlayerNoClip(InPlayer, bDesiredNoClipState)
 	
-	return InPlayer:Alive()
+	return (UtilGetAllowNoclip() and InPlayer:Alive()) or bDesiredNoClipState == false
 end

@@ -3,6 +3,7 @@
 include("sh_util.lua")
 include("sh_craft.lua")
 include("sh_stash.lua")
+include("sh_movement.lua")
 
 include("cl_util.lua")
 

@@ -119,6 +119,16 @@ function UtilGetReviveDuration()
 	return GetConVar("sk_revive_duration"):GetFloat()
 end
 
+function UtilGetMaxReserveClips()
+
+	return GetConVar("sk_max_reserve_clip"):GetFloat()
+end
+
+function UtilGetAllowNoclip()
+
+	return GetConVar("sk_allow_noclip"):GetBool()
+end
+
 function UtilCheckPlayerInArea(InPlayer, InArea)
 
 	if IsValid(InArea) then

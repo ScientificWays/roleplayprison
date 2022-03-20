@@ -202,6 +202,8 @@ function StartNewCycle()
 		UpdateMapLockablesState()
 
 		TrySetMapNightState(0.0)
+
+		ResetArmory()
 	end
 end
 

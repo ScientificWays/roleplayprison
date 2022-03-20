@@ -3,6 +3,7 @@
 AddCSLuaFile("sh_util.lua")
 AddCSLuaFile("sh_craft.lua")
 AddCSLuaFile("sh_stash.lua")
+AddCSLuaFile("sh_movement.lua")
 
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("cl_util.lua")
@@ -22,6 +23,7 @@ AddCSLuaFile("cl_postprocess.lua")
 include("sh_util.lua")
 include("sh_craft.lua")
 include("sh_stash.lua")
+include("sh_movement.lua")
 
 include("sv_util.lua")
 
@@ -139,15 +141,15 @@ end
 
 end]]
 
---Переделать замедление от урона
+--Разблокировка двери с помощью выстрела по замку
+--Переделать систему камер под SetViewEntity
+--Арсенал копов
 --Интерфейс наблюдателя
 --Интерфейс расписания
 
 --Half-Life 2: Melee Pack
---Задания по поддержке состояния тюрьмы
+--Роли медика, инженера, грузчика и уборщика появляются на один цикл по выбору офицера
 --Книги и прокачка знаний
 --Спортзал и прокачка физической силы
 --Сковородка
---Арсенал копов
 --Система тревоги с освещением
---Переделать систему камер под SetViewEntity

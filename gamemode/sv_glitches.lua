@@ -25,3 +25,17 @@ timer.Create("GlitchesTimer", 48.0, 0, function()
 		end
 	end
 end)
+
+function MakePlayerDistort(InPlayer, InSeconds)
+
+	InPlayer:SetRenderFX(kRenderFxDistort)
+
+	InPlayer:SetRenderMode(RENDERMODE_TRANSCOLOR)
+
+	timer.Simple(InSeconds, function()
+	
+		InPlayer:SetRenderMode(RENDERMODE_NORMAL)
+
+		InPlayer:SetRenderFX(kRenderFxNone)
+	end)
+end

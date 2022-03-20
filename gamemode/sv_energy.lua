@@ -91,16 +91,6 @@ function UpdatePlayerEnergyValue(InPlayer)
 	InPlayer:SetJumpPower(200.0 * math.Clamp(FinalEnergyValue + 0.5, 0.0, 1.0))
 end
 
-hook.Add("SetupMove", "EnergyMove", function(InPlayer, InMoveData, InCommandData)
-
-	if not InPlayer:GetNWBool("bIncapped") then
-
-		local FinalMaxSpeed = Lerp(InPlayer:GetNWFloat("EnergyValue"), 100, InMoveData:GetMaxClientSpeed())
-
-		InMoveData:SetMaxClientSpeed(FinalMaxSpeed)
-	end
-end)
-
 hook.Add("KeyPress", "EnergyJump", function(InPlayer, InKey)
 
 	if InKey == IN_JUMP and (InPlayer.LastJumpEnergyDrain or 0) + 1.5 < CurTime() then

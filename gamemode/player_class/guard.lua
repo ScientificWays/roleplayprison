@@ -51,10 +51,10 @@ function PLAYER:Loadout()
 	self.Player:Give("weapon_stunstick")
 	self.Player:Give("weapon_rpp_talkie")
 
-	self.Player:GiveAmmo(60, "357", true)
-	self.Player:Give("weapon_357")
+	--self.Player:GiveAmmo(60, "357", true)
+	--self.Player:Give("weapon_357")
 	
-	self.Player:Give("weapon_rpp_broom")
+	--self.Player:Give("weapon_rpp_broom")
 end
 
 player_manager.RegisterClass("player_guard", PLAYER, "player_default")

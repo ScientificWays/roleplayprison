@@ -30,20 +30,13 @@ function OnPlayerHandcuffsOff(InPlayer)
 	end
 end
 
-hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandData)
-
-	if not InPlayer:GetNWBool("bHandcuffed") then
-
-		return
-	end
-	
-	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.6)
+function GetHandcuffKidnappedVelocity(InPlayer)
 
 	local Kidnapper = Entity(InPlayer:GetNWInt("KidnapperIndex"))
 
-	if not IsValid(Kidnapper) or Kidnapper == InPlayer then
+	if not IsValid(Kidnapper) or Kidnapper:EntIndex() == InPlayer:EntIndex() then
 
-		return
+		return nil
 	end
 	
 	local MoveToPos = Kidnapper:GetPos()
@@ -56,7 +49,7 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 
 	if MoveToPos:DistToSqr(MoveFromPos) <= 2304.0 then
 
-		return
+		return nil
 	end
 
 	local FinalMoveToPos = MoveToPos - (MoveDirection * Distance)
@@ -106,5 +99,5 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 
 	--MsgN(MoveVelocity)
 	
-	InMoveData:SetVelocity(MoveVelocity)
-end)
+	return MoveVelocity
+end

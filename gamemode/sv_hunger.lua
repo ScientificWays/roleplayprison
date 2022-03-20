@@ -59,13 +59,6 @@ timer.Create("HungerTick", 24.0, 0, function()
 	end
 end)
 
-hook.Add("SetupMove", "HungerMove", function(InPlayer, InMoveData, InCommandData)
-
-	local VelocityMul = Lerp(InPlayer:GetNWFloat("HungerValue"), 1.0, 0.5)
-
-	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * VelocityMul)
-end)
-
 hook.Add("OnEntityCreated", "NutritionSpawn", function(InEntity)
 
 	timer.Simple(0.1, function()

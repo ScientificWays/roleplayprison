@@ -217,5 +217,21 @@
 			"type"		"Numeric"
 			"default"	"20.0"
 		}
+		27
+		{
+			"name"		"sk_max_reserve_clip"
+			"text"		"Max reserve clips"
+			"help"		"Max reserve ammo clips"
+			"type"		"Numeric"
+			"default"	"2"
+		}
+		28
+		{
+			"name"		"sk_allow_noclip"
+			"text"		"Noclip enabled"
+			"help"		"If enabled, players will be able to use noclip"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
 	}
 }
