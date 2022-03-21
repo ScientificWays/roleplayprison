@@ -28,6 +28,7 @@ local IconFoodSpawn				= Material("icon16/basket_add.png")
 local IconWater					= Material("icon16/cup.png")
 local IconWaterSpawn			= Material("icon16/cup_add.png")
 local IconCraft					= Material("icon16/plugin.png")
+local IconCamera				= Material("icon16/camera.png")
 
 local BlurMaterial = Material("pp/blurscreen")
 
@@ -367,6 +368,17 @@ local function SetHUDHintDataStash()
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
+local function SetHUDHintDataCameraControl()
+
+	--MsgN("SetHUDHintDataCameraControl()")
+
+	HUDHintData.Icon = IconCamera
+
+	HUDHintData.Text = UtilLocalizable("RPP_HUD.CameraControl")
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
 local function SetHUDHintDataRevive()
 
 	--MsgN("SetHUDHintDataRevive()")
@@ -633,6 +645,12 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 	elseif InTargetEntity:GetNWBool("bStash") then
 
 		SetHUDHintDataStash()
+
+		return
+		
+	elseif InTargetEntity:GetNWBool("bCameraControl") then
+
+		SetHUDHintDataCameraControl()
 
 		return
 	end

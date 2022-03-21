@@ -41,6 +41,7 @@ include("sv_energy.lua")
 include("sv_escape.lua")
 include("sv_officer.lua")
 include("sv_weapons.lua")
+include("sv_cameras.lua")
 include("sv_interact.lua")
 include("sv_commands.lua")
 include("sv_identity.lua")
@@ -128,6 +129,8 @@ function GM:InitPostEntity()
 	SetupMapAreas()
 
 	SetupSkyPaint()
+
+	SetupCameras()
 
 	SetGlobalBool("bInterCycle", true)
 

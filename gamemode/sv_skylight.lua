@@ -128,7 +128,7 @@ function SetupSkyPaint()
 
 	if IsValid(SkyPaintEntity) then
 
-		MsgN("SkyPaintEntity registered!")
+		MsgN("SkyPaintEntity is registered!")
 	else
 
 		MsgN("Error! Can't find env_skypaint entity!")

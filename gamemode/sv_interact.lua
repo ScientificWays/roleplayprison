@@ -75,6 +75,13 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			return false
 		end
 
+		if InTargetEntity:GetNWBool("bCameraControl") then
+
+			StartCamerasModeForPlayer(InActivator)
+
+			return false
+		end
+
 		if InActivator:Team() == TEAM_GUARD then
 
 			if InTargetEntity:GetNWBool("bScheduleSetupEntity") then

@@ -129,7 +129,7 @@ function GM:PlayerSpawnAsSpectator(InPlayer)
 	InPlayer:Spectate(OBS_MODE_ROAMING)
 end
 
-function GM:DoPlayerDeath(InPlayer)
+function GM:PostPlayerDeath(InPlayer)
 
 	OnPlayerHandcuffsOff(InPlayer)
 
@@ -340,6 +340,11 @@ function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDa
 	if InAttackerEntity:IsPlayer() then
 
 		InVictimPlayer:SetNWFloat("DamageSlowTime", 2.0)
+	end
+	
+	if InVictimPlayer:GetNWBool("bUsingCameras") then
+
+		StopCamerasModeForPlayer(InVictimPlayer)
 	end
 end
 

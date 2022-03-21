@@ -65,7 +65,7 @@ end
 
 function SetupMapEntityFlags()
 
-	MsgN("Setup map lockables...")
+	MsgN("Setup map entity flags...")
 
 	local AllEntities = ents.GetAll()
 
@@ -218,6 +218,14 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bStash", true)
+
+			SampleEntity:SetNWBool("bShowHint", true)
+
+		elseif string.EndsWith(SampleEntityName, "_CameraControl") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bCameraControl", true)
 
 			SampleEntity:SetNWBool("bShowHint", true)
 		end

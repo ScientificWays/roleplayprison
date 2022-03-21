@@ -24,6 +24,13 @@ function UpdatePostProcessData(InPlayer)
 
 			TotalValue = math.Clamp(TotalValue + (1.0 - InPlayer:GetNWFloat("EnergyValue")) * 0.2, 0.0, 1.0)
 		end
+
+		if InPlayer:GetNWBool("bUsingCameras") then
+
+			InPlayer:ConCommand("pp_mat_overlay effects/tvscreen_noise002a")
+		else
+			InPlayer:ConCommand("pp_mat_overlay \"\"")
+		end
 	end
 
 	if TotalValue == OldTotalValue then
