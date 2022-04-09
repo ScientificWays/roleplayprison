@@ -46,39 +46,6 @@ local function CanTryInteract(InPlayer, InInteractEntity)
 	and InInteractEntity:GetNWString("NowImplemetingBy") == ""
 end
 
-local function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
-
-	local InputType = "Unlock"
-
-	if bNewLockState then
-
-		InputType = "Lock"
-	end
-
-	InLockableEntity:Fire(InputType, nil, 0, InPlayer, InLockableEntity)
-
-	InLockableEntity:SetNWBool("bWasLocked", bNewLockState)
-
-	InLockableEntity:EmitSound("Town.d1_town_02_default_locked",
-		60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
-
-	local SlaveDoorName = InLockableEntity:GetInternalVariable("slavename") or ""
-
-	if SlaveDoorName ~= "" then
-
-		local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
-
-		--MsgN(SlaveDoorEntity:GetName())
-
-		if IsValid(SlaveDoorEntity) then
-
-			SlaveDoorEntity:Fire(InputType)
-
-			SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
-		end
-	end
-end
-
 local function CanUsePicklock(InPlayer, InInteractEntity)
 
 	if InPlayer:GetNWInt("PicklockNum") > 0

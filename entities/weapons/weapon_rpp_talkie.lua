@@ -66,6 +66,13 @@ local function UpdatePlayerFrequency(InPlayer, bAdd)
 	InPlayer:EmitSound(table.Random(FrequencySwitchSoundList), 50)
 end
 
+function RandomizeTalkieFrequency(InPlayer)
+
+	local NewFrequencyIndex = math.random(15)
+
+	InPlayer:SetNWFloat("TalkieFrequency", 99.5 + NewFrequencyIndex * 0.5)
+end
+
 function SWEP:Initialize()
 
 	self:SetHoldType("slam")
@@ -80,7 +87,7 @@ function SWEP:Equip()
 
 	local PlayerOwner = self:GetOwner()
 
-	PlayerOwner:SetNWFloat("TalkieFrequency", 0.0)
+	RandomizeTalkieFrequency(PlayerOwner)
 
 	self.AllowDrop = PlayerOwner:Team() ~= TEAM_GUARD
 end

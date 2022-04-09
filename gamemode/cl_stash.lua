@@ -237,7 +237,7 @@ function ShowStash(InStashEntity)
 			draw.RoundedBoxEx(10, 0, 0, w, h, Color(220, 20, 60, self.lerp), true, true, true, true)
 		end
 
-		draw.SimpleText("Закрыть", "HUDTextSmall", 65, 10, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText(UtilLocalizable("RPP_HUD.Close"), "HUDTextSmall", 65, 10, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
 	CloseButton.DoClick = function()

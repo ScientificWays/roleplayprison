@@ -10,7 +10,7 @@ WorkWoodArea = {}
 WorkMetalArea = {}
 
 PunishmentArea = {}
-Outside1Area = {}
+--Outside1Area = {}
 GuardRestArea = {}
 
 local bDayMapState = nil
@@ -278,5 +278,46 @@ function SetupMapAreas()
 
 			GuardRestArea = SampleArea
 		end
+	end
+end
+
+function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
+
+	local InputType = "Unlock"
+
+	if bNewLockState then
+
+		InputType = "Lock"
+	end
+
+	InLockableEntity:Fire(InputType, nil, 0, InPlayer, InLockableEntity)
+
+	InLockableEntity:SetNWBool("bWasLocked", bNewLockState)
+
+	InLockableEntity:EmitSound("Town.d1_town_02_default_locked",
+		60, math.random(95, 105), math.random(0.95, 1.05), CHAN_AUTO, 0, 1)
+
+	local SlaveDoorName = InLockableEntity:GetInternalVariable("slavename") or ""
+
+	if SlaveDoorName ~= "" then
+
+		local SlaveDoorEntity = ents.FindByName(SlaveDoorName)[1]
+
+		--MsgN(SlaveDoorEntity:GetName())
+
+		if IsValid(SlaveDoorEntity) then
+
+			SlaveDoorEntity:Fire(InputType)
+
+			SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+		end
+	end
+end
+
+function GM:PostEntityTakeDamage(InEntity, InDamageInfo, bTookDamage)
+
+	if InEntity:GetNWBool("bWasLocked") and math.random() < 0.35 then
+
+		ChangeLockableState(InDamageInfo:GetAttacker(), InEntity, false)
 	end
 end

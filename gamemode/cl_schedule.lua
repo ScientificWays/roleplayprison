@@ -298,7 +298,7 @@ end
 
 function ToggleScheduleSetup()
 
-	if (IsValid(ScheduleFrame)) then
+	if IsValid(ScheduleFrame) then
 
 		HideScheduleSetup()
 	else

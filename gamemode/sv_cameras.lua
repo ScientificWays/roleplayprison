@@ -39,11 +39,11 @@ hook.Add("KeyPress", "CameraControls", function(InPlayer, InKey)
 			InPlayer:SetViewEntity(SampleCamera)
 
 			InPlayer.LastCameraToggle = CurTime()
+
+			InPlayer:ScreenFade(SCREENFADE.IN, COLOR_BLACK, 1.0, 2.5)
 		else
 			StopCamerasModeForPlayer(InPlayer)
 		end
-
-		InPlayer:ScreenFade(SCREENFADE.IN, COLOR_BLACK, 1.0, 2.5)
 	end
 end)
 

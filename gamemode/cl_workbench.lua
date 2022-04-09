@@ -60,7 +60,7 @@ function ShowWorkbenchFrame()
 
 			draw.RoundedBoxEx(10, 5, 5, 120, 120, Color(0, 0, 0, 200), true, true, true, true)
 
-			draw.SimpleText(ItemData.PrintName, "HUDTextSmall", 65, 110, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+			draw.SimpleText(UtilLocalizable(ItemData.PrintName), "HUDTextSmall", 65, 110, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 			surface.SetDrawColor(COLOR_WHITE)
 
@@ -158,7 +158,7 @@ function ShowWorkbenchFrame()
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(220, 20, 60), true, true, true, true)
 
-		draw.SimpleText("Закрыть", "HUDTextSmall", 65, 25, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		draw.SimpleText(UtilLocalizable("RPP_HUD.Close"), "HUDTextSmall", 65, 25, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
 	CloseButton.DoClick = function()

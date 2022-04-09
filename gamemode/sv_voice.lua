@@ -32,9 +32,9 @@ function UpdatePlayerVoiceArea(InPlayer)
 
 		InPlayer:SetNWString("VoiceLocalArea", "LocalPunishmentArea")
 
-	elseif UtilCheckPlayerInArea(InPlayer, Outside1Area) then
+	--[[elseif UtilCheckPlayerInArea(InPlayer, Outside1Area) then
 
-		InPlayer:SetNWString("VoiceLocalArea", "LocalOutside1Area")
+		InPlayer:SetNWString("VoiceLocalArea", "LocalOutside1Area")--]]
 	else
 
 		InPlayer:SetNWString("VoiceLocalArea", "")
