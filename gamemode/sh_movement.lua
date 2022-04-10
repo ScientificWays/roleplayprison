@@ -19,9 +19,9 @@ hook.Add("SetupMove", "HandcuffsMove", function(InPlayer, InMoveData, InCommandD
 	
 	InMoveData:SetMaxClientSpeed(InMoveData:GetMaxClientSpeed() * 0.6)
 
-	local MoveVelocty = GetHandcuffKidnappedVelocity(InPlayer)
+	local MoveVelocty = GetHandcuffKidnappedVelocity(InPlayer, InMoveData)
 
-	if IsValid(MoveVelocty) then
+	if MoveVelocty ~= nil then
 
 		InMoveData:SetVelocity(MoveVelocty)
 	end

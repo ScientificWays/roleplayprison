@@ -46,6 +46,8 @@ end
 
 function VoiceNotifyPanel:Paint(w, h)
 
+	--print(IsValid(self.Player), UtilIsGlobalSpeakerEnabled() and self.Player:GetNWBool("bGlobalSpeaker"), UtilCanHearByTalkie(LocalPlayer(), self.Player))
+
 	if IsValid(self.Player) then
 
 		local bShowPanel = false
@@ -64,7 +66,7 @@ function VoiceNotifyPanel:Paint(w, h)
 
 			PlayerIcon = IconTalkie
 
-		elseif Client:EntIndex() == InPlayer:EntIndex() then
+		elseif LocalPlayer():EntIndex() == self.Player:EntIndex() then
 
 			bShowPanel = true
 		end
@@ -73,11 +75,11 @@ function VoiceNotifyPanel:Paint(w, h)
 
 			draw.RoundedBox(4, 0, 0, w, h, Color(0, self.Player:VoiceVolume() * 255, 0, 240))
 
-			if IsValid(PlayerIcon) then
+			if PlayerIcon ~= nil then
 
 				surface.SetDrawColor(COLOR_WHITE)
 
-				surface.SetMaterial(IconTalkie)
+				surface.SetMaterial(PlayerIcon)
 
 				surface.DrawTexturedRect(4, 4, 32, 32)
 			end

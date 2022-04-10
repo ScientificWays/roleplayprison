@@ -30,7 +30,7 @@ function OnPlayerHandcuffsOff(InPlayer)
 	end
 end
 
-function GetHandcuffKidnappedVelocity(InPlayer)
+function GetHandcuffKidnappedVelocity(InPlayer, InMoveData)
 
 	local Kidnapper = Entity(InPlayer:GetNWInt("KidnapperIndex"))
 
@@ -92,12 +92,16 @@ function GetHandcuffKidnappedVelocity(InPlayer)
 	MoveVelocity.y = (MoveVelocity.y > TargetVel.y - clamp or MoveVelocity.y < TargetVel.y + clamp) and math.Approach(MoveVelocity.y, TargetVel.y, accel) or MoveVelocity.y
 	
 	if MoveFromPos.z < FinalMoveToPos.z then
-		MoveVelocity.z = (MoveVelocity.z > TargetVel.z-vclamp or MoveVelocity.z < TargetVel.z + vclamp) and math.Approach(MoveVelocity.z, TargetVel.z, vaccel) or MoveVelocity.z
+
+		MoveVelocity.z = (MoveVelocity.z > TargetVel.z - vclamp or MoveVelocity.z < TargetVel.z + vclamp) and math.Approach(MoveVelocity.z, TargetVel.z, vaccel) or MoveVelocity.z
 		
-		if vertMult > 0 then InPlayer.Cuff_ForceJump = InPlayer end
+		if vertMult > 0 then
+
+			InPlayer.Cuff_ForceJump = InPlayer
+		end
 	end
 
-	--MsgN(MoveVelocity)
+	MsgN(MoveVelocity)
 	
 	return MoveVelocity
 end

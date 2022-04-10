@@ -130,7 +130,10 @@ function GM:InitPostEntity()
 
 	SetupSkyPaint()
 
-	SetupCameras()
+	timer.Simple(0.0, function()
+		
+		SetupCameras()
+	end)
 
 	SetGlobalBool("bInterCycle", true)
 

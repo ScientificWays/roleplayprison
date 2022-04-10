@@ -233,7 +233,7 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			end
 		end
 
-	elseif InInput == "Trigger" and InActivator:Team() == TEAM_ROBBER and not InActivator:GetNWBool("bEscaped") then
+	elseif InInput == "Trigger" and InActivator:Team() == TEAM_ROBBER and UtilPlayerCanInteract(InActivator) and not InActivator:GetNWBool("bEscaped") then
 
 		if InTargetEntity:GetName() == "Escape_OnTrigger" then
 

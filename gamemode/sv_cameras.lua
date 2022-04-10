@@ -1,7 +1,7 @@
 ---- Roleplay: Prison
 
-CamerasList = {}
-CamerasResetRelay = nil
+local CamerasList = {}
+local CamerasResetRelay = nil
 
 local function UpdateCameraIndex(InPlayer, InIndexDelta)
 
@@ -19,11 +19,11 @@ end
 
 hook.Add("KeyPress", "CameraControls", function(InPlayer, InKey)
 
-	if InPlayer:GetNWBool("bUsingCameras") and (InPlayer.LastCameraToggle or 0) + 3.5 < CurTime() then
+	if InPlayer:GetNWBool("bUsingCameras") then
 
 		CamerasResetRelay:Input("Trigger")
 
-		if InKey == IN_ATTACK or InKey == IN_ATTACK2 then
+		if (InPlayer.LastCameraToggle or 0.0) + 3.5 < CurTime() and (InKey == IN_ATTACK or InKey == IN_ATTACK2) then
 
 			if InKey == IN_ATTACK then
 
