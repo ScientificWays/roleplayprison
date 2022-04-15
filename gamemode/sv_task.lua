@@ -18,7 +18,7 @@ function OnTaskTimeout(InTaskType)
 
 	if UtilIsOfficerPunished() then
 
-		SetOfficerPunishmentTimeLeft(UtilGetOfficerPunishmentTimeLeft() + UtilGetOfficerPunishmentDuration() / 4)
+		SetOfficerPunishmentTimeLeft(UtilGetOfficerPunishmentTimeLeft() + UtilGetOfficerPunishmentDuration() * 0.25)
 
 		MsgN(Format("OnTaskTimeout() %s, punishment time left %i", InTaskType, UtilGetOfficerPunishmentTimeLeft()))
 	else

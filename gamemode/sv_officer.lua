@@ -4,6 +4,13 @@ local OfficerVoterAndVotedList = {}
 
 function SetOfficerPunishmentTimeLeft(InValue)
 
+	if not InValue > 0 and not InValue < 1000 then
+		
+		MsgN(Format("Abnormal officer punishment time - %s, setting to 10", InValue))
+
+		InValue = 10
+	end
+
 	SetGlobalInt("OfficerPunishmentTimeLeft", InValue)
 end
 
