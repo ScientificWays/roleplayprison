@@ -146,6 +146,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 		DebugDude:SetTeam(TEAM_GUARD)
 
 		DebugDude:SetNWString("RPName", "Лёха")
+		DebugDude:SetNWString("RPSurname", "Бот")
 
 		DebugDude:Spawn()
 
@@ -156,6 +157,7 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 		DebugDude:SetTeam(TEAM_ROBBER)
 
 		DebugDude:SetNWString("RPName", "Саня")
+		DebugDude:SetNWString("RPSurname", "Бот")
 
 		DebugDude:Spawn()
 

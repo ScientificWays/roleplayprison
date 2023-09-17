@@ -13,12 +13,12 @@ local IconPicklock				= Material("vgui/rpp/icon_picklock")
 local IconKnock					= Material("vgui/rpp/icon_knock")
 local IconInspect				= Material("vgui/rpp/icon_inspect")
 local IconCross					= Material("vgui/rpp/icon_cross")
+local IconCrowbar				= Material("vgui/rpp/icon_crowbar")
 
 local IconScheduleSetup			= Material("icon16/text_list_numbers.png")
 local IconCellsButton			= Material("icon16/lock_open.png")
 local IconAlarmButton			= Material("icon16/exclamation.png")
 local IconGlobalSpeakerButton	= Material("icon16/sound.png")
-local IconServerSabotage		= Material("icon16/server.png")
 
 local IconGuardTask				= Material("icon16/folder_error.png")
 local IconRobberTask			= Material("icon16/cog.png")
@@ -259,17 +259,25 @@ local function SetHUDHintDataDetailSpawn(InNowImplemetingBy)
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
 
-local function SetHUDHintDataServerSabotage(bRobberTeam)
+local function SetHUDHintDataSabotage(bInSabotaged)
 
-	HUDHintData.Icon = IconServerSabotage
+	HUDHintData.Icon = IconHand
+	HUDHintData.IconColor = COLOR_YELLOW
 
-	if bRobberTeam then
-
-		HUDHintData.Text = UtilLocalizable("RPP_HUD.Sabotage")
-	else
+	if bInSabotaged then
 
 		HUDHintData.Text = UtilLocalizable("RPP_HUD.Repair")
+	else
+		HUDHintData.Text = UtilLocalizable("RPP_HUD.Sabotage")
 	end
+
+	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
+end
+
+local function SetHUDHintDataCrowbar()
+
+	HUDHintData.Icon = IconCrowbar
+	HUDHintData.IconColor = COLOR_YELLOW
 
 	HUDHintData.TotalNum = HUDHintData.TotalNum + 1
 end
@@ -585,73 +593,71 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 	if InTargetEntity:GetNWBool("bScheduleSetupEntity") then
 
 		SetHUDHintDataScheduleSetup()
-
 		return
 
 	elseif InTargetEntity:GetNWBool("bCellsButton") then
 
 		SetHUDHintDataCellsButton()
-
 		return
 
 	elseif InTargetEntity:GetNWBool("bAlarmButton") then
 
 		SetHUDHintDataAlarmButton()
-
 		return
 
 	elseif InTargetEntity:GetNWBool("bGlobalSpeakerButton") then
 
 		SetHUDHintDataGlobalSpeakerButton()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bDetailSpawn") then
 
 		SetHUDHintDataDetailSpawn(InTargetEntity:GetNWString("TaskImplementer"))
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bFoodInstance") then
 
 		SetHUDHintDataFood()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bFoodSpawn") then
 
 		SetHUDHintDataFoodSpawn()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bWaterInstance") then
 
 		SetHUDHintDataWater()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bWaterSpawn") then
 
 		SetHUDHintDataWaterSpawn()
-
 		return
 
 	elseif InTargetEntity:GetNWBool("bWorkbench") then
 
 		SetHUDHintDataCraft()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bStash") then
 
 		SetHUDHintDataStash()
-
 		return
 		
 	elseif InTargetEntity:GetNWBool("bCameraControl") then
 
 		SetHUDHintDataCameraControl()
+		return
 
+	elseif InTargetEntity:GetNWBool("bSabotage") then
+
+		SetHUDHintDataSabotage(InTargetEntity:GetNWBool("bSabotaged"))
+		return
+
+	elseif InTargetEntity:GetNWBool("bCrowbarOnly") then
+
+		SetHUDHintDataCrowbar()
 		return
 	end
 
@@ -678,10 +684,6 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), false)
 
-		elseif InTargetEntity:GetNWBool("bServerSabotage") and InTargetEntity:GetNWBool("bSabotaged") then
-
-			SetHUDHintDataServerSabotage(false)
-
 		elseif InTargetEntity:IsPlayer() and InTargetEntity:Team() == TEAM_ROBBER then
 
 			SetHUDHintDataHandcuffs()
@@ -699,10 +701,6 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 		if InTargetEntity:GetNWBool("bRobberTask") then
 
 			SetHUDHintDataRobberTask(InTargetEntity:GetNWString("TaskImplementer"), true)
-
-		elseif InTargetEntity:GetNWBool("bServerSabotage") and not InTargetEntity:GetNWBool("bSabotaged") then
-
-			SetHUDHintDataServerSabotage(true)
 
 		elseif InTargetEntity:GetNWBool("bWasLocked")
 			and (InTargetEntity:GetNWBool("bGuardLockable") or InTargetEntity:GetNWBool("bOfficerLockable"))
@@ -743,7 +741,7 @@ function UpdateHUDHintData(InPlayer, InTargetEntity)
 
 			SetHUDHintDataLockable(InTargetEntity:GetNWBool("bWasLocked"))
 		
-		elseif InTargetEntity:GetNWBool("bGuardUser1") or InTargetEntity:GetNWBool("bAllUser1") then
+		elseif InTargetEntity:GetNWBool("bAllUser1") then
 
 			SetHUDHintDataUsable()
 

@@ -103,7 +103,7 @@ function AddOfficerVote(InVoter, InVotedName)
 
 	if InVoter:Team() ~= TEAM_GUARD then
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteOnlyGuards"})
+		UtilSendEventMessageToPlayers({"RPP_Event.VoteOnlyGuards"})
 
 		return
 	end
@@ -116,12 +116,12 @@ function AddOfficerVote(InVoter, InVotedName)
 
 		OfficerVoterAndVotedList[InVoter] = VotedPlayer
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteInfo", VoterName, InVotedName})
+		UtilSendEventMessageToPlayers({"RPP_Event.VoteInfo", VoterName, InVotedName})
 
 		return
 	end
 
-	UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteDeny", InVotedName})
+	UtilSendEventMessageToPlayers({"RPP_Event.VoteDeny", InVotedName})
 
 	return
 end
@@ -130,7 +130,7 @@ function FinishOfficerVote(InSender)
 
 	if IsValid(InSender) and InSender:Team() ~= TEAM_GUARD then
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteOnlyGuards"})
+		UtilSendEventMessageToPlayers({"RPP_Event.VoteOnlyGuards"})
 
 		return
 	end
@@ -163,7 +163,7 @@ function FinishOfficerVote(InSender)
 
 	else
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.NoVotes"})
+		UtilSendEventMessageToPlayers({"RPP_Event.NoVotes"})
 
 		SetOfficerPlayer(table.Random(team.GetPlayers(TEAM_GUARD)))
 	end
@@ -175,7 +175,7 @@ function SetOfficerPlayer(InPlayer)
 
 	if InPlayer:Team() ~= TEAM_GUARD then
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteError"})
+		UtilSendEventMessageToPlayers({"RPP_Event.VoteError"})
 
 		return
 	end
@@ -187,5 +187,5 @@ function SetOfficerPlayer(InPlayer)
 
 	InPlayer:SetNWBool("bOfficer", true)
 
-	UtilSendEventMessageToPlayers({"RPP_RPEvent.VoteSuccess", UtilGetRPNameSurname(InPlayer)})
+	UtilSendEventMessageToPlayers({"RPP_Event.VoteSuccess", UtilGetRPNameSurname(InPlayer)})
 end

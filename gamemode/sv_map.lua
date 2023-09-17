@@ -76,75 +76,60 @@ function SetupMapEntityFlags()
 		if string.EndsWith(SampleEntityName, "_GuardLockable") then
 
 			SampleEntity:SetNWBool("bGuardLockable", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
-
 			SampleEntity:Input("Lock")
-
 			SampleEntity:SetNWBool("bWasLocked", true)
 
 		elseif string.EndsWith(SampleEntityName, "_OfficerLockable") then
 
 			SampleEntity:SetNWBool("bOfficerLockable", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
-
 			SampleEntity:Input("Lock")
-
 			SampleEntity:SetNWBool("bWasLocked", true)
 
 		elseif string.EndsWith(SampleEntityName, "_AllUser1") then
 
 			SampleEntity:SetNWBool("bAllUser1", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_GuardUser1") then
 
 			SampleEntity:SetNWBool("bGuardUser1", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_RobberUser1") then
 
 			SampleEntity:SetNWBool("bRobberUser1", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_ScheduleSetup") then
 
 			SampleEntity:SetNWBool("bScheduleSetupEntity", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_CellsButton") then
 
 			SampleEntity:SetNWBool("bCellsButton", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_CellDoor") then
 
 			SampleEntity:SetNWBool("bCellDoor", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_AlarmButton") then
 
 			SampleEntity:SetNWBool("bAlarmButton", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_GlobalSpeakerButton") then
 
 			SampleEntity:SetNWBool("bGlobalSpeakerButton", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
-		elseif string.EndsWith(SampleEntityName, "_ServerSabotage") then
+		elseif string.EndsWith(SampleEntityName, "_Sabotage") then
 
-			SampleEntity:SetNWBool("bServerSabotage", true)
-
+			SampleEntity:SetNWBool("bSabotage", true)
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_GuardTask") then
@@ -152,7 +137,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bGuardTask", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_OfficerPhone") then
@@ -160,7 +144,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bOfficerPhone", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_RobberTask") then
@@ -194,7 +177,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bFoodSpawn", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_WaterSpawn") then
@@ -202,7 +184,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bWaterSpawn", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_Workbench") then
@@ -210,7 +191,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bWorkbench", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_Stash") then
@@ -218,7 +198,14 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bStash", true)
+			SampleEntity:SetNWBool("bShowHint", true)
 
+		elseif string.EndsWith(SampleEntityName, "_StashMetal") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bStash", true)
+			SampleEntity:SetNWBool("bStashMetal", true)
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_CameraControl") then
@@ -226,7 +213,13 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bCameraControl", true)
+			SampleEntity:SetNWBool("bShowHint", true)
 
+		elseif string.EndsWith(SampleEntityName, "_CrowbarOnly") then
+
+			MsgN(SampleEntityName.." is registered!")
+
+			SampleEntity:SetNWBool("bCrowbarOnly", true)
 			SampleEntity:SetNWBool("bShowHint", true)
 		end
 	end
@@ -291,7 +284,6 @@ function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
 	end
 
 	InLockableEntity:Fire(InputType, nil, 0, InPlayer, InLockableEntity)
-
 	InLockableEntity:SetNWBool("bWasLocked", bNewLockState)
 
 	InLockableEntity:EmitSound("Town.d1_town_02_default_locked",
@@ -308,8 +300,28 @@ function ChangeLockableState(InPlayer, InLockableEntity, bNewLockState)
 		if IsValid(SlaveDoorEntity) then
 
 			SlaveDoorEntity:Fire(InputType)
-
 			SlaveDoorEntity:SetNWBool("bWasLocked", bNewLockState)
+		end
+	end
+end
+
+function GM:EntityTakeDamage(InEntity, InDamageInfo)
+
+	--MsgN("EntityTakeDamage()")
+
+	if InEntity:IsPlayer() then
+
+		HandlePlayerTakeDamage(InEntity, InDamageInfo)
+	end
+
+	if InEntity:GetNWBool("bCrowbarOnly") then
+
+		local AttackerEntity = InDamageInfo:GetAttacker()
+
+		if AttackerEntity == nil or AttackerEntity:GetActiveWeapon() == nil or AttackerEntity:GetActiveWeapon():GetClass() ~= "weapon_crowbar" then
+			
+			--Block damage
+			return true
 		end
 	end
 end

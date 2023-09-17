@@ -6,6 +6,7 @@ local StashDataList = {
 	PicklockNum = {Icon = Material("vgui/rpp/icon_picklock")},
 	weapon_rpp_club = {Icon = Material("vgui/rpp/icon_club")},
 	weapon_rpp_talkie = {Icon = Material("vgui/rpp/icon_talkie")},
+	weapon_crowbar = {Icon = Material("vgui/rpp/icon_crowbar")},
 }
 
 function GetStashDataList()
@@ -15,7 +16,17 @@ function GetStashDataList()
 	return StashDataList
 end
 
-function CanAddStackableToStash(InPlayer, InStashEntity, InStackableName)
+function CanAddStackableToStash(InPlayer, InStashEntity, InStackableName, InNum)
+
+	if InStashEntity == nil then
+
+		return false
+	end
+
+	if InPlayer == nil then
+
+		return true
+	end
 
 	if InPlayer:Team() == TEAM_GUARD then
 
@@ -24,8 +35,10 @@ function CanAddStackableToStash(InPlayer, InStashEntity, InStackableName)
 
 	local StashItemName = InStashEntity:GetNWString("StashItemName")
 
+	--MsgN(InStackableName)
+
 	return (StashItemName == "" or StashItemName == InStackableName)
-	and InPlayer:GetNWInt(InStackableName) > 0
+	and InPlayer:GetNWInt(InStackableName) >= InNum
 end
 
 function CanAddWeaponToStash(InPlayer, InStashEntity)

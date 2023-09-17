@@ -1,6 +1,6 @@
 ---- Roleplay: Prison
 
-timer.Create("HungerTick", 24.0, 0, function()
+timer.Create("HungerTick", 32.0, 0, function()
 
 	local AllPlayers = player.GetAll()
 
@@ -104,7 +104,6 @@ end)
 function UpdatePlayerHungerValue(InPlayer)
 
 	InPlayer.Food = math.Clamp(InPlayer.Food, 0.0, 100.0)
-
 	InPlayer.Water = math.Clamp(InPlayer.Water, 0.0, 100.0)
 
 	--MsgN(Format("%s Food: %i, Water: %s", InPlayer:GetNWString("RPName"), InPlayer.Food, InPlayer.Water))
@@ -137,12 +136,17 @@ function OnNutritionSpawn(InPlayer, InTemplateEntity)
 		NutritionInstance:SetName("Spawned_WaterInstance")
 	end
 
+	if InTemplateEntity:GetNWBool("bSabotagedNutrition") then
+
+		NutritionInstance:SetName("Spawned_SabotagedNutrition")
+		NutritionInstance:Ignite(1000.0)
+
+		SafeRemoveEntityDelayed(NutritionInstance, 10.0)
+	end
+
 	NutritionInstance:SetPos(InTemplateEntity:GetPos() + Vector(0.0, 0.0, 16.0))
-
 	NutritionInstance:SetAngles(InTemplateEntity:GetAngles())
-
 	NutritionInstance:SetModel(InTemplateEntity:GetModel())
-
 	NutritionInstance:Spawn()
 --[[
 	if InTemplateEntity:GetNWBool("bFoodSpawn") then
@@ -174,4 +178,14 @@ function OnNutritionConsume(InPlayer, InNutritionInstance)
 	end
 
 	InNutritionInstance:Remove()
+end
+
+function SetSabotageNutritionSpawners(InSpawnersName, bInNewState)
+
+	local TargetSpawners = ents.FindByName(InSpawnersName)
+
+	for Index, SampleSpawner in ipairs(TargetSpawners) do
+
+		SampleSpawner:SetNWBool("bSabotagedNutrition", bInNewState)
+	end
 end

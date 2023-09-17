@@ -65,7 +65,7 @@ function GetDetailNumInStack(InPickupEntity)
 
 		local TemplateEntity = InPickupEntity:GetParent()
 
-		MsgN(TemplateEntity:GetName())
+		--MsgN(TemplateEntity:GetName())
 
 		if IsValid(TemplateEntity) and DetailPickupList[TemplateEntity] ~= nil then
 

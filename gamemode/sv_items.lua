@@ -16,7 +16,7 @@ end
 
 function TryGiveWeaponItem(InPlayer, InItemNameStr)
 
-	MsgN(InItemNameStr)
+	--MsgN(InItemNameStr)
 
 	if InItemNameStr == "club" then
 
@@ -27,6 +27,12 @@ function TryGiveWeaponItem(InPlayer, InItemNameStr)
 	elseif InItemNameStr == "talkie" then
 
 		InPlayer:Give("weapon_rpp_talkie")
+
+		return true
+
+	elseif InItemNameStr == "crowbar" then
+
+		InPlayer:Give("weapon_crowbar")
 
 		return true
 	end
@@ -102,7 +108,6 @@ function TryCraftItem(InPlayer, InItemName)
 	end
 
 	InPlayer:SetNWInt("DetailWoodNum", InPlayer:GetNWInt("DetailWoodNum") - ItemData.Wood)
-
 	InPlayer:SetNWInt("DetailMetalNum", InPlayer:GetNWInt("DetailMetalNum") - ItemData.Metal)
 
 	if ItemData.Name == "Picklock" then
@@ -111,10 +116,26 @@ function TryCraftItem(InPlayer, InItemName)
 
 	elseif ItemData.Name == "Club" then
 
+		if InPlayer:HasWeapon("weapon_rpp_club") then
+
+			InPlayer:DropWeapon(InPlayer:GetWeapon("weapon_rpp_club"))
+		end
 		InPlayer:Give("weapon_rpp_club")
 
 	elseif ItemData.Name == "Talkie" then
 
+		if InPlayer:HasWeapon("weapon_rpp_talkie") then
+
+			InPlayer:DropWeapon(InPlayer:GetWeapon("weapon_rpp_talkie"))
+		end
 		InPlayer:Give("weapon_rpp_talkie")
+
+	elseif ItemData.Name == "Crowbar" then
+
+		if InPlayer:HasWeapon("weapon_crowbar") then
+
+			InPlayer:DropWeapon(InPlayer:GetWeapon("weapon_crowbar"))
+		end
+		InPlayer:Give("weapon_crowbar")
 	end
 end

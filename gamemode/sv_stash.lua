@@ -1,5 +1,20 @@
 ---- Roleplay: Prison
 
+function UpdateStashes()
+
+	MsgN("UpdateStashes()")
+
+	local AllEntities = ents.GetAll()
+
+	for Index, SampleEntity in ipairs(AllEntities) do
+
+		if SampleEntity:GetNWBool("bStashMetal") then
+
+			TryAddStackableToStash(nil, SampleEntity, "DetailMetalNum", math.random(0, 2))
+		end
+	end
+end
+
 function OnStashOpen(InPlayer, InStashEntity)
 
 	MsgN("OnStashOpen()")
@@ -32,7 +47,7 @@ function ServerReceiveTryInteractStash(InMessageLength, InPlayer)
 
 		if AddItemName == "DetailWoodNum" or AddItemName == "DetailMetalNum" or AddItemName == "PicklockNum" then
 
-			TryAddStackableToStash(InPlayer, StashEntity, AddItemName)
+			TryAddStackableToStash(InPlayer, StashEntity, AddItemName, 1)
 
 		elseif AddItemName == "Weapon" then
 
@@ -41,17 +56,20 @@ function ServerReceiveTryInteractStash(InMessageLength, InPlayer)
 	end
 end
 
-function TryAddStackableToStash(InPlayer, InStashEntity, InStackableName)
+function TryAddStackableToStash(InPlayer, InStashEntity, InStackableName, InNum)
 
 	MsgN("TryAddStackableToStash()")
 
-	if CanAddStackableToStash(InPlayer, InStashEntity, InStackableName) then
+	if CanAddStackableToStash(InPlayer, InStashEntity, InStackableName, InNum) then
 
-		InPlayer:SetNWInt(InStackableName, InPlayer:GetNWInt(InStackableName) - 1)
+		if IsValid(InPlayer) then
+
+			InPlayer:SetNWInt(InStackableName, InPlayer:GetNWInt(InStackableName) - InNum)
+		end
 
 		InStashEntity:SetNWString("StashItemName", InStackableName)
 
-		InStashEntity:SetNWInt("StashItemNum", InStashEntity:GetNWInt("StashItemNum") + 1)
+		InStashEntity:SetNWInt("StashItemNum", InStashEntity:GetNWInt("StashItemNum") + InNum)
 	end
 end
 
@@ -79,7 +97,7 @@ function TryPickItemFromStash(InPlayer, InStashEntity)
 		
 		local StashItemName = InStashEntity:GetNWString("StashItemName")
 
-		if StashItemName == "weapon_rpp_club" or StashItemName == "weapon_rpp_talkie" then
+		if string.StartsWith(StashItemName, "weapon_") then
 
 			InPlayer:Give(StashItemName)
 		else
@@ -89,7 +107,7 @@ function TryPickItemFromStash(InPlayer, InStashEntity)
 
 		InStashEntity:SetNWInt("StashItemNum", InStashEntity:GetNWInt("StashItemNum") - 1)
 
-		MsgN(InStashEntity:GetNWInt("StashItemNum"))
+		--MsgN(InStashEntity:GetNWInt("StashItemNum"))
 
 		if InStashEntity:GetNWInt("StashItemNum") <= 0 then
 

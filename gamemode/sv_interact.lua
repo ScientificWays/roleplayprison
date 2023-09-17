@@ -82,6 +82,33 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			return false
 		end
 
+		if InTargetEntity:GetNWBool("bSabotage") then
+
+			if InTargetEntity:GetNWBool("bSabotaged") then
+
+				OnImplementTaskStart(
+					InActivator,
+					InTargetEntity,
+					UtilGetSabotageRepairDuration(),
+					nil,
+					TryRepairSabotage
+				)
+
+				return true
+			else
+
+				OnImplementTaskStart(
+					InActivator,
+					InTargetEntity,
+					UtilGetSabotageDuration(),
+					nil,
+					TrySabotage
+				)
+
+				return true
+			end
+		end
+
 		if InActivator:Team() == TEAM_GUARD then
 
 			if InTargetEntity:GetNWBool("bScheduleSetupEntity") then
@@ -100,25 +127,6 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 					InTargetEntity:Fire("Unlock", nil, 1.5, InActivator, caller)
 
 					return true
-				end
-			end
-
-			if InTargetEntity:GetNWBool("bServerSabotage") then
-
-				if InTargetEntity:GetNWBool("bSabotaged") then
-
-					OnImplementTaskStart(
-						InActivator,
-						InTargetEntity,
-						UtilGetServerRepairDuration(),
-						nil,
-						TryRepairServer
-					)
-
-					return true
-				else
-
-					return false
 				end
 			end
 
@@ -167,25 +175,6 @@ function GM:AcceptInput(InTargetEntity, InInput, InActivator, InCaller, InValue)
 			end
 
 		elseif InActivator:Team() == TEAM_ROBBER then
-
-			if InTargetEntity:GetNWBool("bServerSabotage") then
-
-				if not InTargetEntity:GetNWBool("bSabotaged") then
-
-					OnImplementTaskStart(
-						InActivator,
-						InTargetEntity,
-						UtilGetServerSabotageDuration(),
-						nil,
-						TrySabotageServer
-					)
-
-					return true
-				else
-
-					return false
-				end
-			end
 
 			if InTargetEntity:GetNWBool("bRobberTask") then
 

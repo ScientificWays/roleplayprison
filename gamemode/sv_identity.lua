@@ -391,7 +391,7 @@ function GetNewPlayerIdentity(InPlayer, InTeam, bMale)
 
 		OutModel, OutName, OutSurname = RejoinIdentityList[ID].Model, RejoinIdentityList[ID].Name, RejoinIdentityList[ID].Surname
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.Reconnect", InPlayer:Nick()})
+		UtilSendEventMessageToPlayers({"RPP_Event.Reconnect", InPlayer:Nick()})
 	else
 		RefreshEmptyLists()
 
@@ -444,7 +444,7 @@ function SetupRPModel(InPlayer)
 
 	local ModelName = player_manager.TranslatePlayerModel(RPPlayerModel)
 
-	MsgN(ModelName)
+	MsgN(Format("Setup RP model %s for %s", ModelName, InPlayer))
 
 	util.PrecacheModel(ModelName)
 

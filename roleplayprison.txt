@@ -123,19 +123,19 @@
 		}
 		15
 		{
-			"name"		"sk_server_sabotage_duration"
-			"text"		"Server sabotage duration"
-			"help"		"Server sabotage duration in seconds"
+			"name"		"sk_sabotage_duration"
+			"text"		"Sabotage duration"
+			"help"		"Sabotage duration in seconds"
 			"type"		"Numeric"
 			"default"	"10"
 		}
 		16
 		{
-			"name"		"sk_server_repair_duration"
-			"text"		"Server repair duration"
-			"help"		"Server repair duration in seconds"
+			"name"		"sk_sabotage_repair_duration"
+			"text"		"Sabotage repair duration"
+			"help"		"Sabotage repair duration in seconds"
 			"type"		"Numeric"
-			"default"	"30"
+			"default"	"20"
 		}
 		17
 		{

@@ -69,7 +69,7 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
 		InPlayer:Spawn()
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.Spectate", InPlayer:Nick()})
+		UtilSendEventMessageToPlayers({"RPP_Event.Spectate", InPlayer:Nick()})
 
 		return
 	end
@@ -78,15 +78,12 @@ function GM:OnPlayerChangedTeam(InPlayer, InOldTeam, InNewTeam)
 
 	InPlayer.RPModel = NewModel
 
-	MsgN(NewModel)
-
 	InPlayer:SetNWString("RPName", NewRPName)
-
 	InPlayer:SetNWString("RPSurname", NewRPSurname)
 
 	InPlayer:Spawn()
 
-	UtilSendEventMessageToPlayers({"RPP_RPEvent.JoinRole", InPlayer:Nick(), team.GetName(InNewTeam), UtilGetRPNameSurname(InPlayer)})
+	UtilSendEventMessageToPlayers({"RPP_Event.JoinRole", InPlayer:Nick(), team.GetName(InNewTeam), UtilGetRPNameSurname(InPlayer)})
 end
 
 function GM:PlayerRequestTeam(InPlayer, InTeamID)
@@ -204,7 +201,7 @@ end
 
 function GM:PlayerSelectTeamSpawn(TeamID, InPlayer)
 
-	MsgN("PlayerSelectTeamSpawn")
+	MsgN("PlayerSelectTeamSpawn()")
 
 	if InPlayer:GetNWBool("bOfficer") and UtilIsOfficerPunished() then
 
@@ -323,7 +320,7 @@ function GM:OnPlayerHitGround(InPlayer, in_water, on_floater, speed)
 	end
 end
 
-function UpdatePlayersHealthValue()
+function UpdateAllPlayersHealthValue()
 
 	local AllPlayers = player.GetAll()
 
@@ -335,7 +332,7 @@ end
 
 function GM:PlayerHurt(InVictimPlayer, InAttackerEntity, InHealthRemaining, InDamageTaken)
 
-	UpdatePlayersHealthValue()
+	UpdateAllPlayersHealthValue()
 
 	if InAttackerEntity:IsPlayer() then
 
@@ -364,7 +361,7 @@ timer.Create("DamageSlowUpdate", 0.5, 0, function()
 	end
 end)
 
-timer.Create("InjuryUpdate", 0.2, 0, UpdatePlayersHealthValue)
+timer.Create("InjuryUpdate", 0.2, 0, UpdateAllPlayersHealthValue)
 
 function GM:PlayerNoClip(InPlayer, bDesiredNoClipState)
 	

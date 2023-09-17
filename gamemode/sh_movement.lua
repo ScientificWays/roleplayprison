@@ -131,8 +131,7 @@ function GetHandcuffKidnappedVelocity(InPlayer, InMoveData)
 		end
 	end
 
-	MsgN(MoveVelocity)
-	
+	--MsgN(MoveVelocity)	
 	return MoveVelocity
 end
 	

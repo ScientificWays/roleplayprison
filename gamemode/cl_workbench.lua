@@ -2,7 +2,7 @@
 
 local WorkbenchFrame = nil
 
-local WorkbenchFrameWidth, WorkbenchFrameHeight = 600, 600
+local WorkbenchFrameWidth, WorkbenchFrameHeight = 600, 700
 
 function IsWorkbenchOpen()
 
@@ -19,35 +19,24 @@ function ShowWorkbenchFrame()
 	WorkbenchFrame = vgui.Create("DFrame")
 
 	WorkbenchFrame:SetSize(WorkbenchFrameWidth, WorkbenchFrameHeight)
-
 	WorkbenchFrame:SetPos(ScrW() / 2 - WorkbenchFrameWidth / 2, ScrH() / 2 - WorkbenchFrameHeight / 2)
-
 	WorkbenchFrame:SetTitle("")
-
 	WorkbenchFrame:MakePopup()
-
 	WorkbenchFrame:SetAlpha(0)
-
 	WorkbenchFrame:AlphaTo(255, 0.4, 0)
-
 	WorkbenchFrame:SetDraggable(false)
-
 	WorkbenchFrame:ShowCloseButton(false)
 
 	WorkbenchFrame.Paint = function(self, w, h) end
 
 	local LastSelectedItem = nil
-
 	local CraftDataList = GetCraftDataList()
 
 	for Index, ItemData in ipairs(CraftDataList) do
 
 		local CraftItem = vgui.Create("DButton", WorkbenchFrame)
-
 		CraftItem:SetSize(130, 130)
-
-		CraftItem:SetPos(20, (Index - 1) * 180)
-
+		CraftItem:SetPos(20, (Index - 1) * 150)
 		CraftItem:SetText("")
 
 		CraftItem.Paint = function(self, w, h)
@@ -55,17 +44,13 @@ function ShowWorkbenchFrame()
 			DrawBlur(self, 6)
 
 			draw.RoundedBoxEx(10, 0, 0, w, h, Color(0, 0, 0, 200), true, true, true, true)
-
 			draw.RoundedBoxEx(10, 0, 0, 130, 130, Color(90, 90, 90, 200), true, true, true, true)
-
 			draw.RoundedBoxEx(10, 5, 5, 120, 120, Color(0, 0, 0, 200), true, true, true, true)
 
 			draw.SimpleText(UtilLocalizable(ItemData.PrintName), "HUDTextSmall", 65, 110, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 			surface.SetDrawColor(COLOR_WHITE)
-
 			surface.SetMaterial(ItemData.Icon)
-
 			surface.DrawTexturedRect(30, 30, 70, 70)
 		end
 
@@ -78,7 +63,6 @@ function ShowWorkbenchFrame()
 				if LastSelectedItem == self then
 
 					LastSelectedItem = nil
-
 					return
 				end
 			end
@@ -89,12 +73,9 @@ function ShowWorkbenchFrame()
 
 			local RecipePanel = vgui.Create("DButton", CraftItem)
 
-			RecipePanel:SetSize(270, 130)
-
+			RecipePanel:SetSize(270, 140)
 			RecipePanel:SetPos(130, 0)
-
 			RecipePanel:SetText("")
-
 			RecipePanel.lerp = 0
 
 			RecipePanel.Paint = function(self, w, h)
@@ -107,7 +88,6 @@ function ShowWorkbenchFrame()
 				end
 				
 				local Client = LocalPlayer()
-
 				local CraftColor = COLOR_RED
 
 				--Can craft
@@ -129,15 +109,10 @@ function ShowWorkbenchFrame()
 				if CanCraftRoleplayItem(LocalPlayer(), ItemData) then
 
 					ClientSendTryCraftItem(ItemData.Name)
-
 					RecipePanel:Remove()
-
 					LastSelectedItem:SizeTo(130, 130, 0.3, 0, 0.2)
-
-					surface.PlaySound("Buttons.snd6")
+					surface.PlaySound("buttons/button6.wav")
 				end
-
-				MsgN("Клик")
 			end
 		end
 	end
@@ -145,11 +120,8 @@ function ShowWorkbenchFrame()
 	local CloseButton = vgui.Create("DButton", WorkbenchFrame)
 
 	CloseButton:SetSize(130, 50)
-
-	CloseButton:SetPos(20, #CraftDataList * 180)
-
+	CloseButton:SetPos(20, #CraftDataList * 150)
 	CloseButton:SetText("")
-
 	CloseButton:SetAlpha(155)
 
 	CloseButton.lerp = 0
@@ -157,7 +129,6 @@ function ShowWorkbenchFrame()
 	CloseButton.Paint = function(self, w, h)
 
 		draw.RoundedBoxEx(10, 0, 0, w, h, Color(220, 20, 60), true, true, true, true)
-
 		draw.SimpleText(UtilLocalizable("RPP_HUD.Close"), "HUDTextSmall", 65, 25, COLOR_WHITE, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
@@ -179,7 +150,6 @@ function HideWorkbenchFrame()
 	timer.Simple(0.4, function()
 
 		WorkbenchFrame:Remove()
-
 		WorkbenchFrame = nil
 	end)
 end

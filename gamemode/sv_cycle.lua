@@ -204,6 +204,8 @@ function StartNewCycle()
 		TrySetMapNightState(0.0)
 
 		ResetArmory()
+
+		UpdateStashes()
 	end
 end
 

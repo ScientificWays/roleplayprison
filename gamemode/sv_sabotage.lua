@@ -1,35 +1,29 @@
 ---- Roleplay: Prison
 
-function TrySabotageServer(InPlayer, InServerEntity)
+function TrySabotage(InPlayer, InTargetEntity)
 
-	if not IsValid(InServerEntity) then
+	if not IsValid(InTargetEntity) then
 
 		return
 	end
 
-	if not InServerEntity:GetNWBool("bSabotaged") then
+	if not InTargetEntity:GetNWBool("bSabotaged") then
 
-		InServerEntity:Fire("FireUser1", nil, 0, InPlayer, InServerEntity)
-
-		InServerEntity:SetNWBool("bSabotaged", true)
-
-		SetGlobalBool("bServerSabotaged", true)
+		InTargetEntity:Fire("FireUser1", nil, 0, InPlayer, InTargetEntity)
+		InTargetEntity:SetNWBool("bSabotaged", true)
 	end
 end
 
-function TryRepairServer(InPlayer, InServerEntity)
+function TryRepairSabotage(InPlayer, InTargetEntity)
 
-	if not IsValid(InServerEntity) then
+	if not IsValid(InTargetEntity) then
 
 		return
 	end
 
-	if InServerEntity:GetNWBool("bSabotaged") then
+	if InTargetEntity:GetNWBool("bSabotaged") then
 
-		InServerEntity:Fire("FireUser2", nil, 0, InPlayer, InServerEntity)
-
-		InServerEntity:SetNWBool("bSabotaged", false)
-
-		SetGlobalBool("bServerSabotaged", false)
+		InTargetEntity:Fire("FireUser2", nil, 0, InPlayer, InTargetEntity)
+		InTargetEntity:SetNWBool("bSabotaged", false)
 	end
 end

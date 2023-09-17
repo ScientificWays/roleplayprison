@@ -95,9 +95,9 @@ hook.Add("KeyPress", "EnergyJump", function(InPlayer, InKey)
 
 	if InKey == IN_JUMP and (InPlayer.LastJumpEnergyDrain or 0) + 1.5 < CurTime() then
 
-		InPlayer.Food = InPlayer.Food - 0.2
+		InPlayer.Food = InPlayer.Food - 0.1
 
-		InPlayer.Water = InPlayer.Water - 0.4
+		InPlayer.Water = InPlayer.Water - 0.2
 
 		UpdatePlayerHungerValue(InPlayer)
 

@@ -52,7 +52,7 @@ function OnRobberEscape(InRobberPlayer)
 
 		InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
 
-		UtilSendEventMessageToPlayers({"RPP_RPEvent.Escaped", UtilGetRPNameSurname(InRobberPlayer)})
+		UtilSendEventMessageToPlayers({"RPP_Event.Escaped", UtilGetRPNameSurname(InRobberPlayer)})
 	end)
 
 	timer.Simple(9.0, function()

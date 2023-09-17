@@ -29,24 +29,19 @@ timer.Create("IncappedBleed", 2.5, 0, function()
 	end
 end)
 
-function GM:EntityTakeDamage(InEntity, InDamageInfo)
+function HandlePlayerTakeDamage(InPlayer, InDamageInfo)
 
-	--MsgN("EntityTakeDamage()")
+	if InPlayer:GetNWBool("bIncapped") then
 
-	if InEntity:IsPlayer() then
-
-		if InEntity:GetNWBool("bIncapped") then
+		InDamageInfo:SetDamage(0.0)
+	else
+		if InPlayer:Health() <= InDamageInfo:GetDamage() then
 
 			InDamageInfo:SetDamage(0.0)
-		else
-			if InEntity:Health() <= InDamageInfo:GetDamage() then
 
-				InDamageInfo:SetDamage(0.0)
+			if InPlayer:Team() ~= TEAM_MEDIC then
 
-				if InEntity:Team() ~= TEAM_MEDIC then
-
-					OnPlayerIncapped(InEntity)
-				end
+				OnPlayerIncapped(InPlayer)
 			end
 		end
 	end

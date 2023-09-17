@@ -145,7 +145,7 @@ function TrySetMapDayState(InAlpha)
 
 			ToggleEntity:Fire("FireUser1")
 
-			MsgN("SetMapDayState")
+			MsgN("Set map day state...")
 		end
 
 		if IsValid(SkyPaintEntity) then
@@ -177,7 +177,7 @@ function TrySetMapNightState(InAlpha)
 
 			ToggleEntity:Fire("FireUser2")
 
-			MsgN("SetMapNightState")
+			MsgN("Set map night state...")
 		end
 
 		bDayMapState = false

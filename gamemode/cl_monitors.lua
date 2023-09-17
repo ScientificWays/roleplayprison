@@ -37,7 +37,7 @@ timer.Create("MonitorTick", 1.0, 0, function()
 		ShowMonitor()
 	end
 
-	MsgN(ActiveMonitorType)
+	--MsgN(ActiveMonitorType)
 end)
 
 function OfficerMonitorDraw()

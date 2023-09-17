@@ -59,14 +59,14 @@ function UtilGetDetailPickupDuration()
 	return GetConVar("sk_detail_pickup_duration"):GetInt()
 end
 
-function UtilGetServerSabotageDuration()
+function UtilGetSabotageDuration()
 
-	return GetConVar("sk_server_sabotage_duration"):GetInt()
+	return GetConVar("sk_sabotage_duration"):GetInt()
 end
 
-function UtilGetServerRepairDuration()
+function UtilGetSabotageRepairDuration()
 
-	return GetConVar("sk_server_repair_duration"):GetInt()
+	return GetConVar("sk_sabotage_repair_duration"):GetInt()
 end
 
 function UtilGetToggleLockDuration()

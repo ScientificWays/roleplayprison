@@ -65,7 +65,6 @@ function ShowStash(InStashEntity)
 
 	StashFrame.Paint = function(self, w, h)
 		
-		
 	end
 
 	local ItemSlot = vgui.Create("DButton", StashFrame)
@@ -144,7 +143,7 @@ function ShowStash(InStashEntity)
 
 		StackableButton.DoClick = function()
 
-			if CanAddStackableToStash(Client, InStashEntity, StackableData.Name) then
+			if CanAddStackableToStash(Client, InStashEntity, StackableData.Name, 1) then
 
 				net.Start("SendTryInteractStashToServer")
 
