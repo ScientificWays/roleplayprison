@@ -108,7 +108,7 @@ function FinishOfficerAnswerPhone(InOfficerPlayer, InTaskStartEntity)
 	UpdateGuardRoutine(InOfficerPlayer:GetNWString("RPName"))
 end
 
-function EnableGuardAccountingTask(InGuardPlayer)
+function TryEnableGuardAccountingTask(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetNWString("RPName")
 

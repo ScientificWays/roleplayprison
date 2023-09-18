@@ -20,9 +20,7 @@ function OnStashOpen(InPlayer, InStashEntity)
 	MsgN("OnStashOpen()")
 
 	net.Start("ClientOpenStash")
-
 	net.WriteInt(InStashEntity:EntIndex(), 32)
-
 	net.Send(InPlayer)
 end
 
@@ -31,9 +29,7 @@ function ServerReceiveTryInteractStash(InMessageLength, InPlayer)
 	MsgN("ServerReceiveTryInteractStash()")
 
 	local StashEntityIndex = net.ReadInt(32)
-
 	local bPickupItem = net.ReadBool()
-
 	local StashEntity = Entity(StashEntityIndex)
 
 	if bPickupItem then
@@ -68,7 +64,6 @@ function TryAddStackableToStash(InPlayer, InStashEntity, InStackableName, InNum)
 		end
 
 		InStashEntity:SetNWString("StashItemName", InStackableName)
-
 		InStashEntity:SetNWInt("StashItemNum", InStashEntity:GetNWInt("StashItemNum") + InNum)
 	end
 end
@@ -82,7 +77,6 @@ function TryAddWeaponToStash(InPlayer, InStashEntity)
 		local ActiveWeaponClassName = InPlayer:GetActiveWeapon():GetClass()
 
 		InStashEntity:SetNWString("StashItemName", ActiveWeaponClassName)
-
 		InStashEntity:SetNWInt("StashItemNum", 0)
 
 		InPlayer:StripWeapon(ActiveWeaponClassName)
@@ -112,7 +106,6 @@ function TryPickItemFromStash(InPlayer, InStashEntity)
 		if InStashEntity:GetNWInt("StashItemNum") <= 0 then
 
 			InStashEntity:SetNWString("StashItemName", "")
-
 			InStashEntity:SetNWInt("StashItemNum", 0)
 		end
 	end

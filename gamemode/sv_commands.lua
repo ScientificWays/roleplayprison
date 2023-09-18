@@ -137,6 +137,10 @@ function GM:PlayerSay(InSender, InText, bTeamChat)
 		elseif SeparatedStrings[2] == "delay" and SeparatedStrings[3] ~= nil then
 
 			TrySkipTaskDelayFor(TryConvertPlayerName(SeparatedStrings[3]))
+
+		elseif SeparatedStrings[2] == "time" and SeparatedStrings[3] ~= nil then
+
+			TrySkipTaskTimeFor(TryConvertPlayerName(SeparatedStrings[3]))
 		end
 
 	elseif InSender:IsAdmin() and SeparatedStrings[1] == "/Лёха" then

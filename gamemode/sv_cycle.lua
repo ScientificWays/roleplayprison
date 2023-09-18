@@ -1,9 +1,7 @@
 ---- Roleplay: Prison
 
 local bInterCycle = false
-
 local ServerScheduleList = {}
-
 local GuardRoutineTimeLeftTable = {}
 
 function GetServerScheduleList()
@@ -13,7 +11,7 @@ end
 
 function ServerReceiveScheduleList(InMessageLength, InPlayer)
 
-	MsgN("ServerReceiveScheduleList()")
+	--MsgN("ServerReceiveScheduleList()")
 
 	if InPlayer:GetNWBool("bOfficer") == false then
 
@@ -22,12 +20,10 @@ function ServerReceiveScheduleList(InMessageLength, InPlayer)
 
 	ServerScheduleList = net.ReadTable()
 
-	MsgN(table.ToString(ServerScheduleList))
+	--MsgN(table.ToString(ServerScheduleList))
 
 	net.Start("SendScheduleListToClients")
-
 	net.WriteTable(ServerScheduleList)
-
 	net.Broadcast()
 end
 
@@ -38,16 +34,13 @@ function ServerResetScheduleList()
 	table.Empty(ServerScheduleList)
 
 	net.Start("SendScheduleListToClients")
-
 	net.WriteTable(ServerScheduleList)
-
 	net.Broadcast()
 end
 
 function OnScheduleSetupOpen(InPlayer, InScheduleSetupEntity)
 
 	net.Start("ClientOpenScheduleSetup")
-
 	net.Send(InPlayer)
 end
 
@@ -57,41 +50,48 @@ function TrySkipTaskDelayFor(InPlayerName)
 
 	if RoutineData then
 
+		MsgN(Format("Skip delay for %s, was %i", InPlayerName, RoutineData.DelayLeft))
 		--Will go to 0 next cycle update
-		RoutineData.DelayLeft = 1
+		RoutineData.DelayLeft = math.min(1, RoutineData.DelayLeft)
+	end
+end
+
+function TrySkipTaskTimeFor(InPlayerName)
+
+	local RoutineData = GuardRoutineTimeLeftTable[InPlayerName]
+
+	if RoutineData then
+
+		MsgN(Format("Skip time for %s, was %i", InPlayerName, RoutineData.TimeLeft))
+		--Will go to 0 next cycle update
+		RoutineData.TimeLeft = math.min(1, RoutineData.TimeLeft)
 	end
 end
 
 function UpdateGuardRoutine(InPlayerName)
 
 	--MsgN(Format("UpdateGuardRoutine() %s", InPlayerName))
-
 	GuardRoutineTimeLeftTable[InPlayerName] = {DelayLeft = UtilGetRoutineDelay(), TimeLeft = UtilGetRoutineTimeout()}
-
 	--MsgN(table.ToString(GuardRoutineTimeLeftTable))
 end
 
 local function SetupCycleStartGuardRoutine()
 
 	local AllGuards = team.GetPlayers(TEAM_GUARD)
-
 	local GuardsNum = team.NumPlayers(TEAM_GUARD)
 
 	for Index = 1, GuardsNum do
 
 		local BaseRoutineDelay = UtilGetRoutineDelay()
-
 		local AdjustedRoutineDelay = BaseRoutineDelay / GuardsNum * Index
 
 		local SampleGuard = table.Random(AllGuards)
-
 		local SampleGuardName = SampleGuard:GetNWString("RPName")
 
 		GuardRoutineTimeLeftTable[SampleGuardName] = {DelayLeft = AdjustedRoutineDelay, TimeLeft = UtilGetRoutineTimeout()}
 
 		MsgN(Format("Set first routine delay for %s: adjusted from %i to %i",
 			SampleGuardName, BaseRoutineDelay, AdjustedRoutineDelay))
-
 		table.RemoveByValue(AllGuards, SampleGuard)
 	end
 end
@@ -99,9 +99,7 @@ end
 local function GuardRoutineTick(InGuardPlayer)
 
 	local GuardName = InGuardPlayer:GetNWString("RPName")
-
 	--MsgN(Format("GuardRoutineTick() for %s", GuardName))
-
 	local RoutineData = GuardRoutineTimeLeftTable[GuardName]
 
 	if RoutineData then
@@ -118,17 +116,14 @@ local function GuardRoutineTick(InGuardPlayer)
 
 					TryEnableOfficerPhone()
 				else
-
-					EnableGuardAccountingTask(InGuardPlayer)
+					TryEnableGuardAccountingTask(InGuardPlayer)
 				end
 			end
 
 		elseif RoutineData.TimeLeft <= 0 then
 
 			OnTaskTimeout("GuardRoutine")
-
 			DisableGuardAccountingTask(InGuardPlayer)
-
 			UpdateGuardRoutine(GuardName)
 
 		elseif InGuardPlayer:GetNWFloat("TaskTimeLeft") <= 0.0 then
@@ -136,7 +131,6 @@ local function GuardRoutineTick(InGuardPlayer)
 			RoutineData.TimeLeft = RoutineData.TimeLeft - 1
 		end
 	else
-
 		UpdateGuardRoutine(GuardName)
 	end
 end
@@ -159,12 +153,10 @@ function ToggleCycle(bPause)
 	if bPause then
 
 		timer.Pause("CycleUpdateTimer")
-
 		UtilSendEventMessageToPlayers({"RPP_Cycle.Paused"})
 	else
 
 		timer.UnPause("CycleUpdateTimer")
-
 		UtilSendEventMessageToPlayers({"RPP_Cycle.Continue"})
 	end
 end
@@ -172,16 +164,13 @@ end
 function StartNewCycle()
 
 	SetGlobalInt("CurrentCycleTimeSeconds", 0)
-
 	timer.Create("CycleUpdateTimer", 1, 0, CycleUpdate)
 
 	if UtilIsInterCycle() then
 
 		SetGlobalBool("bInterCycle", false)
-
 		--PrintMessage(HUD_PRINTTALK, "Начался новый цикл!")
-
-		MsgN(table.ToString(ServerScheduleList))
+		--MsgN(table.ToString(ServerScheduleList))
 
 		if table.IsEmpty(ServerScheduleList) then
 
@@ -189,22 +178,15 @@ function StartNewCycle()
 		end 
 
 		SetupCycleStartGuardRoutine()
-
 		ClearDetailPickups()
-
 		TrySetMapDayState(0.0)
 	else
 
 		SetGlobalBool("bInterCycle", true)
-
 		--PrintMessage(HUD_PRINTTALK, "Начался перерыв!")
-
 		UpdateMapLockablesState()
-
 		TrySetMapNightState(0.0)
-
 		ResetArmory()
-
 		UpdateStashes()
 	end
 end
@@ -231,7 +213,6 @@ function OnCycleEnd()
 		end
 
 		TryDisableOfficerPhone()
-
 		HandleOfficerOnIntercycleStart()
 	end
 end
@@ -239,11 +220,8 @@ end
 function CycleUpdate()
 
 	SetGlobalInt("CurrentCycleTimeSeconds", GetGlobalInt("CurrentCycleTimeSeconds") + 1)
-
 	local CurrentCycleTimeSeconds = GetGlobalInt("CurrentCycleTimeSeconds")
-
 	--MsgN(GetGlobalInt("CurrentCycleTimeSeconds"))
-
 	local CurrentCycleDurationSeconds = UtilGetCycleDurationMinutes(UtilIsInterCycle()) * 60
 
 	if CurrentCycleTimeSeconds >= CurrentCycleDurationSeconds then
@@ -255,7 +233,7 @@ function CycleUpdate()
 		return
 	end
 
---[[	local LeftCycleTimeSeconds = UtilGetLeftCycleTimeSeconds()
+--[[local LeftCycleTimeSeconds = UtilGetLeftCycleTimeSeconds()
 
 	if LeftCycleTimeSeconds <= 150 then
 
@@ -269,15 +247,12 @@ function CycleUpdate()
 	end--]]
 
 	TryUpdateSkyPaintAndLightmapsState(CurrentCycleTimeSeconds / CurrentCycleDurationSeconds)
-
 	local AllGuards = team.GetPlayers(TEAM_GUARD)
 
 	if table.IsEmpty(AllGuards) then
 
 		UtilSendEventMessageToPlayers({"RPP_Cycle.NoGuards"})
-
 		ToggleCycle(true)
-
 		return
 	end
 
@@ -286,9 +261,7 @@ function CycleUpdate()
 	if not IsValid(OfficerPlayer) then
 
 		UtilSendEventMessageToPlayers({"RPP_Cycle.NoOfficer"})
-
 		ToggleCycle(true)
-
 		return
 	end
 
@@ -297,9 +270,7 @@ function CycleUpdate()
 	--[[if table.IsEmpty(AllRobbers) then
 
 		PrintMessage(HUD_PRINTTALK, "Заключенные не найдены!")
-
 		ToggleCycle(true)
-
 		return
 	end]]
 
@@ -319,7 +290,6 @@ function CycleUpdate()
 
 		HandleOfficerPunished()
 	else
-
 		
 	end
 end

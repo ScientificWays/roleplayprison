@@ -4,7 +4,7 @@ local function GetEscapeUnusedViewList()
 
 	local EscapeViewList = ents.FindByName("*_OutroView")
 
-	MsgN(table.ToString(EscapeViewList))
+	--MsgN(table.ToString(EscapeViewList))
 
 	local OutViewList = {}
 
@@ -35,39 +35,53 @@ function OnRobberEscape(InRobberPlayer)
 	MsgN(Format("OnRobberEscape() %s", InRobberPlayer))
 
 	local EscapeUnusedViewList = GetEscapeUnusedViewList()
-
 	local SampleEscapeView = table.Random(EscapeUnusedViewList)
+
+	local bWithEscapeView = SampleEscapeView ~= nil
 
 	MsgN(Format("SampleEscapeView %s", SampleEscapeView))
 
 	InRobberPlayer:SetNWBool("bEscaped", true)
 
-	SampleEscapeView:Fire("FireUser1", nil, 3.0, InRobberPlayer, InRobberPlayer)
+	if bWithEscapeView then
+
+		SampleEscapeView:Fire("FireUser1", nil, 3.0, InRobberPlayer, InRobberPlayer)
+	end
 
 	InRobberPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
 
 	timer.Simple(3.0, function()
 
-		InRobberPlayer:SetViewEntity(SampleEscapeView)
+		if bWithEscapeView then
 
-		InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
+			InRobberPlayer:SetViewEntity(SampleEscapeView)
+			InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
+		end
 
 		UtilSendEventMessageToPlayers({"RPP_Event.Escaped", UtilGetRPNameSurname(InRobberPlayer)})
 	end)
 
-	timer.Simple(9.0, function()
+	local FadeOutDelay = 12.0
 
-		InRobberPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
-	end)
+	if bWithEscapeView then
 
-	timer.Simple(12.0, function()
+		timer.Simple(9.0, function()
+
+			InRobberPlayer:ScreenFade(SCREENFADE.OUT, COLOR_WHITE, 2.0, 2.0)
+		end)
+	else
+		FadeOutDelay = 3.0
+	end
+
+	timer.Simple(FadeOutDelay, function()
 
 		InRobberPlayer:ScreenFade(SCREENFADE.IN, COLOR_WHITE, 2.0, 0.0)
-
 		InRobberPlayer:SetViewEntity(nil)
-
 		GAMEMODE:PlayerJoinTeam(InRobberPlayer, TEAM_SPECTATOR)
 	end)
 
-	SampleEscapeView:SetNWBool("bWasUsed", true)
+	if SampleEscapeView ~= nil then
+
+		SampleEscapeView:SetNWBool("bWasUsed", true)
+	end
 end
