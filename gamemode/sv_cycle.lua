@@ -274,7 +274,7 @@ function CycleUpdate()
 		return
 	end]]
 
-	if not UtilIsInterCycle() then
+	if UtilGetRoutinesEnabled() and not UtilIsInterCycle() then
 
 		for Index, SampleGuard in ipairs(AllGuards) do
 

@@ -20,10 +20,8 @@ hook.Add("PostDrawOpaqueRenderables", "HandcuffsDragRope", function()
 
 			if IsValid(Kidnapper) then
 
-				local KidnapperPos = (Kidnapper:IsPlayer() and Kidnapper:GetPos() + Vector(0,0,37)) or Kidnapper:GetPos()
-				
+				local KidnapperPos = (Kidnapper:IsPlayer() and Kidnapper:GetPos() + Vector(0,0,37)) or Kidnapper:GetPos()				
 				local RopeStartPos = SamplePlayer:GetPos()
-
 				local DragBone = SamplePlayer:LookupBone(HandcuffsDragBoneName)
 
 				if DragBone then
@@ -37,26 +35,20 @@ hook.Add("PostDrawOpaqueRenderables", "HandcuffsDragRope", function()
 				end
 				
 				render.SetMaterial(HandcuffsRopeMaterial)
-
 				render.DrawBeam(KidnapperPos, RopeStartPos, 0.7, 0, 5, COLOR_WHITE)
-
 				--render.DrawBeam(RopeStartPos, KidnapperPos, -0.7, 0, 5, COLOR_WHITE)
 			end
 
 			local LeftHandBone = SamplePlayer:LookupBone(LeftHandBoneName)
-
 			local LeftHandBonePos = SamplePlayer:GetBonePosition(LeftHandBone)
 
 			local RightHandBone = SamplePlayer:LookupBone(RightHandBoneName)
-
 			local RightHandBonePos = SamplePlayer:GetBonePosition(RightHandBone)
 
 			if not LeftHandBonePos:IsZero() and not RightHandBonePos:IsZero() then
 
 				render.SetMaterial(HandcuffsRopeMaterial)
-
 				render.DrawBeam(LeftHandBonePos, RightHandBonePos, 0.7, 0, 5, COLOR_WHITE)
-
 				--render.DrawBeam(RightHandBonePos, LeftHandBonePos, -0.7, 0, 5, COLOR_WHITE)
 			end
 		end

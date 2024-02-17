@@ -49,7 +49,7 @@
 			"type"		"Numeric"
 			"default"	"5"
 		}
-		6
+		7
 		{
 			"name"		"sk_routine_delay_min"
 			"text"		"Routine delay min"
@@ -57,7 +57,7 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
-		7
+		8
 		{
 			"name"		"sk_routine_delay_max"
 			"text"		"Routine delay max"
@@ -65,7 +65,7 @@
 			"type"		"Numeric"
 			"default"	"600"
 		}
-		8
+		9
 		{
 			"name"		"sk_routine_timeout"
 			"text"		"Routine timeout"
@@ -73,7 +73,7 @@
 			"type"		"Numeric"
 			"default"	"90"
 		}
-		9
+		10
 		{
 			"name"		"sk_guard_routine_duration"
 			"text"		"Guard routine duration"
@@ -81,7 +81,7 @@
 			"type"		"Numeric"
 			"default"	"60"
 		}
-		10
+		11
 		{
 			"name"		"sk_officer_routine_duration"
 			"text"		"Officer routine duration"
@@ -89,7 +89,7 @@
 			"type"		"Numeric"
 			"default"	"20"
 		}
-		11
+		12
 		{
 			"name"		"sk_officer_punishment_duration"
 			"text"		"Officer punishment duration"
@@ -97,7 +97,7 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
-		12
+		13
 		{
 			"name"		"sk_robber_work_duration"
 			"text"		"Robber work duration"
@@ -105,7 +105,7 @@
 			"type"		"Numeric"
 			"default"	"60"
 		}
-		13
+		14
 		{
 			"name"		"sk_robber_work_buff_multiplier"
 			"text"		"Robber work buff multiplier"
@@ -113,7 +113,7 @@
 			"type"		"Numeric"
 			"default"	"1.2"
 		}
-		14
+		15
 		{
 			"name"		"sk_detail_pickup_duration"
 			"text"		"Detail pickup duration"
@@ -121,7 +121,7 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		15
+		16
 		{
 			"name"		"sk_sabotage_duration"
 			"text"		"Sabotage duration"
@@ -129,7 +129,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		16
+		17
 		{
 			"name"		"sk_sabotage_repair_duration"
 			"text"		"Sabotage repair duration"
@@ -137,7 +137,7 @@
 			"type"		"Numeric"
 			"default"	"20"
 		}
-		17
+		18
 		{
 			"name"		"sk_toggle_lock_duration"
 			"text"		"Guard toggle lock duration"
@@ -145,7 +145,7 @@
 			"type"		"Numeric"
 			"default"	"1"
 		}
-		18
+		19
 		{
 			"name"		"sk_picklock_use_duration"
 			"text"		"Picklock use duration"
@@ -153,7 +153,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		19
+		20
 		{
 			"name"		"sk_picklock_open_chance"
 			"text"		"Picklock open chance"
@@ -161,7 +161,7 @@
 			"type"		"Numeric"
 			"default"	"0.9"
 		}
-		20
+		21
 		{
 			"name"		"sk_picklock_break_chance"
 			"text"		"Picklock break chance"
@@ -169,7 +169,7 @@
 			"type"		"Numeric"
 			"default"	"0.9"
 		}
-		21
+		22
 		{
 			"name"		"sk_handcuffs_on_duration"
 			"text"		"Handcuffs on duration"
@@ -177,7 +177,7 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		22
+		23
 		{
 			"name"		"sk_handcuffs_off_duration"
 			"text"		"Handcuffs off duration"
@@ -185,7 +185,7 @@
 			"type"		"Numeric"
 			"default"	"5"
 		}
-		23
+		24
 		{
 			"name"		"sk_inspection_duration"
 			"text"		"Inspection duration"
@@ -193,7 +193,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		24
+		25
 		{
 			"name"		"sk_sprint_duration"
 			"text"		"Sprint duration"
@@ -201,7 +201,7 @@
 			"type"		"Numeric"
 			"default"	"20.0"
 		}
-		25
+		26
 		{
 			"name"		"sk_trade_duration"
 			"text"		"Trade duration"
@@ -209,7 +209,7 @@
 			"type"		"Numeric"
 			"default"	"2.5"
 		}
-		26
+		27
 		{
 			"name"		"sk_revive_duration"
 			"text"		"Revive duration"
@@ -217,7 +217,7 @@
 			"type"		"Numeric"
 			"default"	"20.0"
 		}
-		27
+		28
 		{
 			"name"		"sk_max_reserve_clip"
 			"text"		"Max reserve clips"
@@ -225,11 +225,19 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		28
+		29
 		{
 			"name"		"sk_allow_noclip"
 			"text"		"Noclip enabled"
 			"help"		"If enabled, players will be able to use noclip"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+		30
+		{
+			"name"		"sk_routines_enabled"
+			"text"		"Routines enabled"
+			"help"		"Are routines enabled at all?"
 			"type"		"CheckBox"
 			"default"	"1"
 		}

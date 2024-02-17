@@ -19,6 +19,11 @@ function UtilSendEventMessageToPlayers(InMessageStrings)
 	net.Broadcast()
 end
 
+function UtilGetRoutinesEnabled()
+
+	return GetConVar("sk_routines_enabled"):GetBool()
+end
+
 function UtilGetRoutineDelay()
 
 	return math.random(GetConVar("sk_routine_delay_min"):GetInt(), GetConVar("sk_routine_delay_max"):GetInt())
