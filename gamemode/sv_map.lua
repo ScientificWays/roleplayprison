@@ -151,7 +151,6 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bRobberTask", true)
-
 			SampleEntity:SetNWBool("bShowHint", true)
 
 		elseif string.EndsWith(SampleEntityName, "_DetailPickup") then
@@ -159,18 +158,14 @@ function SetupMapEntityFlags()
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bDetailPickup", true)
-
-			--No hint needed
-			--SampleEntity:SetNWBool("bShowHint", false)
+			--SampleEntity:SetNWBool("bShowHint", false) --No hint needed
 
 		elseif string.EndsWith(SampleEntityName, "_DetailSpawn") then
 
 			MsgN(SampleEntityName.." is registered!")
 
 			SampleEntity:SetNWBool("bDetailSpawn", true)
-
-			--Will be true if will have at least 1 detail made
-			SampleEntity:SetNWBool("bShowHint", false)
+			SampleEntity:SetNWBool("bShowHint", false) --Will be true if will have at least 1 detail made
 
 		elseif string.EndsWith(SampleEntityName, "_FoodSpawn") then
 
@@ -270,6 +265,25 @@ function SetupMapAreas()
 		elseif string.EndsWith(SampleAreaName, "_Rest_Area") then
 
 			GuardRestArea = SampleArea
+		end
+	end
+end
+
+function HandleStartNewCycleRelays()
+
+	local LogicRelays = ents.FindByClass("logic_relay")
+	local TargetPostfix = "_OnCycleStart"
+
+	if UtilIsInterCycle() then
+		TargetPostfix = "_OnInterCycleStart"
+
+	for Index, SampleRelay in ipairs(LogicRelays) do
+
+		local SampleAreaName = SampleArea:GetName()
+
+		if string.EndsWith(SampleAreaName, TargetPostfix) then
+
+			SampleRelay:Fire("Trigger")
 		end
 	end
 end

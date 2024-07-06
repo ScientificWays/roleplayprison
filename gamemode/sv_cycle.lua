@@ -189,6 +189,7 @@ function StartNewCycle()
 		ResetArmory()
 		UpdateStashes()
 	end
+	HandleStartNewCycleRelays()
 end
 
 function OnCycleEnd()
@@ -227,9 +228,7 @@ function CycleUpdate()
 	if CurrentCycleTimeSeconds >= CurrentCycleDurationSeconds then
 
 		OnCycleEnd()
-
 		StartNewCycle()
-
 		return
 	end
 
